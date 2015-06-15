@@ -437,7 +437,7 @@ $(document).ready(function(){
      * Custom Select
      */
     if ($('.selectpickers')[0]) {
-        $('.selecstpicker').selectpicker();
+        $('.selectpickers').selectpicker();
     }
     
     /*
