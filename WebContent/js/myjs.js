@@ -39,6 +39,21 @@ function showErrorValidation(div, message) {
 	}
 }
 
+
+$('submitBTN').click(
+		function()
+		{
+			$('buttonValue').val("submit");
+		}
+);
+
+$('resetBTN').click(
+		function()
+		{
+			$('buttonValue').val("reset");
+		}
+);
+
 function clearError(div) {
 	$(div).attr("class", $(div).attr("class").replace(" has-error", ""));
 	div = div + " small#error";
@@ -432,7 +447,7 @@ function showProduct(available, index, name, price, qty, total) {
 	productName.setAttribute("class", "form-control");
 	productName.setAttribute("value", name);
 	productName.setAttribute("readonly", "true");
-	productName.setAttribute("name", "prodName" + index);
+	productName.setAttribute("name", "prodName");
 
 	disableDiv.appendChild(productName);
 	textDiv.appendChild(disableDiv);
@@ -466,7 +481,7 @@ function showProduct(available, index, name, price, qty, total) {
 	productQty.setAttribute("class", "form-control");
 	productQty.setAttribute("value", qty);
 	productQty.setAttribute("readonly", "true");
-	productQty.setAttribute("name", "prodQty" + index);
+	productQty.setAttribute("name", "prodQty");
 
 	var availSpan = document.createElement("span");
 	availSpan.setAttribute("class", "md-shopping-basket form-control-feedback");
@@ -503,7 +518,7 @@ function showProduct(available, index, name, price, qty, total) {
 	productQty.setAttribute("class", "form-control");
 	productQty.setAttribute("value", price);
 	productQty.setAttribute("readonly", "true");
-	productQty.setAttribute("name", "prodPrice" + index);
+	productQty.setAttribute("name", "prodPrice");
 
 	var availSpan = document.createElement("span");
 	availSpan.setAttribute("class", "md-attach-money form-control-feedback");

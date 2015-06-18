@@ -8,6 +8,11 @@ import org.apache.struts.action.ActionMapping;
 
 public class ForgotPassword extends ActionForm 
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	@Override
 	public ActionErrors validate(ActionMapping mapping,
 			HttpServletRequest request) {

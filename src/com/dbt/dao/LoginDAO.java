@@ -131,7 +131,7 @@ public class LoginDAO {
 		PreparedStatement stmt = null;
 		ResultSet set = null;
 		try {
-			String sql = "select _id,first_name,last_name,mobile,status,type,log_ip,st_time,end_time from user join user_login on user._id = user_login.user_id where user_login.email = ? and user_login.password = ?;";
+			String sql = "select _id,first_name,last_name,mobile,status,user_login.type,log_ip,st_time,end_time from user join user_login on user._id = user_login.user_id where user_login.email = ? and user_login.password = ?;";
 			con = DBConnection.getConnection();
 			stmt = con.prepareStatement(sql);
 			stmt.setString(1, email.trim().toLowerCase());

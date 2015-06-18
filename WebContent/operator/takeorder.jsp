@@ -6,9 +6,6 @@
 <%@page import="java.util.Iterator"%>
 <%@page import="com.dbt.data.User"%>
 
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
-<%@ taglib prefix="jspcore" uri="http://java.sun.com/jsp/jstl/core"%>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -20,37 +17,8 @@
 <title>Take Order</title>
 
 <!-- Vendor CSS -->
-<link
-	href="<%=request.getContextPath()%>/vendors/fullcalendar/fullcalendar.css"
-	rel="stylesheet">
-<link
-	href="<%=request.getContextPath()%>/vendors/animate-css/animate.min.css"
-	rel="stylesheet">
-<link
-	href="<%=request.getContextPath()%>/vendors/sweet-alert/sweet-alert.min.css"
-	rel="stylesheet">
-<link
-	href="<%=request.getContextPath()%>/vendors/material-icons/material-design-iconic-font.min.css"
-	rel="stylesheet">
-<link
-	href="<%=request.getContextPath()%>/vendors/socicon/socicon.min.css"
-	rel="stylesheet">
-<link href="<%=request.getContextPath()%>/img/favicon.ico" rel="icon" />
-<link
-	href="<%=request.getContextPath()%>/vendors/noUiSlider/jquery.nouislider.min.css"
-	rel="stylesheet">
-<link
-	href="<%=request.getContextPath()%>/vendors/farbtastic/farbtastic.css"
-	rel="stylesheet">
-<link
-	href="<%=request.getContextPath()%>/vendors/summernote/summernote.css"
-	rel="stylesheet">
 
-<!-- CSS -->
-<link href="<%=request.getContextPath()%>/css/app.min.1.css"
-	rel="stylesheet">
-<link href="<%=request.getContextPath()%>/css/app.min.2.css"
-	rel="stylesheet">
+   <%@include file="/css/includecss.jsp" %>
 
 <script>
 	var products = new Array();
@@ -60,82 +28,18 @@
 <body>
 	<%@ include file="../header.jsp"%>
 
-	<section id="main"> <%
- 	User user = (User)session.getAttribute("user");
-            	   String type = user.getType();
-            	   String path = request.getContextPath();
-            	   String uri = request.getRequestURI();
-            	   Iterator<Privilege> iter = LoginDAO.getPrivileges(type);
- %> <aside id="sidebar">
-	<div class="sidebar-inner">
-		<div class="si-inner">
-			<div class="profile-menu">
-				<a href="#">
-					<div class="profile-pic">
-						<img src="<%=path%>/img/profile-pics/mypic.jpg" alt="">
-					</div>
-
-					<div class="profile-info">
-						<%=type%>
-						<i class="md md-arrow-drop-down"></i>
-					</div>
-				</a>
-
-				<ul class="main-menu">
-					<li><a href="profile-about.html"><i class="md md-person"></i>
-							View Profile</a></li>
-					<li><a href="#"><i class="md md-settings-input-antenna"></i>
-							Privacy Settings</a></li>
-					<li><a href="#"><i class="md md-settings"></i> Settings</a></li>
-					<li><a href="./logout.do"><i class="md md-history"></i>
-							Logout</a></li>
-				</ul>
-			</div>
-
-			<ul class="main-menu">
-				<li class="active"><a href="dashboard.jsp"><i
-						class="md md-home"></i> Home</a></li>
-
-				<%
-					while(iter.hasNext())
-																															{
-																																Privilege priv = iter.next();
-																																Iterator<Privilege> iterin = priv.subprivs.iterator();
-																																String classN = priv.getIconClass();
-				%>
-				<li class="sub-menu"><a href="#"><i class="<%=classN%>"></i><%=priv.getName()%></a>
-					<ul>
-						<%
-							while(iterin.hasNext())
-																																																								    {
-																																																								    	Privilege inpriv = iterin.next();
-																																																								    	String className = "";
-																																																								    	String p = inpriv.getPath();
-																																																								    	String link = path +"/"+ p;
-																																																								    	if(p != null && uri.contains(p))
-																																																								    		className = "class='active'";
-						%>
-						<li><a href="<%=link%>" <%=className%>><%=inpriv.getName()%></a></li>
-
-						<%
-							}
-						%>
-
-					</ul></li>
-				<%
-					}
-				%>
-			</ul>
-		</div>
-	</div>
-	</aside> <section id="content">
+	<section id="main"> 
+	 
+	 <%@ include file="../panel/leftpanel.jsp" %>
+	
+	<section id="content">
 	<div class="container">
 		<div class="block-header">
 			<h1>Take Order</h1>
 		</div>
 
 		<div class="card">
-			<form action="./ConfirmOrder.do" method="post" id="custForm"
+			<form action="../ConfirmOrder.do" method="get" id="custForm"
 				name="custForm" class="form-horizontal" role="form">
 
 				<div class="card-header">
@@ -149,11 +53,13 @@
 							<div class="fg-line">
 								<input type="text" class="form-control" name="custName"
 									id="inputName" placeholder="Enter Full Name">
-
+					
 							</div>
 
 							<span class="md md-person form-control-feedback"></span> <small
-								id="error" class="help-block"></small>
+								id="error" class="help-block">
+								<html:errors property="nameError"/>
+								</small>
 						</div>
 						<button type="button" class="btn btn-info" data-toggle="tooltip"
 							data-placement="top" title data-original-title="Search Customers"
@@ -193,7 +99,7 @@
 
 							</div>
 							<span class="md md-email form-control-feedback"></span> <small
-								id="error" class="help-block"></small>
+								id="error" class="help-block"><html:errors property="emailError"/></small>
 						</div>
 					</div>
 
@@ -206,7 +112,7 @@
 										name="custHouseNo" placeholder="House No.">
 
 								</div>
-								<small id="error" class="help-block"></small>
+								<small id="error" class="help-block"><html:errors property="houseError"/></small>
 							</div>
 						</div>
 						<div id="addDiv" class="form-input">
@@ -217,7 +123,7 @@
 
 								</div>
 								<span class="md md-location-on form-control-feedback"></span> <small
-									id="error" class="help-block"></small>
+									id="error" class="help-block"><html:errors property="line1Error"/></small>
 							</div>
 						</div>
 					</div>
@@ -237,7 +143,7 @@
 							<label for="inputCity" class="col-sm-2 control-label"></label>
 							<div class="col-sm-3 m-b-25 selectpicker">
 								<select class="form-control" id="inputCity" name="custCity">
-									<option>Select City</option>
+									<option >Select City</option>
 									<option value="Jaipur">Jaipur</option>
 									<option value="Tonk">Tonk</option>
 									<option value="Jodhpur">Jodhpur</option>
@@ -248,7 +154,7 @@
 									<option value="Chennai">Chennai</option>
 									<option value='Delhi'>Delhi</option>
 								</select>
-								<small id="error" class="help-block"></small>
+								<small id="error" class="help-block"><html:errors property="cityError"/></small>
 							</div>
 							
 						</div>
@@ -265,7 +171,7 @@
 									<option value="Karnataka">Karnataka</option>
 								</select>
 								
-								  <small id="error" class="help-block"></small>
+								  <small id="error" class="help-block"><html:errors property="stateError"/></small>
 							
 							</div>
 							
@@ -278,7 +184,7 @@
 										placeholder="Enter PinCode" name="custPinCode"> 
 								</div>
 								<span class="md md-my-location form-control-feedback"></span> <small
-									id="error" class="help-block"></small>
+									id="error" class="help-block"><html:errors property="pinError"/></small>
 							</div>
 						</div>
 
@@ -294,7 +200,7 @@
 
 							</div>
 							<span class="md-phone-android form-control-feedback"></span> <small
-								id="error" class="help-block"></small>
+								id="error" class="help-block"><html:errors property="mobileError"/></small>
 						</div>
 					</div>
 				</div>
@@ -320,7 +226,7 @@
 											<option value="${cat.id}">${cat.name}</option>
 										</jspcore:forEach>
 									</select>
-									<small id="error" class="help-block"></small>
+									<small id="error" class="help-block"><html:errors property="productError"/></small>
 								</div>
 								
 							</div>
@@ -406,57 +312,8 @@
 
 	<!-- Javascript Libraries -->
 
-	<script src="<%=request.getContextPath()%>/js/jquery-2.1.1.min.js"></script>
-	<script src="<%=request.getContextPath()%>/js/bootstrap.min.js"></script>
-
-	<script
-		src="<%=request.getContextPath()%>/vendors/flot/jquery.flot.min.js"></script>
-	<script
-		src="<%=request.getContextPath()%>/vendors/flot/jquery.flot.resize.min.js"></script>
-	<script
-		src="<%=request.getContextPath()%>/vendors/flot/plugins/curvedLines.js"></script>
-	<script
-		src="<%=request.getContextPath()%>/vendors/sparklines/jquery.sparkline.min.js"></script>
-	<script
-		src="<%=request.getContextPath()%>/vendors/easypiechart/jquery.easypiechart.min.js"></script>
-
-	<script
-		src="<%=request.getContextPath()%>/vendors/chosen/chosen.jquery.min.js"></script>
-	<script
-		src="<%=request.getContextPath()%>/vendors/fullcalendar/lib/moment.min.js"></script>
-	<script
-		src="<%=request.getContextPath()%>/vendors/fullcalendar/fullcalendar.min.js"></script>
-	<script
-		src="<%=request.getContextPath()%>/vendors/simpleWeather/jquery.simpleWeather.min.js"></script>
-	<script
-		src="<%=request.getContextPath()%>/vendors/auto-size/jquery.autosize.min.js"></script>
-	<script
-		src="<%=request.getContextPath()%>/vendors/nicescroll/jquery.nicescroll.min.js"></script>
-	<script src="<%=request.getContextPath()%>/vendors/waves/waves.min.js"></script>
-	<script
-		src="<%=request.getContextPath()%>/vendors/bootstrap-growl/bootstrap-growl.min.js"></script>
-	<script
-		src="<%=request.getContextPath()%>/vendors/sweet-alert/sweet-alert.min.js"></script>
-	<script
-		src="<%=request.getContextPath()%>/vendors/bootstrap-select/bootstrap-select.min.js"></script>
-
-	<script
-		src="<%=request.getContextPath()%>/js/flot-charts/curved-line-chart.js"></script>
-	<script
-		src="<%=request.getContextPath()%>/js/flot-charts/line-chart.js"></script>
-	<script src="<%=request.getContextPath()%>/js/charts.js"></script>
-
-	<script
-		src="<%=request.getContextPath()%>/vendors/noUiSlider/jquery.nouislider.all.min.js"></script>
-	<script
-		src="<%=request.getContextPath()%>/vendors/input-mask/input-mask.min.js"></script>
-	<script
-		src="<%=request.getContextPath()%>/vendors/farbtastic/farbtastic.min.js"></script>
-
-	<script src="<%=request.getContextPath()%>/js/charts.js"></script>
-	<script src="<%=request.getContextPath()%>/js/functions.js"></script>
-	<script src="<%=request.getContextPath()%>/js/demo.js"></script>
-	<script src="<%=request.getContextPath()%>/js/myjs.js"></script>
+	<%@include file="/js/includejs.jsp" %>
+	
 	<script>
 		function load(id) {
 			console.log("Selected : " + id);

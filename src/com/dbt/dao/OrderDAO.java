@@ -8,12 +8,36 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.dbt.data.Category;
+import com.dbt.data.Order;
 import com.dbt.data.Product;
 import com.dbt.database.DBConnection;
 import com.dbt.exception.NoConnectionException;
+import com.dbt.support.Email;
 
 public class OrderDAO 
 {
+	
+	public static boolean takeOrder(Order order)
+	{
+		boolean success = true;
+		
+		Connection con = null;
+		PreparedStatement ps = null;
+		try
+		{
+			con = DBConnection.getConnection();
+			String query = "";
+			
+		}
+		catch(NoConnectionException ex)
+		{
+			Email.sendExceptionReport(ex);
+			ex.printStackTrace();
+		}
+		
+		
+		return success;
+	}
 	
 	
 	public static List<Product> getProducts(int id)

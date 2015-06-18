@@ -1,3 +1,7 @@
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ taglib prefix="jspcore" uri="http://java.sun.com/jsp/jstl/core"%>
+
 <header id="header">
 		<ul class="header-inner">
 			<li id="menu-trigger" data-trigger="#sidebar">

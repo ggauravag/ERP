@@ -8,14 +8,17 @@
 	<form-beans>
 		<form-bean name="loginForm" type="com.dbt.forms.LoginForm"></form-bean>
 		<form-bean name="passwordForm" type="com.dbt.forms.ForgotPassword"></form-bean>
+		<form-bean name="orderForm" type="com.dbt.forms.OrderForm"></form-bean>
 	</form-beans>
 
 	<action-mappings>
 
        
-       <action path="/ConfirmOrder" type="com.dbt.dao.OrderDAO" scope="request">
-         <forward name="success" path="/ConfirmOrder.jsp"></forward>
-       	 <forward name="failure" path="/takeorder.jsp"></forward>
+       <action path="/ConfirmOrder" validate="true" input="/operator/takeorder.jsp" type="com.dbt.action.OrderAction" scope="session">
+         <forward name="success" path="/operator/ordertaken.jsp"></forward>
+         <forward name="modify" path="/operator/takeorder.jsp"></forward>
+         <forward name="confirm" path="/operator/confirmorder.jsp"></forward>
+       	 <forward name="failure" path="/operator/takeorder.jsp"></forward>
        </action>
 
 
