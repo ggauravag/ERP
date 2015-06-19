@@ -1,10 +1,12 @@
 package com.dbt.dao;
 
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import com.dbt.data.Category;
@@ -19,20 +21,68 @@ public class OrderDAO
 	
 	public static boolean takeOrder(Order order)
 	{
-		boolean success = true;
+		boolean success = false;
 		
 		Connection con = null;
-		PreparedStatement ps = null;
+		CallableStatement stmt = null;
 		try
 		{
 			con = DBConnection.getConnection();
-			String query = "";
+			String query = "{Call CreateOrder(?,?)}";
+			stmt = con.prepareCall(query);
+			stmt.setInt(1, order.getCustomer().getId());
+			stmt.registerOutParameter(2, java.sql.Types.INTEGER);
+			stmt.execute();
+			int orderId = stmt.getInt(2);
+			order.setId(orderId);
+			stmt.close();
+			Iterator<Product> products = order.getProducts().iterator();
+			String sql = "insert into order_item values ";
+			while(products.hasNext())
+			{
+				if(products.hasNext())
+					sql += "(?,?,?,?), ";
+				else
+					sql += "(?,?,?,?);";
+			}
+			
+			products = order.getProducts().iterator();
+			int i = 1,amount = 0;
+			PreparedStatement ps = con.prepareStatement(sql);
+			while(products.hasNext())
+			{
+				Product p = products.next();
+				ps.setInt(i++, orderId);
+				ps.setInt(i++, p.getId());
+				ps.setInt(i++, p.getQuantity());
+				ps.setInt(i++, p.getSellPrice());
+				amount += p.getQuantity() * p.getSellPrice();
+			}
+			
+			int j = ps.executeUpdate();
+		    if(j >= 1)
+		    {
+		    	success = true;
+		    	sql = "update order set amount = ? where _id = ?";
+		    	ps.close();
+		    	ps = con.prepareStatement(sql);
+		    	ps.setInt(1, amount);
+		    	ps.setInt(2, orderId);
+		    	ps.executeUpdate();
+		    	ps.close();
+		    }
+		    else
+		    	success = false;
 			
 		}
-		catch(NoConnectionException ex)
+		catch(NoConnectionException | SQLException ex)
 		{
 			Email.sendExceptionReport(ex);
 			ex.printStackTrace();
+		}
+		finally
+		{
+			DBConnection.closeResource(con, stmt, null);
 		}
 		
 		

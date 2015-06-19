@@ -9,7 +9,6 @@
 		<form-bean name="loginForm" type="com.dbt.forms.LoginForm"></form-bean>
 		<form-bean name="passwordForm" type="com.dbt.forms.ForgotPassword"></form-bean>
 		<form-bean name="orderForm" type="com.dbt.forms.OrderForm"></form-bean>
-		<form-bean name="capitalForm" type="com.dbt.forms.CapitalForm"></form-bean>
 	</form-beans>
 
 	<action-mappings>
@@ -22,10 +21,6 @@
        	 <forward name="failure" path="/operator/takeorder.jsp"></forward>
        </action>
 
-		<action path="/AddCapital" validate="true" input="/owner/AddCapital.jsp" type="com.dbt.action.OrderAction" scope="request">
-         <forward name="success" path="/owner/AddCapital.jsp"></forward>
-       	 <forward name="failure" path="/owner/AddCapital.jsp"></forward>
-       </action>
 
 		<action path="/ForgotPassword" type="com.dbt.action.ForgotPasswordAction"
 			validate="true" input="/login.jsp" name="passwordForm">

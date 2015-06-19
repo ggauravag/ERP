@@ -16,9 +16,6 @@
   		<servlet-name>AjaxActionServlet</servlet-name>
 		<servlet-class>com.dbt.servlets.AjaxActionServlet</servlet-class>
 	</servlet>
-	
-	
-	
 
 	<servlet-mapping>
 		<servlet-name>actionServlet</servlet-name>
@@ -28,7 +25,6 @@
 		<servlet-name>AjaxActionServlet</servlet-name>
 		<url-pattern>/ajaxServlet</url-pattern>
 	</servlet-mapping>
-	
 
 
 	<filter>

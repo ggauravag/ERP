@@ -20,9 +20,6 @@
 
    <%@include file="/css/includecss.jsp" %>
 
-<script>
-	var products = new Array();
-</script>
 </head>
 
 <body>

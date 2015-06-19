@@ -77,7 +77,7 @@ public class DBConnection
 		try
 		{
 		   System.out.println("Local Address is : "+InetAddress.getLocalHost());
-		   con = DriverManager.getConnection("jdbc:mysql://localhost:3306/ramerp", "root", "");
+		   con = DriverManager.getConnection("jdbc:mysql://localhost:3306/ramerp", "root", "rat");
 		   //con = DriverManager.getConnection("jdbc:mysql://localhost:3306/dreambit_ramerp", "dreambit_root", "#rat123");
 		}
 		catch(SQLException e)

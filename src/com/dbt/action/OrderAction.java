@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
@@ -13,6 +14,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 
 import com.dbt.dao.CustomerDAO;
+import com.dbt.dao.OrderDAO;
 import com.dbt.data.Address;
 import com.dbt.data.Customer;
 import com.dbt.data.Order;
@@ -90,21 +92,21 @@ public class OrderAction extends Action {
 			Order order = (Order) request.getSession().getAttribute("order");
 			String name = order.getCustomer().getName();
 			int cid = order.getCustomer().getId();
-			String type = "";
+			
 			if (cid == -1) {
 				if (isMerchant(name)) {
 					cid = CustomerDAO.insertCustomer(order.getCustomer());
 
 					if (cid != 0) {
 						result = "success";
-						type = "MERCHANT";
+						order.getCustomer().setType("MERCHANT");
 					} else
 						result = "failure";
 				} else {
 					cid = CustomerDAO.insertCustomer(order.getCustomer());
 					if (cid != 0) {
 						result = "success";
-						type = "CUSTOMER";
+						order.getCustomer().setType("CUSTOMER");
 					} else
 						result = "failure";
 				}
@@ -113,6 +115,16 @@ public class OrderAction extends Action {
 			
 			if("success".equals(result))
 			{
+				order.getCustomer().setId(cid);
+				boolean isOrderTaken = OrderDAO.takeOrder(order);
+				if(!isOrderTaken)
+					result = "failure";
+				else
+				{
+					HttpSession session = request.getSession(false);
+					session.removeAttribute("order");
+					request.setAttribute("order", order);
+				}
 				
 			}
 

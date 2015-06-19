@@ -38,8 +38,9 @@
 
 	<section id="main">
 	
-		<%@ include file="panel/leftpanel.jsp" %>
-	  
+	<%@include file="panel/leftpanel.jsp" %>
+	   
+
 		<section id="content">
 			<div class="container">
 				<div class="block-header">

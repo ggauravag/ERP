@@ -42,10 +42,10 @@
 
 				<%
 					while(iter.hasNext())
-					{
-						Privilege priv = iter.next();
-						Iterator<Privilege> iterin = priv.subprivs.iterator();
-						String classN = priv.getIconClass();																												
+																																	{
+																																		Privilege priv = iter.next();
+																																		Iterator<Privilege> iterin = priv.subprivs.iterator();
+																																		String classN = priv.getIconClass();
 				%>
 				<li class="sub-menu"><a href="#"><i class="<%=classN%>"></i><%=priv.getName()%></a>
 					<ul>
