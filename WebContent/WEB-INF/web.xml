@@ -16,6 +16,41 @@
   		<servlet-name>AjaxActionServlet</servlet-name>
 		<servlet-class>com.dbt.servlets.AjaxActionServlet</servlet-class>
 	</servlet>
+	<servlet>
+		<description>
+		</description>
+		<display-name>ProductDAO</display-name>
+		<servlet-name>ProductDAO</servlet-name>
+		<servlet-class>com.dbt.dao.ProductDAO</servlet-class>
+	</servlet>
+	<servlet>
+		<description>
+		</description>
+		<display-name>FundDAO</display-name>
+		<servlet-name>FundDAO</servlet-name>
+		<servlet-class>com.dbt.dao.FundDAO</servlet-class>
+	</servlet>
+	<servlet>
+		<description>
+		</description>
+		<display-name>Fund</display-name>
+		<servlet-name>Fund</servlet-name>
+		<servlet-class>com.dbt.data.Fund</servlet-class>
+	</servlet>
+	<servlet>
+		<description>
+		</description>
+		<display-name>LoanServlet</display-name>
+		<servlet-name>LoanServlet</servlet-name>
+		<servlet-class>com.dbt.servlets.LoanServlet</servlet-class>
+	</servlet>
+	<servlet>
+		<description>
+		</description>
+		<display-name>CapitalServlet</display-name>
+		<servlet-name>CapitalServlet</servlet-name>
+		<servlet-class>com.dbt.servlets.CapitalServlet</servlet-class>
+	</servlet>
 
 	<servlet-mapping>
 		<servlet-name>actionServlet</servlet-name>
@@ -24,6 +59,26 @@
 	<servlet-mapping>
 		<servlet-name>AjaxActionServlet</servlet-name>
 		<url-pattern>/ajaxServlet</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>ProductDAO</servlet-name>
+		<url-pattern>/ProductDAO</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>FundDAO</servlet-name>
+		<url-pattern>/FundDAO</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>Fund</servlet-name>
+		<url-pattern>/Fund</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>LoanServlet</servlet-name>
+		<url-pattern>/LoanServlet</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>CapitalServlet</servlet-name>
+		<url-pattern>/CapitalServlet</url-pattern>
 	</servlet-mapping>
 
 
