@@ -21,7 +21,7 @@
 <body class="four-zero-content">
 		<div class="four-zero">
             <h2>Error!</h2>
-            <small>Nah.. it's 404</small>
+            <small>Nah.... it's 404</small>
             
             <footer>
                 <a href="index.jsp"><i class="md md-arrow-back"></i></a>
