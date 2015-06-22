@@ -50,6 +50,8 @@
                                             <input type="text" class="form-control" name="inputRate" id="inputRate" placeholder="Interest Rate (%)">
                                         </div>
                                         <span class="md md-email form-control-feedback"></span>
+                                        <small id="error" class="help-block">
+										</small>
                                     </div>
                                 </div>
                                 
@@ -59,7 +61,9 @@
                                         <div class="fg-line">
                                             <input type="text" class="form-control" name="inputLender" id="inputLender" placeholder="Enter Lender's Name">
                                         </div>
-                                        <span class="md md-email form-control-feedback"></span>
+                                        <span class="md md-person form-control-feedback"></span>
+                                        <small id="error" class="help-block">
+										</small>
                                     </div>
                                 </div>
                             	                                    
@@ -86,15 +90,15 @@
         <%@include file="../js/includejs.jsp" %>
         
         	<jspcore:choose>
-				<jspcore:when test="${loanStatus == 'Success'}">
+				<jspcore:when test="${capitalStatus == 'Success'}">
 					<script>
-						notify("top",'Capital details added successfully.', "right", "fa fa-comments", "success", "", "");
+						notify("top",'Capital details added successfully.', "right", "fa fa-comments", "success", "animated flipInY", "animated flipOutY");
 					</script>
 				</jspcore:when>
 				<jspcore:otherwise>
-					<jspcore:if test="${loanStatus == 'Failure'}">
+					<jspcore:if test="${capitalStatus == 'Failure'}">
 						<script>
-							notify("top",'Unable to add capital details.', "right", "fa fa-comments", "danger", "", "");
+							notify("top",'Unable to add capital details.', "right", "fa fa-comments", "danger", "animated flipInY", "animated flipOutY");
 						</script>
 					</jspcore:if>
 				</jspcore:otherwise>	

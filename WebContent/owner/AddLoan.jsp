@@ -11,8 +11,6 @@
 	
 </head>
 
-
-
 <body>
 	<%@ include file="../header.jsp" %>
         
@@ -27,7 +25,7 @@
                     </div>
                     
                     <div class="card">
-                        <form action="<%=request.getContextPath()%>/LoanServlet" method="post" 
+                        <form action="<%=request.getContextPath()%>/AddLoan.do" method="post" 
                         		name="loanForm" id="loanForm" class="form-horizontal" role="form">
                             
                             <div class="card-header">
@@ -61,7 +59,7 @@
                                     <label for="inputInstallment" class="col-sm-2 control-label">Monthly Installment</label>
                                     <div class="col-sm-8">
                                         <div class="fg-line">
-                                            <input type="text" class="form-control" name="inputInstallement" id="inputInstallement" placeholder="Installement (monthly)">
+                                            <input type="text" class="form-control" name="inputInstallment" id="inputInstallment" placeholder="Installment (monthly)">
                                         </div>
                                         <span class="md md-email form-control-feedback"></span>
                                         <small id="error" class="help-block">
@@ -105,8 +103,8 @@
         
         <!-- Javascript Libraries -->
         <%@include file="../js/includejs.jsp" %>
-        
-         <jspcore:choose>
+
+			<jspcore:choose>
 				<jspcore:when test="${loanStatus == 'Success'}">
 					<script>
 						notify("top",'Loan details added successfully.', "right", "fa fa-comments", "success", "animated flipInY", "animated flipOutY");
