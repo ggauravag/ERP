@@ -10,19 +10,35 @@
 		<form-bean name="passwordForm" type="com.dbt.forms.ForgotPassword"></form-bean>
 		<form-bean name="orderForm" type="com.dbt.forms.OrderForm"></form-bean>
 		<form-bean name="ajaxForm" type="com.dbt.forms.AjaxActionForm"></form-bean>
+		<form-bean name="capitalForm" type="com.dbt.forms.CapitalForm"></form-bean>
+		<form-bean name="loanForm" type="com.dbt.forms.LoanForm"></form-bean>
 	</form-beans>
 
 	<action-mappings>
-	
-		<action path="/ajaxServlet" name="ajaxForm" input="/errors/error.jsp" validate="true" type="com.dbt.action.AjaxAction">
+
+		<action path="/AddCapital" validate="true" input="/owner/AddCapital.jsp"
+			name="capitalForm" type="com.dbt.action.CapitalAction" scope="request">
+			<forward name="success" path="/owner/AddCapital.jsp"></forward>
+			<forward name="failure" path="/owner/AddCapital.jsp"></forward>
 		</action>
-	
+
+		<action path="/AddLoan" validate="true" input="/owner/AddLoan.jsp"
+			name="loanForm" type="com.dbt.action.LoanAction" scope="request">
+			<forward name="success" path="/owner/AddLoan.jsp"></forward>
+			<forward name="failure" path="/owner/AddLoan.jsp"></forward>
+		</action>
+
+
+		<action path="/ajaxServlet" name="ajaxForm" input="/errors/error.jsp"
+			validate="true" type="com.dbt.action.AjaxAction">
+		</action>
+
 		<action path="/PrintOrder" type="com.dbt.action.PrintAction">
 			<forward name="printOrder" path="/operator/printOrder.jsp"></forward>
 			<forward name="error" path="/errors/error-au.jsp"></forward>
 		</action>
 
-		
+
 
 		<action path="/TakeOrder" name="orderForm" validate="true"
 			input="/operator/takeorder.jsp" type="com.dbt.action.OrderAction"
