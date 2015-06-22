@@ -40,6 +40,7 @@ public class OrderDAO
 			String sql = "insert into order_item values ";
 			while(products.hasNext())
 			{
+				products.next();
 				if(products.hasNext())
 					sql += "(?,?,?,?), ";
 				else
@@ -63,13 +64,14 @@ public class OrderDAO
 		    if(j >= 1)
 		    {
 		    	success = true;
-		    	sql = "update order set amount = ? where _id = ?";
+		    	sql = "update `order` set amount = ? where _id = ?";
 		    	ps.close();
 		    	ps = con.prepareStatement(sql);
 		    	ps.setInt(1, amount);
 		    	ps.setInt(2, orderId);
 		    	ps.executeUpdate();
 		    	ps.close();
+		    	order.setAmount(amount);
 		    }
 		    else
 		    	success = false;

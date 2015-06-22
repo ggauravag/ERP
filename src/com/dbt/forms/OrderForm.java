@@ -12,8 +12,24 @@ public class OrderForm extends ActionForm {
 
 	String name, email, house, line1, line2, city, state, mobile, zip, numProd;
 	String[] productNames, productPrices, productQtys;
-	String custID;
+	String custID,type,tin;
 	
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
+	public String getTin() {
+		return tin;
+	}
+
+	public void setTin(String tin) {
+		this.tin = tin;
+	}
+
 	/**
 	 * 
 	 */
@@ -92,11 +108,14 @@ public class OrderForm extends ActionForm {
 		zip = request.getParameter("custPinCode");
 		mobile = request.getParameter("custMobile");
 		custID = request.getParameter("custID");
+		type = request.getParameter("type");
+		tin = request.getParameter("tin");
 
 		productNames = request.getParameterValues("prodName");
 		productPrices = request.getParameterValues("prodPrice");
 		productQtys = request.getParameterValues("prodQty");
 		numProd = request.getParameter("numProd");
+		System.out.println("OrderForm Called : "+name);
 
 		ActionErrors errors = new ActionErrors();
 		if (name == null || name == "")

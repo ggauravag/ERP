@@ -36,7 +36,7 @@
 		</div>
 
 		<div class="card">
-			<form action="../ConfirmOrder.do" method="get" id="custForm"
+			<form action="../TakeOrder.do" method="post" id="custForm"
 				name="custForm" class="form-horizontal" role="form">
 
 				<div class="card-header">
@@ -50,7 +50,6 @@
 							<div class="fg-line">
 								<input type="text" class="form-control" name="custName"
 									id="inputName" placeholder="Enter Full Name">
-					
 							</div>
 
 							<span class="md md-person form-control-feedback"></span> <small
@@ -99,7 +98,8 @@
 								id="error" class="help-block"><html:errors property="emailError"/></small>
 						</div>
 					</div>
-
+					<input type="hidden" name="tin" id="tin" value=""/>
+					<input type="hidden" name="type" id="type" value=""/>
 					<div class="row">
 						<div id="houseDiv" class="form-input">
 							<label for="inputHouse" class="col-sm-2 control-label">Address</label>

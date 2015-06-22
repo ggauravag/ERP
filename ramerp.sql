@@ -32,7 +32,7 @@ CREATE TABLE `address` (
 
 /*Data for the table `address` */
 
-insert  into `address`(`user_id`,`house_no`,`line_1`,`line_2`,`city`,`state`,`zip`) values (3,'AA-13','Netaji Subhash Nagar II','Hari Marg, Tonk Road','Jaipur','Maharashtra','302015'),(4,'50','Santosh Nagar','Opp. Ganga Jamuna Petrol Pump, Near New Aatish Market, Gopalpura Bypass','Jaipur','Rajasthan','302019');
+insert  into `address`(`user_id`,`house_no`,`line_1`,`line_2`,`city`,`state`,`zip`) values (3,'AA-13','Netaji Subhash Nagar II','Hari Marg, Tonk Road','Jaipur','Maharashtra','302015'),(4,'50','Santosh Nagar','Opp. Ganga Jamuna Petrol Pump, Near New Aatish Market, Gopalpura Bypass','Jaipur','Rajasthan','302019'),(9,'50','Santosh Nagar, Opp. Ganga-Jamuna Petrol Pump','Near New Aatish Market','Jaipur','Rajasthan','302019'),(10,'19','Nirman Nagar Extension','Hari Marg, Tonk Road','Jaipur','Rajasthan','302015'),(11,'13','Jay Shankar Colony','New Sanganer Road','Jaipur','Rajasthan','302020');
 
 /*Table structure for table `attendance` */
 
@@ -59,9 +59,11 @@ CREATE TABLE `capital` (
   `interest_rate` int(11) default NULL,
   `lender` varchar(255) default NULL,
   PRIMARY KEY  (`_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
 /*Data for the table `capital` */
+
+insert  into `capital`(`_id`,`amount`,`interest_rate`,`lender`) values (1,NULL,NULL,NULL);
 
 /*Table structure for table `category` */
 
@@ -125,11 +127,11 @@ CREATE TABLE `customer` (
   PRIMARY KEY  (`user_id`),
   KEY `cust_id_fk_idx` (`user_id`),
   CONSTRAINT `cust_id_fk` FOREIGN KEY (`user_id`) REFERENCES `user` (`_id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
 
 /*Data for the table `customer` */
 
-insert  into `customer`(`user_id`,`name`,`mobile`,`email`) values (3,'Anil Jain','9889778122','aniljain@gmail.com'),(4,'Leeladhar Agarwal','9874665565','leeladhar@gmail.com');
+insert  into `customer`(`user_id`,`name`,`mobile`,`email`) values (3,'Anil Jain','9889778122','aniljain@gmail.com'),(4,'Leeladhar Agarwal','9874665565','leeladhar@gmail.com'),(9,'AjayJain','9414871461','gauravag94@live.com'),(10,'Aruna Agarwal','9414868388','aruna.2011@ymail.com');
 
 /*Table structure for table `daily_expenditure` */
 
@@ -232,10 +234,13 @@ CREATE TABLE `merchant` (
   `merchant_name` varchar(255) default NULL,
   `mobile` varchar(10) default NULL,
   `email` varchar(255) default NULL,
+  `tin` varchar(20) default NULL,
   PRIMARY KEY  (`_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8;
 
 /*Data for the table `merchant` */
+
+insert  into `merchant`(`_id`,`merchant_name`,`mobile`,`email`,`tin`) values (11,'S S Trading Co.','9460008990','sstradingcompany@gmail.com','080054646565');
 
 /*Table structure for table `order` */
 
@@ -248,10 +253,12 @@ CREATE TABLE `order` (
   `time` datetime NOT NULL,
   PRIMARY KEY  (`_id`),
   KEY `cust_order_fk_idx` (`cust_id`),
-  CONSTRAINT `cust_order_fk` FOREIGN KEY (`cust_id`) REFERENCES `customer` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  CONSTRAINT `FK_order` FOREIGN KEY (`cust_id`) REFERENCES `user` (`_id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=30 DEFAULT CHARSET=utf8;
 
 /*Data for the table `order` */
+
+insert  into `order`(`_id`,`cust_id`,`amount`,`time`) values (13,3,130000,'2015-06-20 12:19:02'),(14,4,350500,'2015-06-20 12:30:34'),(15,9,120000,'2015-06-20 12:34:10'),(16,4,136500,'2015-06-20 12:45:32'),(17,3,148000,'2015-06-20 12:47:22'),(18,4,14800,'2015-06-20 13:29:50'),(19,10,130000,'2015-06-20 14:05:07'),(20,11,148000,'2015-06-20 20:58:06'),(21,11,148800,'2015-06-21 15:42:57'),(22,11,148000,'2015-06-21 15:50:27'),(23,11,159750,'2015-06-21 16:03:18'),(24,11,57000,'2015-06-21 16:06:02'),(25,11,148000,'2015-06-21 20:00:14'),(26,11,354500,'2015-06-22 00:18:31'),(27,11,240000,'2015-06-22 00:36:16'),(28,11,120000,'2015-06-22 11:14:12'),(29,11,379000,'2015-06-22 21:49:39');
 
 /*Table structure for table `order_item` */
 
@@ -269,6 +276,8 @@ CREATE TABLE `order_item` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 /*Data for the table `order_item` */
+
+insert  into `order_item`(`order_id`,`product_id`,`quantity`,`amount`) values (13,1,400,325),(14,1,400,370),(14,2,300,400),(14,3,300,275),(15,2,300,400),(16,2,325,420),(17,1,400,370),(18,1,40,370),(19,1,400,325),(20,1,400,370),(21,1,400,372),(22,1,400,370),(23,1,450,355),(24,3,200,285),(25,1,400,370),(26,1,400,355),(26,2,325,400),(26,3,300,275),(27,2,300,400),(27,3,300,400),(28,2,300,400),(29,1,400,370),(29,2,300,410),(29,3,400,270);
 
 /*Table structure for table `payment` */
 
@@ -303,7 +312,7 @@ CREATE TABLE `privilege` (
 
 /*Data for the table `privilege` */
 
-insert  into `privilege`(`name`,`path`,`mainmenu`,`_id`,`user_type`,`icon`) values ('Employee',NULL,NULL,1,'OPERATOROWNER','md-group'),('Mark Attendance',NULL,1,2,'OPERATOR',NULL),('Orders',NULL,NULL,3,'OPERATOR','md-shopping-cart'),('Take Order','operator/takeorder.jsp',3,4,'OPERATOR',NULL),('Process Order',NULL,3,5,'OPERATOR',NULL),('View Orders',NULL,3,6,'OPERATOR',NULL),('Generate Bill',NULL,3,7,'OPERATOR',NULL),('Generate Challan',NULL,3,8,'OPERATOR',NULL),('Complaints',NULL,NULL,9,'OPERATOR','md-description'),('View Complaints',NULL,9,10,'OPERATOR',NULL),('Register Complaints',NULL,9,11,'OPERATOR',NULL),('Process Complaints',NULL,9,12,'OPERATOR',NULL),('Inventory',NULL,NULL,13,'OPERATOR','md-add-shopping-cart'),('Add Stock',NULL,13,14,'OPERATOR',NULL),('Manage Returns',NULL,13,15,'OPERATOR',NULL),('Expenditure',NULL,NULL,16,'OPERATOR','md-my-library-add'),('Add Expenditure',NULL,16,17,'OPERATOR',NULL),('Add Employee',NULL,1,18,'OWNER',NULL),('Manage Employees',NULL,1,21,'OWNER',NULL),('Add DBA',NULL,1,22,'OWNER',NULL),('Manage DBA',NULL,1,23,'OWNER',NULL),('Add Operator',NULL,1,24,'OWNER',NULL),('Manage Operator',NULL,1,25,'OWNER',NULL),('Accounts',NULL,NULL,26,'OWNER','md-my-library-books'),('View Balance Sheet',NULL,26,27,'OWNER',NULL),('View Expenditures',NULL,26,28,'OWNER',NULL),('View Transactions',NULL,26,29,'OWNER',NULL),('Privileges',NULL,NULL,30,'OWNER','md-verified-user'),('Manage Privileges',NULL,30,31,'OWNER',NULL),('Funds',NULL,NULL,32,'OWNER','md-local-grocery-sto'),('Add Loan',NULL,32,33,'OWNER',NULL),('Add Capital',NULL,32,34,'OWNER',NULL),('Backups',NULL,NULL,35,'DBA','md-backup'),('Take Backup',NULL,35,36,'DBA',NULL),('Delete Backup',NULL,35,37,'DBA',NULL),('Manage Database',NULL,NULL,38,'DBA','md-query-builder'),('Fire Query',NULL,38,39,'DBA',NULL);
+insert  into `privilege`(`name`,`path`,`mainmenu`,`_id`,`user_type`,`icon`) values ('Employee',NULL,NULL,1,'OPERATOROWNER','md-group'),('Mark Attendance',NULL,1,2,'OPERATOR',NULL),('Orders',NULL,NULL,3,'OPERATOR','md-shopping-cart'),('Take Order','operator/takeorder.jsp',3,4,'OPERATOR',NULL),('Process Order',NULL,3,5,'OPERATOR',NULL),('View Orders',NULL,3,6,'OPERATOR',NULL),('Generate Bill',NULL,3,7,'OPERATOR',NULL),('Generate Challan',NULL,3,8,'OPERATOR',NULL),('Complaints',NULL,NULL,9,'OPERATOR','md-description'),('View Complaints','',9,10,'OPERATOR',NULL),('Register Complaints','operator/complaint/requestComplaint.jsp',9,11,'OPERATOR',NULL),('Process Complaints',NULL,9,12,'OPERATOR',NULL),('Inventory',NULL,NULL,13,'OPERATOR','md-add-shopping-cart'),('Add Stock',NULL,13,14,'OPERATOR',NULL),('Manage Returns',NULL,13,15,'OPERATOR',NULL),('Expenditure',NULL,NULL,16,'OPERATOR','md-my-library-add'),('Add Expenditure',NULL,16,17,'OPERATOR',NULL),('Add Employee',NULL,1,18,'OWNER',NULL),('Manage Employees',NULL,1,21,'OWNER',NULL),('Add DBA',NULL,1,22,'OWNER',NULL),('Manage DBA',NULL,1,23,'OWNER',NULL),('Add Operator',NULL,1,24,'OWNER',NULL),('Manage Operator',NULL,1,25,'OWNER',NULL),('Accounts',NULL,NULL,26,'OWNER','md-my-library-books'),('View Balance Sheet',NULL,26,27,'OWNER',NULL),('View Expenditures',NULL,26,28,'OWNER',NULL),('View Transactions',NULL,26,29,'OWNER',NULL),('Privileges',NULL,NULL,30,'OWNER','md-verified-user'),('Manage Privileges',NULL,30,31,'OWNER',NULL),('Funds',NULL,NULL,32,'OWNER','md-local-grocery-sto'),('Add Loan',NULL,32,33,'OWNER',NULL),('Add Capital',NULL,32,34,'OWNER',NULL),('Backups',NULL,NULL,35,'DBA','md-backup'),('Take Backup',NULL,35,36,'DBA',NULL),('Delete Backup',NULL,35,37,'DBA',NULL),('Manage Database',NULL,NULL,38,'DBA','md-query-builder'),('Fire Query',NULL,38,39,'DBA',NULL);
 
 /*Table structure for table `product` */
 
@@ -402,13 +411,14 @@ CREATE TABLE `user` (
   `last_name` varchar(255) default NULL,
   `email` varchar(255) NOT NULL,
   `mobile` varchar(10) NOT NULL,
+  `type` varchar(10) default NULL,
   PRIMARY KEY  (`_id`),
   UNIQUE KEY `email_UNIQUE` (`email`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8;
 
 /*Data for the table `user` */
 
-insert  into `user`(`_id`,`first_name`,`last_name`,`email`,`mobile`) values (1,'Gaurav','Agarwal','ggauravag@gmail.com','9982166368'),(2,'Gaurav','Agarwal','gauravag94@gmail.com','9414871461'),(3,'Anil','Jain','anilji@gmail.com','9999999999'),(4,'Leeladhar','Agarwal','leeladhar@gmail.com','9415789332'),(5,'Chaggan','Lal','chagganlal@gmail.com','9876552355'),(6,'Anuj','Jain','anujjain@gmail.com','7655555598'),(7,'Manoj','Verma','manojverma@gmail.com','9876652331');
+insert  into `user`(`_id`,`first_name`,`last_name`,`email`,`mobile`,`type`) values (1,'Gaurav','Agarwal','ggauravag@gmail.com','9982166368','OWNER'),(2,'Gaurav','Agarwal','gauravag94@gmail.com','9414871461','OPERATOR'),(3,'Anil','Jain','anilji@gmail.com','9999999999','CUSTOMER'),(4,'Leeladhar','Agarwal','leeladhar@gmail.com','9415789332','CUSTOMER'),(5,'Chaggan','Lal','chagganlal@gmail.com','9876552355','CUSTOMER'),(6,'Anuj','Jain','anujjain@gmail.com','7655555598','CUSTOMER'),(7,'Manoj','Verma','manojverma@gmail.com','9876652331','CUSTOMER'),(9,'Ajay','Jain','gauravag94@live.com','9414871461','CUSTOMER'),(10,'Aruna','Agarwal','aruna.2011@ymail.com','9414868388','CUSTOMER'),(11,'S','S Trading Co.','sstradingcompany@gmail.com','9460008990','MERCHANT');
 
 /*Table structure for table `user_login` */
 
@@ -431,6 +441,51 @@ CREATE TABLE `user_login` (
 /*Data for the table `user_login` */
 
 insert  into `user_login`(`user_id`,`email`,`password`,`log_ip`,`status`,`type`,`st_time`,`end_time`) values (2,'gauravag94@gmail.com','5f4dcc3b5aa765d61d8327deb882cf99','0:0:0:0:0:0:0:1','Y','OPERATOR','00:01:00','23:59:00'),(1,'ggauravag@gmail.com','5f4dcc3b5aa765d61d8327deb882cf99','0:0:0:0:0:0:0:1','Y','OWNER','12:00:00','15:30:00');
+
+/* Procedure structure for procedure `CreateCustomer` */
+
+/*!50003 DROP PROCEDURE IF EXISTS  `CreateCustomer` */;
+
+DELIMITER $$
+
+/*!50003 CREATE DEFINER=`root`@`localhost` PROCEDURE `CreateCustomer`(IN fname varchar(255),in lname varchar(255),IN mobile varchar(255),IN email varchar(255),
+        in house varchar(255),in line1 varchar(255),in line2 varchar(255),in city varchar(255),in state varchar(255),in zip varchar(255),out cust_id INT)
+BEGIN
+    insert into user(first_name,last_name,email,mobile,`type`) values(fname,lname,email,mobile,'CUSTOMER');
+    select LAST_INSERT_ID() into cust_id;
+    insert into address values(cust_id,house,line1,line2,city,state,zip);
+    insert into customer values(cust_id,CONCAT(fname,' ',lname),mobile,email);
+    END */$$
+DELIMITER ;
+
+/* Procedure structure for procedure `CreateMerchant` */
+
+/*!50003 DROP PROCEDURE IF EXISTS  `CreateMerchant` */;
+
+DELIMITER $$
+
+/*!50003 CREATE DEFINER=`root`@`localhost` PROCEDURE `CreateMerchant`(IN fname varchar(255),in lname varchar(255),IN mobile varchar(255),IN email varchar(255),
+        in house varchar(255),in line1 varchar(255),in line2 varchar(255),in city varchar(255),in state varchar(255),in zip varchar(255),out cust_id INT)
+BEGIN
+    insert into user(first_name,last_name,email,mobile,`type`) values(fname,lname,email,mobile,'MERCHANT');
+    select LAST_INSERT_ID() into cust_id;
+    insert into merchant values(cust_id,concat(fname,lname),mobile,email,'');
+    insert into address values(cust_id,house,line1,line2,city,state,zip);
+    END */$$
+DELIMITER ;
+
+/* Procedure structure for procedure `CreateOrder` */
+
+/*!50003 DROP PROCEDURE IF EXISTS  `CreateOrder` */;
+
+DELIMITER $$
+
+/*!50003 CREATE DEFINER=`root`@`localhost` PROCEDURE `CreateOrder`(in cust int(10),out order_id int(10))
+BEGIN
+       insert into `order`(cust_id,amount,time) values(cust,0,now());
+       select last_insert_id() into order_id;
+    END */$$
+DELIMITER ;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;

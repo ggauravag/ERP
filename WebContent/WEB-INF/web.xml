@@ -12,20 +12,12 @@
 		</init-param>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
-	<servlet>
-  		<servlet-name>AjaxActionServlet</servlet-name>
-		<servlet-class>com.dbt.servlets.AjaxActionServlet</servlet-class>
-	</servlet>
+	
 
 	<servlet-mapping>
 		<servlet-name>actionServlet</servlet-name>
 		<url-pattern>*.do</url-pattern>
 	</servlet-mapping>
-	<servlet-mapping>
-		<servlet-name>AjaxActionServlet</servlet-name>
-		<url-pattern>/ajaxServlet</url-pattern>
-	</servlet-mapping>
-
 
 	<filter>
 		<filter-name>LoginFilter</filter-name>

@@ -29,9 +29,15 @@ public class CustomerDAO
 			con = DBConnection.getConnection();
 			String sql = "Call CreateMerchant(?,?,?,?,?,?,?,?,?,?,?)";
 			stmt = con.prepareCall(sql);
-			String names = customer.getName();
-			stmt.setString(1, names.split(" ")[0]);
-			stmt.setString(2, names.split(" ")[1]);
+			String name = customer.getName();
+			String[] names = name.split(" ");
+			stmt.setString(1, names[0]);
+			StringBuilder restName = new StringBuilder("");
+			for(int i = 1; i < names.length; i++)
+				restName.append(names[i]+" ");
+			
+			
+			stmt.setString(2, restName.toString());
 			stmt.setString(3, customer.getMobile());
 			stmt.setString(4, customer.getEmail());
 			Address add = customer.getAddress();
@@ -101,14 +107,14 @@ public class CustomerDAO
 		{
 			System.out.println("CustomerDAO : Name - "+name);
 			con = DBConnection.getConnection();
-			String query = "select * from customer JOIN address on customer.user_id = address.user_id where name like '%"+name+"%' UNION select * from merchant JOIN address on merchant._id = address.user_id where merchant_name like '%"+name+"%' order by name";
+			String query = "select user_id,(select tin from merchant where _id = user_id) as tin,concat(first_name,' ',last_name) as name,mobile,email,house_no,line_1,line_2,city,state,zip,type from user JOIN address on user._id = address.user_id where lower(concat(first_name,' ',last_name)) like '%"+name.toLowerCase()+"%' ";
 		    //System.out.println("CustomerDAO : Query - "+query);
 			stmt = con.prepareStatement(query);
 		    set = stmt.executeQuery();
 		    while(set.next())
 		    {
 		    	Address address = new Address(set.getString("house_no"), set.getString("line_1"), set.getString("line_2"), set.getString("city"), set.getString("state"), set.getString("zip"));
-		        Customer customer = new Customer(set.getInt("user_id"), set.getString("name"), set.getString("mobile"), set.getString("email"), address);
+		        Customer customer = new Customer(set.getInt("user_id"), set.getString("name"), set.getString("mobile"), set.getString("email"), address, set.getString("type"),set.getString("tin"));
 		        customers.add(customer);
 		    }
 		}

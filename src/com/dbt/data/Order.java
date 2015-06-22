@@ -12,6 +12,68 @@ public class Order
 	private Date datetime;
 	private int amount;
 	
+	
+	int cust_id;
+	
+	String date;
+	String time;
+	
+	/**
+	 * @param id
+	 * @param cust_id
+	 * @param amount
+	 * @param time
+	 */
+	public Order(int id, int cust_id, int amount, String time, String date) {
+		super();
+		this.id = id;
+		this.cust_id = cust_id;
+		this.amount = amount;
+		this.time = time;
+		this.date = date;
+	}
+	/**
+	 * @param id
+	 * @param amount
+	 * @param time
+	 */
+	public Order(int id, int amount, String date, String time, Customer customer) {
+		super();
+		this.id = id;
+		this.amount = amount;
+		this.date = date;
+		this.time = time;
+		this.customer = customer;
+	}
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
+	}
+	public String getDate() {
+		return date;
+	}
+	public void setDate(String date) {
+		this.date = date;
+	}
+	
+	public int getCust_id() {
+		return cust_id;
+	}
+	public void setCust_id(int cust_id) {
+		this.cust_id = cust_id;
+	}
+	
+	
+	public String getTime() {
+		return time;
+	}
+	public void setTime(String time) {
+		this.time = time;
+	}
+
+	
 	public Order(Customer customer, List<Product> products, int id,
 			Date datetime, int amount) {
 		super();
@@ -45,12 +107,7 @@ public class Order
 	public void setProducts(List<Product> products) {
 		this.products = products;
 	}
-	public int getId() {
-		return id;
-	}
-	public void setId(int id) {
-		this.id = id;
-	}
+
 	public Date getDatetime() {
 		return datetime;
 	}

@@ -26,7 +26,7 @@
 		</div>
 
 		<div class="card">
-			<form class="form-horizontal" role="form">
+			<form class="form-horizontal" action="./ConfirmOrder.do" method="post" role="form">
 
 				<div class="card-header">
 					<h2>Customer Details</h2>

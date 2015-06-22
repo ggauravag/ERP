@@ -39,20 +39,13 @@ function showErrorValidation(div, message) {
 	}
 }
 
+$('#submitBTN').click(function() {
+	$('#buttonValue').val("submit");
+});
 
-$('submitBTN').click(
-		function()
-		{
-			$('buttonValue').val("submit");
-		}
-);
-
-$('resetBTN').click(
-		function()
-		{
-			$('buttonValue').val("reset");
-		}
-);
+$('#resetBTN').click(function() {
+	$('#buttonValue').val("reset");
+});
 
 function clearError(div) {
 	$(div).attr("class", $(div).attr("class").replace(" has-error", ""));
@@ -129,7 +122,7 @@ $('#custForm').submit(function() {
 
 	var div = "#categoryDiv";
 	if (num == "0") {
-		showErrorValidation(div, "Select a product first.")
+		showErrorValidation(div, "Select a product first.");
 		success = false;
 	} else
 		clearError(div);
@@ -138,6 +131,328 @@ $('#custForm').submit(function() {
 }
 
 );
+
+
+function showComment(order_id)
+{
+	var q = document.getElementById("fillComment");
+	q.innerHTML="";
+
+	var head = document.createElement('div');
+	head.setAttribute("class","card-header");
+	
+	var hd1 = document.createElement('h2');
+	$(hd1).text("Fill Details");
+	var hd2 = document.createElement('small');
+	$(hd2).text("Please describe the problem in the text below:-");
+	
+	
+	head.appendChild(hd1);
+	head.appendChild(hd2);
+	q.appendChild(head);
+	
+	var e1 = document.createElement('div');
+	e1.setAttribute("class", "form-group");
+	
+	var ee1 = document.createElement('label');
+	ee1.setAttribute("class", "col-sm-offset-2 col-sm-3 control-label");
+	$(ee1).text("Order Id");
+	
+	var indiv = document.createElement('div');
+	indiv.setAttribute("class", "col-sm-5");
+	var ind = document.createElement('div');
+	ind.setAttribute("class", "fg-line");
+	var ee2 = document.createElement('input');
+	ee2.setAttribute("type", "text");
+	ee2.setAttribute("disabled", "true");
+	ee2.setAttribute("name", "orderid");
+	ee2.setAttribute("class","form-control");
+    ee2.setAttribute("value", order_id);
+    ind.appendChild(ee2);
+    indiv.appendChild(ind);
+    
+    e1.appendChild(ee1);
+    e1.appendChild(indiv);
+     q.appendChild(e1);
+     
+     
+    var e2 = document.createElement('div');
+ 	e2.setAttribute("class", "form-group");
+ 	
+ 	var e3 = document.createElement('label');
+ 	e3.setAttribute("class", "col-sm-offset-2 col-sm-3 control-label");
+ 	$(e3).text("Complaint Description");
+ 	
+ 	var indiv1 = document.createElement('div');
+ 	indiv1.setAttribute("class", "col-sm-5");
+ 	var ind1 = document.createElement('div');
+	ind1.setAttribute("class", "fg-line");
+ 	var ee3 = document.createElement('textarea');
+	ee3.setAttribute("name", "comment");
+	ee3.setAttribute("class","form-control");
+	ee3.setAttribute("placeholder", "Enter the detailed description of the Problem occured");
+	ee3.setAttribute("autocomplete","off");
+	ee3.setAttribute("rows","4");
+    ind1.appendChild(ee3); 
+    indiv1.appendChild(ind1); 
+    
+    
+    e2.appendChild(e3);
+    e2.appendChild(indiv1);
+    q.appendChild(e2);
+     
+    
+    var e4 = document.createElement('div');
+ 	e4.setAttribute("class", "form-group");
+ 	var ee4 = document.createElement('div');
+ 	ee4.setAttribute("class", "col-sm-offset-5");
+ 	var e5 = document.createElement('button');
+ 	e5.setAttribute("type", "button");
+    e5.setAttribute("class", "btn btn-primary btn-lg col-sm-3");
+    e5.setAttribute("id", "submitRequest");
+    $(e5).text("Complain >>>");
+    ee4.appendChild(e5);
+    e4.appendChild(ee4);
+    q.appendChild(e4);
+    
+}
+
+
+$("#SearchOrderbtn").click(function(e)
+		{
+	var s = document.getElementById("fillOrderDetails");
+	var p = document.getElementById("fillComment");
+	
+	var ipnm=$("#inputName").val();
+	var ipmob=$("#inputMobile").val();
+	var ipoid=$("#inputOrderId").val();
+	if((ipnm=="" || ipnm == null) && (ipmob=="" || ipmob == null) && (ipoid=="" || ipoid == null))
+	{
+		alert("No data Found. Please Fill At Least One Category");
+	    return;
+	}
+	
+	s.innerHTML="";
+	p.innerHTML="";
+	$.ajax({
+		
+		    url : "../../ajaxServlet.do",
+		    
+		    data : 
+		    {
+			name : ipnm,
+			order : ipoid,
+			mobile : ipmob,
+			action : "getOrderByNameIDMobile"
+	     	},
+	     	error : function(data) {
+				alert("Error : " + data);
+			},
+			success : function(data) {
+				
+				var heading = document.createElement('div');
+				heading.setAttribute("class","card-header");
+				
+				var hd1 = document.createElement('h2');
+				$(hd1).text("Order Details");
+				var hd2 = document.createElement('small');
+				$(hd2).text("Please select the order for complain");
+				
+				
+				heading.appendChild(hd1);
+				heading.appendChild(hd2);
+				s.appendChild(heading);
+		 
+				
+				var dtbl = document.createElement('div');
+				dtbl.setAttribute("class","table-responsive");
+			
+			    var table = document.createElement('table');
+			    table.setAttribute("class", "table table-condensed");
+			
+			    var tbhead = document.createElement('thead');
+			    var tbhdrow = document.createElement('tr');
+			    
+			    
+			    var tbhdtd1 = document.createElement('td');
+			    $(tbhdtd1).text("Select");
+			    tbhdrow.appendChild(tbhdtd1);
+			    
+			    var tbhdtd2 = document.createElement('td');
+			    $(tbhdtd2).text("Order ID");
+			    tbhdrow.appendChild(tbhdtd2);
+			    
+			    var tbhdtd3 = document.createElement('td');
+			    $(tbhdtd3).text("Name");
+			    tbhdrow.appendChild(tbhdtd3);
+			    
+			    var tbhdtd4 = document.createElement('td');
+			    $(tbhdtd4).text("Email");
+			    tbhdrow.appendChild(tbhdtd4);
+			    
+			    
+			    var tbhdtd5 = document.createElement('td');
+			    $(tbhdtd5).text("Mobile");
+			    tbhdrow.appendChild(tbhdtd5);
+			    
+			    var tbhdtd6 = document.createElement('td');
+			    $(tbhdtd6).text("Amount");
+			    tbhdrow.appendChild(tbhdtd6);
+			    
+			    var tbhdtd7 = document.createElement('td');
+			    $(tbhdtd7).text("Date");
+			    tbhdrow.appendChild(tbhdtd7);
+			    
+			    var tbhdtd8 = document.createElement('td');
+			    $(tbhdtd8).text("Time");
+			    tbhdrow.appendChild(tbhdtd8);
+			    
+			    
+			    var tbhdtd9 = document.createElement('td');
+			    $(tbhdtd9).text("View Details");
+			    tbhdrow.appendChild(tbhdtd9);
+			    
+			    tbhead.appendChild(tbhdrow);
+			    table.appendChild(tbhead);  //Header inserted 
+			    
+			    
+			    
+			    var orderdetails = data.orderdetails;
+			    
+			    var tbbody = document.createElement('tbody');
+			    
+			    for(var i=0;i<data.orderdetails.length;i++)
+				{
+			    
+			    var tbbdrw = document.createElement('tr');
+			    	    
+			    
+					    var input = document.createElement('input');
+					    input.setAttribute("type", "radio");
+					    input.setAttribute("name", "orderid");					   
+					    input.setAttribute("onchange", "showComment(this.value)");
+					    input.setAttribute("value", orderdetails[i].oid);			    
+					    var tbbdtd = document.createElement('td');
+					    tbbdtd.appendChild(input);
+					    tbbdrw.appendChild(tbbdtd);
+			    
+			    	    var tbbdtd1 = document.createElement('td');
+					    $(tbbdtd1).text(orderdetails[i].oid);
+					    tbbdrw.appendChild(tbbdtd1);
+					    
+					    var tbbdtd2 = document.createElement('td');
+					    $(tbbdtd2).text(orderdetails[i].Customer.name);
+					    tbbdrw.appendChild(tbbdtd2);
+					    
+					    var tbbdtd3 = document.createElement('td');
+					    $(tbbdtd3).text(orderdetails[i].Customer.email);
+					    tbbdrw.appendChild(tbbdtd3);
+					    
+					    
+					    var tbbdtd4 = document.createElement('td');
+					    $(tbbdtd4).text(orderdetails[i].Customer.mobile);
+					    tbbdrw.appendChild(tbbdtd4);
+					    
+					    var tbbdtd5 = document.createElement('td');
+					    $(tbbdtd5).text(orderdetails[i].amount);
+					    tbbdrw.appendChild(tbbdtd5);
+					    
+					    var tbbdtd6 = document.createElement('td');
+					    $(tbbdtd6).text(orderdetails[i].date);
+					    tbbdrw.appendChild(tbbdtd6);
+					    
+					    var tbbdtd7 = document.createElement('td');
+					    $(tbbdtd7).text(orderdetails[i].time);
+					    tbbdrw.appendChild(tbbdtd7);
+					    
+					    var tbbdtd8 = document.createElement('td');
+					    var vdiv = document.createElement('div');
+					    vdiv.setAttribute("class", "row dialog col-sm-2");
+					    var vdetail = document.createElement('button');
+					    vdetail.setAttribute("id", "sa-basic");
+					    vdetail.setAttribute("class", "btn btn-info");
+					    vdetail.setAttribute("type", "button");
+					    vdetail.setAttribute("value", orderdetails[i].oid);
+					    vdetail.setAttribute("onclick", "window.open('../../PrintOrder.do?print=view&oid="+orderdetails[i].oid+"',1,'width=300,height=300','resizable=yes','status=yes')");
+					    $(vdetail).text("Click here");
+					    vdiv.appendChild(vdetail);
+					    tbbdtd8.appendChild(vdiv);
+					    tbbdrw.appendChild(tbbdtd8);
+					    
+					    
+					tbbody.appendChild(tbbdrw);
+				}
+			     
+			    table.appendChild(tbbody);
+			    dtbl.appendChild(table);
+			    s.appendChild(dtbl);
+			}
+	});
+		}
+
+);
+
+function getQueryStringValue (key) {  
+	  return unescape(window.location.search.replace(new RegExp("^(?:.*[&\\?]" + escape(key).replace(/[\.\+\*]/g, "\\$&") + "(?:\\=([^&]*))?)?.*$", "i"), "$1"));  
+	}
+
+
+$("#sendOrderDetails").click(
+		function() {
+			$.ajax({
+				url : "../ajaxServlet.do",
+				data : {
+					mobile : $("#sendMobiles").val(),
+					email : $("#sendEmails").val(),
+					action : "sendOrderDetails"
+				},
+				method: "post",
+				error : function(data) {
+					alert("Error : " + data);
+				},
+				success : function(data) {
+					// alert("Success : " + data.customers[0].name);
+
+					var div = document.getElementById('custList');
+					div.innerHTML = "";
+					// customers = new Array();
+					// alert("Number of customers : "+data.customers.length);
+					customers = data.customers;
+
+					for (var j = 0; j < data.customers.length; j++) {
+
+						var label = document.createElement('label');
+						label
+								.setAttribute("class",
+										"radio radio-inline m-r-20");
+
+						var input = document.createElement('input');
+						input.setAttribute("type", "radio");
+						input.setAttribute("name", "custID");
+						input.setAttribute("value", customers[j].id);
+
+						var i = document.createElement('i');
+						i.setAttribute("class", "input-helper");
+
+						var p = document.createElement('p');
+						p.setAttribute('style', 'margin-top: -7px');
+
+						label.appendChild(input);
+						label.appendChild(i);
+						var radioText = customers[j].name.replace('"', '');
+						var text = document.createTextNode(radioText + " - "
+								+ customers[j].mobile);
+						p.appendChild(text);
+						label.appendChild(p);
+
+						div.appendChild(label);
+					}
+
+					$('#modalCustomer').modal('show');
+
+				}
+			});
+		});
 
 $('#selectCustomerBtn').click(function() {
 	var cid = document.forms["custForm"].custID.value;
@@ -154,7 +469,8 @@ $('#selectCustomerBtn').click(function() {
 			$('#inputAddress1').val(address.line1);
 			$('#inputCity').val(address.city);
 			$('#inputState').val(address.state);
-
+			$('#tin').val(customers[i].tin);
+			$('#type').val(customers[i].type);
 			$('#inputMobile').val(customers[i].mobile);
 			$('#inputPin').val(address.zip);
 
@@ -165,63 +481,67 @@ $('#selectCustomerBtn').click(function() {
 	// console.log(cid);
 });
 
-$("#searchCust").click(function(e) {
-	console.log($("#inputName").val());
-	var n = $("#inputName").val();
+$("#searchCust").click(
+		function(e) {
+			console.log($("#inputName").val());
+			var n = $("#inputName").val();
 
-	if (n == "" || n == null) {
-		return;
-	}
-
-	$.ajax({
-		url : "../ajaxServlet",
-		data : {
-			name : n,
-			action : "getCustomerDetails"
-		},
-		error : function(data) {
-			alert("Error : " + data);
-		},
-		success : function(data) {
-			// alert("Success : " + data.customers[0].name);
-
-			var div = document.getElementById('custList');
-			div.innerHTML = "";
-			// customers = new Array();
-			// alert("Number of customers : "+data.customers.length);
-			customers = data.customers;
-
-			for (var j = 0; j < data.customers.length; j++) {
-
-				var label = document.createElement('label');
-				label.setAttribute("class", "radio radio-inline m-r-20");
-
-				var input = document.createElement('input');
-				input.setAttribute("type", "radio");
-				input.setAttribute("name", "custID");
-				input.setAttribute("value", customers[j].id);
-
-				var i = document.createElement('i');
-				i.setAttribute("class", "input-helper");
-
-				var p = document.createElement('p');
-				p.setAttribute('style', 'margin-top: -7px');
-
-				label.appendChild(input);
-				label.appendChild(i);
-				var radioText = customers[j].name.replace('"', '');
-				var text = document.createTextNode(radioText);
-				p.appendChild(text);
-				label.appendChild(p);
-
-				div.appendChild(label);
+			if (n == "" || n == null) {
+				return;
 			}
 
-			$('#modalCustomer').modal('show');
+			$.ajax({
+				url : "../ajaxServlet.do",
+				data : {
+					name : n,
+					action : "getCustomerDetails"
+				},
+				error : function(data) {
+					alert("Error : " + data);
+				},
+				success : function(data) {
+					// alert("Success : " + data.customers[0].name);
 
+					var div = document.getElementById('custList');
+					div.innerHTML = "";
+					// customers = new Array();
+					// alert("Number of customers : "+data.customers.length);
+					customers = data.customers;
+
+					for (var j = 0; j < data.customers.length; j++) {
+
+						var label = document.createElement('label');
+						label
+								.setAttribute("class",
+										"radio radio-inline m-r-20");
+
+						var input = document.createElement('input');
+						input.setAttribute("type", "radio");
+						input.setAttribute("name", "custID");
+						input.setAttribute("value", customers[j].id);
+
+						var i = document.createElement('i');
+						i.setAttribute("class", "input-helper");
+
+						var p = document.createElement('p');
+						p.setAttribute('style', 'margin-top: -7px');
+
+						label.appendChild(input);
+						label.appendChild(i);
+						var radioText = customers[j].name.replace('"', '');
+						var text = document.createTextNode(radioText + " - "
+								+ customers[j].mobile);
+						p.appendChild(text);
+						label.appendChild(p);
+
+						div.appendChild(label);
+					}
+
+					$('#modalCustomer').modal('show');
+
+				}
+			});
 		}
-	});
-}
 
 );
 
@@ -288,11 +608,10 @@ $('#selectCategory').change(
 				$("#productDiv").html("");
 				$("#productDiv").append(select);
 				return;
-			}
-			else
+			} else
 				clearError("#categoryDiv");
 
-			$.get("../ajaxServlet", {
+			$.get("../ajaxServlet.do", {
 				action : 'getProductByCategory',
 				catgId : $(this).val()
 			}, function(response) {
@@ -352,45 +671,39 @@ function addProduct() {
 	if (name == "") {
 		showErrorValidation("#productDiv", "No Product Selected !");
 		success = false;
-	}
-	else
+	} else
 		clearError("#productDiv");
 	if (qty == "") {
-		showErrorValidation("#quantityDiv","No Quantity entered !");
+		showErrorValidation("#quantityDiv", "No Quantity entered !");
 		success = false;
-	}
-	else 
+	} else
 		clearError("#quantityDiv");
 	if (price == "" || price == null) {
-		showErrorValidation("#priceDiv","No Price entered!");
+		showErrorValidation("#priceDiv", "No Price entered!");
 		success = false;
-	}
-	else
+	} else
 		clearError("#priceDiv");
 	if (avail == "") {
-		showErrorValidation("#productDiv","No Product available !");
+		showErrorValidation("#productDiv", "No Product available !");
 		success = false;
-	}
-	else
+	} else
 		clearError("#productDiv");
-	
 
-	if(!success)
+	if (!success)
 		return;
-	
+
 	qty = parseInt(qty);
 	price = parseInt(price);
 	avail = parseFloat(avail);
-	
-	if(avail < qty)
-	{
-		showErrorValidation("#productDiv","Product quantity is greater than its availablity !");
+
+	if (avail < qty) {
+		showErrorValidation("#productDiv",
+				"Product quantity is greater than its availablity !");
 		success = false;
-	}
-	else
+	} else
 		clearError("#productDiv");
-	
-	if(!success)
+
+	if (!success)
 		return;
 
 	var num = $("#numProd").val();

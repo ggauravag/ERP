@@ -11,6 +11,7 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.dbt.data.User;
@@ -30,6 +31,7 @@ public class LoginFilter implements Filter {
 
 		HttpServletRequest httpRequest = (HttpServletRequest) request;
 		HttpSession session = httpRequest.getSession(false);
+		HttpServletResponse httpresponse = (HttpServletResponse)response;
        
 		if (session == null || session.getAttribute("user") == null) {
 			System.out.println("LoginFilter : Session is null or Unauthentic");
@@ -67,6 +69,7 @@ public class LoginFilter implements Filter {
 			User u = (User) session.getAttribute("user");
 			System.out.println("LoginFilter : User of type & name : " + u.getFirstName()
 					+ "," + u.getType());
+			httpresponse.sendRedirect("dashboard.jsp");
 		}
 
 		System.out.println("LoginFilter : Filter Called, resource : "

@@ -20,13 +20,16 @@ import com.dbt.data.Customer;
 import com.dbt.data.Order;
 import com.dbt.data.Product;
 import com.dbt.forms.OrderForm;
+import com.sun.scenario.effect.impl.prism.PrDrawable;
 
 public class OrderAction extends Action {
 
 	private boolean isMerchant(String name) {
+
+		name = name.toLowerCase();
 		boolean isMerchant = false;
 		String[] names = { "enterprise", "trading", "co.", "company",
-				"furniture", "market", "store", "service", "market" };
+				"furniture", "market", "store", "service", "sons" };
 
 		for (String each : names) {
 			if (name.contains(each)) {
@@ -48,6 +51,7 @@ public class OrderAction extends Action {
 		OrderForm orderform = (OrderForm) form;
 
 		String method = request.getParameter("confirm");
+
 		if (method == null) {
 			String name = orderform.getName();
 			String email = orderform.getEmail();
@@ -58,13 +62,15 @@ public class OrderAction extends Action {
 			String city = orderform.getCity();
 			String state = orderform.getState();
 			String zip = orderform.getZip();
+			String type = orderform.getType();
+			String tin = orderform.getTin();
 			int cid = -1;
 			if (orderform.getCustID() != null)
 				cid = Integer.parseInt(orderform.getCustID());
 
 			Address address = new Address(house, line1, line2, city, state, zip);
 
-			Customer cust = new Customer(cid, name, mobile, email, address);
+			Customer cust = new Customer(cid, name, mobile, email, address, type, tin);
 
 			int numProducts = Integer.parseInt(orderform.getNumProd());
 
@@ -85,6 +91,10 @@ public class OrderAction extends Action {
 
 			Order order = new Order(cust, products, 0, new Date(), amount);
 			request.getSession().setAttribute("order", order);
+			if(isMerchant(name))
+				order.getCustomer().setType("MERCHANT");
+			else
+				order.getCustomer().setType("CUSTOMER");
 
 			result = "confirm";
 		} else if ("submit".equals(method)) {
@@ -92,40 +102,40 @@ public class OrderAction extends Action {
 			Order order = (Order) request.getSession().getAttribute("order");
 			String name = order.getCustomer().getName();
 			int cid = order.getCustomer().getId();
-			
+			System.out.println("OrderAction - Submit Clicked, CID is : " + cid);
 			if (cid == -1) {
 				if (isMerchant(name)) {
-					cid = CustomerDAO.insertCustomer(order.getCustomer());
+					cid = CustomerDAO.insertMerchant(order.getCustomer());
 
 					if (cid != 0) {
 						result = "success";
-						order.getCustomer().setType("MERCHANT");
+						
 					} else
 						result = "failure";
 				} else {
 					cid = CustomerDAO.insertCustomer(order.getCustomer());
 					if (cid != 0) {
 						result = "success";
-						order.getCustomer().setType("CUSTOMER");
 					} else
 						result = "failure";
 				}
+			} else {
+				result = "success";
+				
+				
 			}
-			
-			
-			if("success".equals(result))
-			{
+
+			System.out.println("OrderAction - Submit Clicked, result is : "
+					+ result);
+			if ("success".equals(result)) {
 				order.getCustomer().setId(cid);
 				boolean isOrderTaken = OrderDAO.takeOrder(order);
-				if(!isOrderTaken)
+				if (!isOrderTaken)
 					result = "failure";
-				else
-				{
-					HttpSession session = request.getSession(false);
-					session.removeAttribute("order");
+				else {
+					
 					request.setAttribute("order", order);
 				}
-				
 			}
 
 		} else if ("reset".equals(method)) {

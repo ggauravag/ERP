@@ -9,15 +9,20 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.validator.EmailValidator;
 import org.apache.log4j.Logger;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
+import com.dbt.dao.ComplaintDAO;
 import com.dbt.dao.CustomerDAO;
 import com.dbt.dao.OrderDAO;
 import com.dbt.data.Address;
 import com.dbt.data.Customer;
+import com.dbt.data.Order;
 import com.dbt.data.Product;
+import com.dbt.support.DBTSms;
+import com.dbt.support.Email;
 
 /**
  * Servlet implementation class AjaxActionServlet
@@ -29,9 +34,49 @@ public class AjaxActionServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	Logger log = Logger.getLogger(AjaxActionServlet.class);
 	
-	public void getCustomerDetails(HttpServletRequest request,
-			HttpServletResponse response) throws IOException
+	public void getOrderByNameIDMobile(HttpServletRequest request,HttpServletResponse response) throws IOException
 	{
+		String name = request.getParameter("name");
+		String oid = request.getParameter("order");
+		String mob = request.getParameter("mobile");
+		String responseText = "";
+		//System.out.println("AjaxActionServlet : "+name+oid+mob);
+		
+		List<Order> order = ComplaintDAO.getOrderDetails(name,oid,mob);
+		Iterator<Order> iter = order.iterator();
+		JSONObject list = new JSONObject();
+		JSONArray custArray = new JSONArray();
+		while (iter.hasNext()) 
+		{
+		 Order o = iter.next();
+		 
+			 JSONObject ord = new JSONObject();
+			 
+			 ord.put("oid", o.getId());
+			 ord.put("amount", o.getAmount());
+			 ord.put("date", o.getDate());
+			 ord.put("time", o.getTime());
+		    
+			        JSONObject custom = new JSONObject();
+			        Customer cus = o.getCustomer();
+			        custom.put("name", cus.getName());
+			        custom.put("mobile", cus.getMobile());
+			        custom.put("email", cus.getEmail());
+		
+		  ord.put("Customer",custom);
+		 custArray.add(ord);
+		}
+		list.put("orderdetails", custArray);
+		responseText = list.toJSONString();
+		//System.out.println("AjaxActionServletFromRequestComplaint : Response JSON is : "+ responseText);
+		response.setContentType("text/json");
+		response.getWriter().write(responseText);
+	}
+	
+	
+
+	public void getCustomerDetails(HttpServletRequest request,
+			HttpServletResponse response) throws IOException {
 		String name = request.getParameter("name");
 		String responseText = "";
 		List<Customer> customers = CustomerDAO.getCustomer(name);
@@ -45,7 +90,8 @@ public class AjaxActionServlet extends HttpServlet {
 			product.put("name", p.getName());
 			product.put("email", p.getEmail());
 			product.put("mobile", p.getMobile());
-			
+			product.put("tin", p.getTin());
+			product.put("type", p.getType());
 			JSONObject address = new JSONObject();
 			Address add = p.getAddress();
 			address.put("house_no", add.getHouseNo());
@@ -54,9 +100,9 @@ public class AjaxActionServlet extends HttpServlet {
 			address.put("city", add.getCity());
 			address.put("state", add.getState());
 			address.put("zip", add.getZip());
-			
+
 			product.put("address", address);
-		
+
 			productsArray.add(product);
 		}
 		list.put("customers", productsArray);
@@ -65,9 +111,36 @@ public class AjaxActionServlet extends HttpServlet {
 				+ responseText);
 		response.setContentType("text/json");
 		response.getWriter().write(responseText);
-		
+
 	}
-	
+
+	private void sendOrderDetails(HttpServletRequest request,
+			HttpServletResponse response) throws IOException {
+		
+		String mobileReg = "^[7-9]{1}[0-9]{9}$";
+		
+		String emails = request.getParameter("email");
+		String mobiles = request.getParameter("mobile");
+		String[] email = emails.split(",");
+		String[] mobile = mobiles.split(",");
+		
+		for(int i = 0; i < email.length; i++)
+		{
+			if(!EmailValidator.getInstance().isValid(email[i]))
+				email[i] = null;
+		}
+		
+		for(int i = 0; i < mobile.length; i++)
+		{
+			if(!mobile[i].matches(mobileReg))
+				mobile[i] = null;
+		}
+		
+		Order order = (Order)request.getSession().getAttribute("order");
+		Email.sendOrderDetails(email, order);
+		DBTSms.sendOrderSMS(mobile, order);
+
+	}
 
 	protected void service(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
@@ -76,14 +149,24 @@ public class AjaxActionServlet extends HttpServlet {
 		String responseText = "";
 		String action = request.getParameter("action");
 		System.out.println("AjaxActionServlet: service(): action = " + action);
-		
-		if("getCustomerDetails".equals(action))
-		{
-			getCustomerDetails(request,response);
+
+		if ("getCustomerDetails".equals(action)) {
+			getCustomerDetails(request, response);
 			return;
 		}
 		
+		if("sendOrderDetails".equals(action))
+		{
+			sendOrderDetails(request, response);
+			return;
+		}
 		
+		if("getOrderByNameIDMobile".equals(action))
+		{
+			//System.out.println("AjaxActionServlet Called");
+			getOrderByNameIDMobile(request,response);
+			return;
+		}
 		
 		if ("getProductByCategory".equals(action)) {
 			int catgId = Integer.parseInt(request.getParameter("catgId"));

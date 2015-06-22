@@ -8,8 +8,26 @@ public class Customer {
 	String email;
 	Address address;
 	String type;
+	String tin;
 	
+	public Customer(String name, String mobile, String email) {
+		super();
+		this.name = name;
+		this.mobile = mobile;
+		this.email = email;
+		this.id = 0;
+		
+	}
+
 	
+	public String getTin() {
+		return tin;
+	}
+
+	public void setTin(String tin) {
+		this.tin = tin;
+	}
+
 	public String getType() {
 		return type;
 	}
@@ -31,6 +49,30 @@ public class Customer {
 		this.email = email;
 		this.address = address;
 	}
+	
+	public Customer(int id, String name, String mobile, String email,
+			Address address,String type) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.mobile = mobile;
+		this.email = email;
+		this.address = address;
+		this.type = type;
+	}
+	
+	public Customer(int id, String name, String mobile, String email,
+			Address address,String type, String tin) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.mobile = mobile;
+		this.email = email;
+		this.address = address;
+		this.type = type;
+		this.tin = tin;
+	}
+	
 	public int getId() {
 		return id;
 	}
