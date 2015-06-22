@@ -39,6 +39,157 @@ function showErrorValidation(div, message) {
 	}
 }
 
+
+$("#loanForm").submit(function() {
+	
+	var amount = $('#inputAmount').val();
+	var tenure = $('#inputTenure').val();
+	var installment = $('#inputInstallment').val();
+	var interest = $('#inputInterest').val();
+	var validity = /^[0-9]\d*$/;
+	
+	var success = true;
+	var div = "#amountDiv";
+	if (amount == "") {
+		showErrorValidation(div, "Amount can't be blank !");
+		success = false;
+	} else
+		clearError(div);
+	if (!validity.test(amount)) {
+		showErrorValidation(div, "Amount can take integer values only !");
+		success = false;
+	} else
+		clearError(div);
+	var div = "#tenureDiv";
+	if (tenure == "") {
+		showErrorValidation(div, "Tenure can't be blank !");
+		success = false;
+	} else
+		clearError(div);
+	if (!validity.test(tenure)) {
+		showErrorValidation(div, "Tenure can take integer values only !");
+		success = false;
+	} else
+		clearError(div);
+	var div = "#monthlyDiv";
+	if (installment == "") {
+		showErrorValidation(div, "Monthly Installment can't be blank !");
+		success = false;
+	} else
+		clearError(div);
+	if (!validity.test(installment)) {
+		showErrorValidation(div, "Monthly installement can take integer values only !");
+		success = false;
+	} else
+		clearError(div);
+	var div = "#interestDiv";
+	if (interest == "") {
+		showErrorValidation(div, "Interest rate can't be blank !");
+		success = false;
+	} else
+		clearError(div);
+	if (!validity.test(interest)) {
+		showErrorValidation(div, "Interest can take integer values only !");
+		success = false;
+	} else
+		clearError(div);
+	
+	return success;
+}
+);
+
+$('#capitalForm').submit(function() {
+	
+	var amount = $('#inputAmount').val();
+	var rate = $('#inputRate').val();
+	var lender = $('#inputLender').val();
+	var validity = /^[0-9]\d*$/;
+	
+	console.log("Lender : " + lender);
+	
+	var success = true;
+	var div = "#amountDiv";
+	if (amount == "") {
+		showErrorValidation(div, "Amount can't be blank");
+		success = false;
+	} else
+		clearError(div);
+	if (!validity.test(amount)) {
+		showErrorValidation(div, "Amount can take integer values only !");
+		success = false;
+	} else
+		clearError(div);
+	var div = "#rateDiv";
+	if (rate == "") {
+		showErrorValidation(div, "Interest Rate can't be blank !");
+		success = false;
+	} else
+		clearError(div);
+	if (!validity.test(rate)) {
+		showErrorValidation(div, "Interest can take integer values only !");
+		success = false;
+	} else
+		clearError(div);
+	var div = "#lenderDiv";
+
+	if (lender == "") {
+		console.log("showed error");		
+		showErrorValidation(div, "Input the lender name please !");
+		success = false;
+	} else
+		clearError(div);
+	if (validity.test(lender)) {
+		showErrorValidation(div, "Name can't take integer values !");
+		success = false;
+	} else
+		clearError(div);
+
+	return success;
+}
+);
+
+function notify(from, msg, align, icon, type, animIn, animOut){
+    $.growl({
+        icon: icon,
+        title: '',
+        message: msg,
+        url: ''
+    },{
+            element: 'body',
+            type: type,
+            allow_dismiss: true,
+            placement: {
+                    from: from,
+                    align: align
+            },
+            offset: {
+                x: 20,
+                y: 85
+            },
+            spacing: 10,
+            z_index: 1031,
+            delay: 2500,
+            timer: 1000,
+            url_target: '_blank',
+            mouse_over: false,
+            animate: {
+                    enter: animIn,
+                    exit: animOut
+            },
+            icon_type: 'class',
+            template: '<div data-growl="container" class="alert" role="alert">' +
+                            '<button type="button" class="close" data-growl="dismiss">' +
+                                '<span aria-hidden="true">&times;</span>' +
+                                '<span class="sr-only">Close</span>' +
+                            '</button>' +
+                            '<span data-growl="icon"></span>' +
+                            '<span data-growl="title"></span>' +
+                            '<span data-growl="message"></span>' +
+                            '<a href="#" data-growl="url"></a>' +
+                        '</div>'
+    });
+};
+
 $('#submitBTN').click(function() {
 	$('#buttonValue').val("submit");
 });

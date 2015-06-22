@@ -9,34 +9,34 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 
 import com.dbt.dao.FundDAO;
-import com.dbt.forms.CapitalForm;
+import com.dbt.forms.LoanForm;
 
-public class CapitalAction extends Action {
-
+public class LoanAction extends Action{
+	
 	@Override
 	public ActionForward execute(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
-	
-		System.out.println("CapitalAction : Called");
+		
+		System.out.println("LoanAction : Called");
 		String result = "failure";
+		LoanForm myform = (LoanForm)form;
 		
 		try{
-			CapitalForm myform = (CapitalForm)form;
+			int loanAmount = Integer.parseInt(myform.getLoanAmount());
+			int loanTenure = Integer.parseInt(myform.getLoanTenure());
+			int loanInstallment = Integer.parseInt(myform.getLoanInstallment());
+			int loanInterest = Integer.parseInt(myform.getLoanRate());
 			
-			int amount = Integer.parseInt(myform.getCapitalAmount());
-			String lender = myform.getCapitalLender();
-			int interest = Integer.parseInt(myform.getCapitalRate());
-			
-			boolean state = FundDAO.addCapital(amount, interest, lender);
+			boolean state = FundDAO.addLoan(loanAmount, loanTenure, loanInstallment, loanInterest);
 			
 			if(state)
 			{
 				result = "success";
-				request.setAttribute("capitalStatus", "Success");
+				request.setAttribute("loanStatus", "Success");
 			}
 			else
-				request.setAttribute("capitalStatus", "Success");
+				request.setAttribute("loanStatus", "Failure");
 			
 		}
 		catch(Exception e)
@@ -46,5 +46,5 @@ public class CapitalAction extends Action {
 		
 		return mapping.findForward(result);
 	}
-	
+
 }
