@@ -3,7 +3,9 @@ package com.dbt.action;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -14,13 +16,18 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 import com.dbt.dao.ComplaintDAO;
 import com.dbt.dao.CustomerDAO;
+import com.dbt.dao.MerchantDAO;
 import com.dbt.dao.OrderDAO;
 import com.dbt.data.Address;
 import com.dbt.data.Customer;
+import com.dbt.data.Merchant;
 import com.dbt.data.Order;
+import com.dbt.data.Order_item;
 import com.dbt.data.Product;
 import com.dbt.support.DBTSms;
 import com.dbt.support.Email;
@@ -47,55 +54,175 @@ public class AjaxAction extends Action {
 		if ("getProductByCategory".equals(action)) {
 			getProductsByCategory(request, response);
 		}
-		 
-		if("getOrderByNameIDMobile".equals(action)){
+
+		if ("getOrderByNameIDMobile".equals(action)) {
 			getOrderByNameIDMobile(request, response);
+		}
+
+		if ("getFirmsDetails".equals(action)) {
+			getFirmsDetails(request, response);
+		}
+
+		if ("setFirm".equals(action)) {
+			setFirm(request, response);
+		}
+		if ("getOrder".equals(action)) {
+			getOrder(request, response);
 		}
 
 		return null;
 	}
 
-	
-	public void getOrderByNameIDMobile(HttpServletRequest request,HttpServletResponse response) throws IOException
-	{
+	public void getOrder(HttpServletRequest request,
+			HttpServletResponse response) throws IOException {
 		String name = request.getParameter("name");
 		String oid = request.getParameter("order");
 		String mob = request.getParameter("mobile");
 		String responseText = "";
-		//System.out.println("AjaxActionServlet : "+name+oid+mob);
-		
-		List<Order> order = ComplaintDAO.getOrderDetails(name,oid,mob);
+		// System.out.println("AjaxActionServlet : "+name+oid+mob);
+
+		List<Order> order = OrderDAO.getOrderDetails(oid, name, mob);
 		Iterator<Order> iter = order.iterator();
 		JSONObject list = new JSONObject();
 		JSONArray custArray = new JSONArray();
-		while (iter.hasNext()) 
-		{
-		 Order o = iter.next();
-		 
-			 JSONObject ord = new JSONObject();
-			 
-			 ord.put("oid", o.getId());
-			 ord.put("amount", o.getAmount());
-			 ord.put("date", o.getDate());
-			 ord.put("time", o.getTime());
-		    
-			        JSONObject custom = new JSONObject();
-			        Customer cus = o.getCustomer();
-			        custom.put("name", cus.getName());
-			        custom.put("mobile", cus.getMobile());
-			        custom.put("email", cus.getEmail());
-		
-		  ord.put("Customer",custom);
-		 custArray.add(ord);
+		while (iter.hasNext()) {
+			Order o = iter.next();
+			JSONObject ord = new JSONObject();
+			ord.put("oid", o.getId());
+			ord.put("amount", o.getAmount());
+			ord.put("date", o.getDatetime().toGMTString());
+			JSONArray itemArray = new JSONArray();
+
+			List<Order_item> items = o.getOrderitems();
+			for (int i = 0; i < items.size(); i++) {
+				Order_item itemJava = items.get(i);
+				JSONObject itemJSON = new JSONObject();
+				itemJSON.put("product_id", itemJava.getProduct_id());
+				itemJSON.put("product_name", itemJava.getProduct_name());
+				itemJSON.put("product_qty", itemJava.getQuantity());
+				itemJSON.put("ship_id", itemJava.getShip_id());
+				itemArray.add(itemJSON);
+			}
+			ord.put("items", itemArray);
+			JSONObject custom = new JSONObject();
+			Customer cus = o.getCustomer();
+			custom.put("name", cus.getName());
+			custom.put("mobile", cus.getMobile());
+			custom.put("email", cus.getEmail());
+			ord.put("Customer", custom);
+			custArray.add(ord);
 		}
 		list.put("orderdetails", custArray);
 		responseText = list.toJSONString();
-		//System.out.println("AjaxActionServletFromRequestComplaint : Response JSON is : "+ responseText);
+		System.out
+				.println("AjaxActionServletFromRequestComplaint : Response JSON is : "
+						+ responseText);
 		response.setContentType("text/json");
 		response.getWriter().write(responseText);
 	}
-	
-	
+
+	public void setFirm(HttpServletRequest request, HttpServletResponse response)
+			throws IOException {
+		String firm = request.getParameter("firmString");
+		int fid = Integer.parseInt(request.getParameter("firm"));
+		System.out.println(firm + " || " + fid);
+		JSONParser parser = new JSONParser();
+		try {
+			JSONObject firmObj = (JSONObject) parser.parse(firm);
+			JSONObject addObj = (JSONObject) firmObj.get("address");
+			Address address = new Address(addObj.get("houseNo").toString(),
+					addObj.get("line1").toString(), addObj.get("line2")
+							.toString(), addObj.get("city").toString(), addObj
+							.get("state").toString(), addObj.get("zip")
+							.toString());
+			Merchant merchant = new Merchant(Integer.parseInt(firmObj.get("id")
+					.toString()), firmObj.get("name").toString(), address,
+					firmObj.get("tin").toString(), firmObj.get("mobile")
+							.toString(), firmObj.get("email").toString(),
+					firmObj.get("logo").toString());
+			request.getSession().setAttribute("merchant", merchant);
+			response.setContentType("text/json");
+			response.getWriter().write("{ \"Response\":\"Success\" }");
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			response.setContentType("text/json");
+			response.getWriter().write("{ \"Response\":\"Error\" }");
+		}
+	}
+
+	public void getFirmsDetails(HttpServletRequest request,
+			HttpServletResponse response) throws IOException {
+		String mobiles = request.getParameter("mobile");
+		List<Merchant> merchants = new MerchantDAO().getFirms(mobiles);
+		JSONObject resp = new JSONObject();
+		JSONArray mer = new JSONArray();
+		Iterator<Merchant> iterator = merchants.iterator();
+		while (iterator.hasNext()) {
+			Merchant merchant = iterator.next();
+			JSONObject singleMer = new JSONObject();
+			singleMer.put("id", merchant.getId());
+			singleMer.put("name", merchant.getName());
+			singleMer.put("mobile", merchant.getMobile());
+			singleMer.put("email", merchant.getEmail());
+			singleMer.put("tin", merchant.getTin());
+			singleMer.put("logo", merchant.getLogo());
+			JSONObject addressJSON = new JSONObject();
+			Address add = merchant.getAddress();
+			addressJSON.put("houseNo", add.getHouseNo());
+			addressJSON.put("line1", add.getLine1());
+			addressJSON.put("line2", add.getLine2());
+			addressJSON.put("city", add.getCity());
+			addressJSON.put("state", add.getState());
+			addressJSON.put("zip", add.getZip());
+			singleMer.put("address", addressJSON);
+			mer.add(singleMer);
+		}
+		resp.put("firms", mer);
+		String responseText = resp.toJSONString();
+		System.out.println("AjaxActionServlet Firms - Response JSON is : "
+				+ responseText);
+		response.setContentType("text/json");
+		response.getWriter().write(responseText);
+	}
+
+	public void getOrderByNameIDMobile(HttpServletRequest request,
+			HttpServletResponse response) throws IOException {
+		String name = request.getParameter("name");
+		String oid = request.getParameter("order");
+		String mob = request.getParameter("mobile");
+		String responseText = "";
+		// System.out.println("AjaxActionServlet : "+name+oid+mob);
+
+		List<Order> order = ComplaintDAO.getOrderDetails(name, oid, mob);
+		Iterator<Order> iter = order.iterator();
+		JSONObject list = new JSONObject();
+		JSONArray custArray = new JSONArray();
+		while (iter.hasNext()) {
+			Order o = iter.next();
+			JSONObject ord = new JSONObject();
+			ord.put("oid", o.getId());
+			ord.put("amount", o.getAmount());
+			ord.put("date", o.getDate());
+			ord.put("time", o.getTime());
+
+			JSONObject custom = new JSONObject();
+			Customer cus = o.getCustomer();
+			custom.put("name", cus.getName());
+			custom.put("mobile", cus.getMobile());
+			custom.put("email", cus.getEmail());
+			ord.put("Customer", custom);
+			custArray.add(ord);
+		}
+		list.put("orderdetails", custArray);
+		responseText = list.toJSONString();
+		System.out
+				.println("AjaxActionServletFromRequestComplaint : Response JSON is : "
+						+ responseText);
+		response.setContentType("text/json");
+		response.getWriter().write(responseText);
+	}
+
 	public void getCustomerDetails(HttpServletRequest request,
 			HttpServletResponse response) throws IOException {
 		String name = request.getParameter("name");

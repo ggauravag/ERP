@@ -49,7 +49,7 @@
 						<div  class="col-sm-8">
 							<div class="fg-line">
 								<input type="text" class="form-control" name="custName"
-									id="inputName" placeholder="Enter Full Name">
+									id="inputName" value="${order.customer.name}" placeholder="Enter Full Name">
 							</div>
 
 							<span class="md md-person form-control-feedback"></span> <small
@@ -91,7 +91,7 @@
 						<div class="col-sm-8">
 							<div class="fg-line">
 								<input type="email" class="form-control" name="custEmail"
-									id="inputEmail" placeholder="Email">
+									id="inputEmail" value="${order.customer.email}" placeholder="Email">
 
 							</div>
 							<span class="md md-email form-control-feedback"></span> <small
@@ -100,13 +100,14 @@
 					</div>
 					<input type="hidden" name="tin" id="tin" value=""/>
 					<input type="hidden" name="type" id="type" value=""/>
+					<jspcore:set value="${order.customer.address}" var="add" />
 					<div class="row">
 						<div id="houseDiv" class="form-input">
 							<label for="inputHouse" class="col-sm-2 control-label">Address</label>
 							<div class="col-sm-2 m-b-25">
 								<div class="fg-line">
 									<input type="text" class="form-control" id="inputHouse"
-										name="custHouseNo" placeholder="House No.">
+										name="custHouseNo" value="${add.houseNo}" placeholder="House No.">
 
 								</div>
 								<small id="error" class="help-block"><html:errors property="houseError"/></small>
@@ -116,7 +117,7 @@
 							<div class="col-sm-6 m-b-25">
 								<div class="fg-line">
 									<input type="text" class="form-control" id="inputAddress1"
-										name="custAdd1" placeholder="Address line 1">
+										name="custAdd1" value="${add.line1}" placeholder="Address line 1">
 
 								</div>
 								<span class="md md-location-on form-control-feedback"></span> <small
@@ -130,7 +131,7 @@
 						<div class="col-sm-8">
 							<div class="fg-line">
 								<input type="text" class="form-control" id="inputAddress2"
-									name="custAdd2" placeholder="Address line 2">
+									name="custAdd2" value="${add.line2}" placeholder="Address line 2">
 							</div>
 						</div>
 					</div>
@@ -139,7 +140,7 @@
 						<div id="cityDiv" class="form-input">
 							<label for="inputCity" class="col-sm-2 control-label"></label>
 							<div class="col-sm-3 m-b-25 selectpicker">
-								<select class="form-control" id="inputCity" name="custCity">
+								<select class="form-control" id="inputCity" value="${add.city}" name="custCity">
 									<option >Select City</option>
 									<option value="Jaipur">Jaipur</option>
 									<option value="Tonk">Tonk</option>
@@ -158,7 +159,7 @@
 
 						<div id="stateDiv" class="form-input">
 							<div  class="col-sm-3 m-b-25 selectpicker">
-								<select class="form-control" id="inputState" name="custState">
+								<select class="form-control" id="inputState" value="${add.state}" name="custState">
 									<option>Select State</option>
 									<option value="Rajasthan">Rajasthan</option>
 									<option value="Maharashtra">Maharashtra</option>
@@ -178,7 +179,7 @@
 							<div id="pinDiv" class="col-sm-2">
 								<div class="fg-line">
 									<input type="text" class="form-control" id="inputPin"
-										placeholder="Enter PinCode" name="custPinCode"> 
+										placeholder="Enter PinCode" value="${add.zip}" name="custPinCode"> 
 								</div>
 								<span class="md md-my-location form-control-feedback"></span> <small
 									id="error" class="help-block"><html:errors property="pinError"/></small>
@@ -193,7 +194,7 @@
 						<div class="col-sm-8">
 							<div class="fg-line">
 								<input type="text" class="form-control" id="inputMobile"
-									name="custMobile" placeholder="Enter Mobile Number">
+									name="custMobile" value="${order.customer.mobile}" placeholder="Enter Mobile Number">
 
 							</div>
 							<span class="md-phone-android form-control-feedback"></span> <small
@@ -279,8 +280,6 @@
 						</div>
 
 						<div id="products"></div>
-
-
 						<input type="hidden" id="numProd" name="numProd" value="0">
 
 					</div>

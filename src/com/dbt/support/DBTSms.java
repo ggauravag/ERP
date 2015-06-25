@@ -148,7 +148,7 @@ public class DBTSms {
 		String rsp = "";
 		// String user = AESCrypto.decrypt("7fMs2hJHbPeLdaQM93dBJA==");
 		String password = "programmer";
-		String sid = "DBTECH";
+		String sid = "RAMFUR";
 		// String flash = "0";
 		// msisdn = "91"+msisdn;
 		System.out.println("India SMS called");

@@ -191,6 +191,24 @@
 				</div>
 			</div>
 		</div>
+		<div class="modal fade" data-modal-color="blue" id="modalPrint"
+			data-backdrop="static" data-keyboard="false" tabindex="-1"
+			role="dialog" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h4 class="modal-title">Select Billing Firm :</h4>
+					</div>
+					<div class="modal-body" id="firmDiv">
+						
+					</div>
+					<div class="modal-footer">
+						<button type="button" id="selectFirmDetails" class="btn btn-link">Select</button>
+						<button type="button" class="btn btn-link" data-dismiss="modal">Close</button>
+					</div>
+				</div>
+			</div>
+		</div>
 		<!-- card div -->
 
 	</div>
@@ -206,7 +224,8 @@
 			function()
 			{
 				console.log("Done");
-				window.open("../PrintOrder.do?print=order","","");
+				loadFirms();
+				//window.open("../PrintOrder.do?print=order","","");
 			}
 		);
 		

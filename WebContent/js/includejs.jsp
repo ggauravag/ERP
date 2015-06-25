@@ -37,7 +37,7 @@
 	<script
 		src="<%=request.getContextPath()%>/js/flot-charts/line-chart.js"></script>
 	<script src="<%=request.getContextPath()%>/js/charts.js"></script>
-
+	
 	<script
 		src="<%=request.getContextPath()%>/vendors/noUiSlider/jquery.nouislider.all.min.js"></script>
 	<script

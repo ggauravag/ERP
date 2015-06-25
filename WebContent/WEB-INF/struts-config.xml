@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="ISO-8859-1" ?>
 <!DOCTYPE struts-config PUBLIC
-       "-//Apache Software Foundation//DTD Struts Configuration 1.1//EN"
-       "http://jakarta.apache.org/struts/dtds/struts-config_1_1.dtd">
+	"-//Apache Software Foundation//DTD Struts Configuration 1.1//EN"
+		"http://jakarta.apache.org/struts/dtds/struts-config_1_1.dtd">
 
 <struts-config>
 
@@ -12,6 +12,7 @@
 		<form-bean name="ajaxForm" type="com.dbt.forms.AjaxActionForm"></form-bean>
 		<form-bean name="capitalForm" type="com.dbt.forms.CapitalForm"></form-bean>
 		<form-bean name="loanForm" type="com.dbt.forms.LoanForm"></form-bean>
+		<form-bean name="processForm" type="com.dbt.forms.ProcessOrderForm"></form-bean>
 	</form-beans>
 
 	<action-mappings>
@@ -20,6 +21,13 @@
 			name="capitalForm" type="com.dbt.action.CapitalAction" scope="request">
 			<forward name="success" path="/owner/AddCapital.jsp"></forward>
 			<forward name="failure" path="/owner/AddCapital.jsp"></forward>
+		</action>
+
+
+		<action path="/ProcessOrder" validate="true" name="processForm"
+			input="/operator/processOrder.jsp" type="com.dbt.action.ProcessOrderAction" scope="request">
+			<forward name="success" path="/operator/shipOrder.jsp"></forward>
+			<forward name="failure" path="/operator/processOrder.jsp"></forward>
 		</action>
 
 		<action path="/AddLoan" validate="true" input="/owner/AddLoan.jsp"

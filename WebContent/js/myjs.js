@@ -5,6 +5,8 @@ var products = new Array();
 var availProduct = new Array();
 var customers;
 
+var firmSelect = new Array();
+
 function Product() {
 	this.name = "";
 	this.price = 0;
@@ -37,6 +39,94 @@ function showErrorValidation(div, message) {
 		div = div + " small#error";
 		$(div).text(message);
 	}
+}
+
+
+$('#selectFirmDetails').click(
+   function(){
+	   //alert("button clicked");
+	   var firmID = $("input[name='firmID']:checked").val();
+	   //alert('Value is : '+firmID);
+	   var selectFirm;
+	   for(var j = 0; j < firmSelect.length; j++)
+		{
+		   	if(firmSelect[j].id == firmID)
+		   		selectFirm = firmSelect[j];
+		}
+	   
+	   $.ajax(
+		{
+			url : "../ajaxServlet.do",
+			data : {
+				firm : firmID,
+				action : "setFirm",
+				firmString : JSON.stringify(selectFirm)
+			},
+			method : "post",
+			
+			success : function(data){
+				//console.log("Result :"+data);
+				if(data.Response == "Success")
+				{
+					$('#modalPrint').modal('hide');
+					window.open("../PrintOrder.do?print=order","","");
+				}
+				else if(data.Response == "Error")
+				{
+					$('#modalPrint').modal('hide');
+					alert("Some error can't print Order Confirmation ! ");
+				}	
+			},
+			
+			error : function(data){
+			    alert("Some error ! "+data);	
+			}
+		}	   
+	   );
+   }		
+);
+
+function loadFirms()
+{
+	console.log("Load Firms called");
+	$.ajax(
+			{
+				url : "../ajaxServlet.do",
+				data : {
+					mobile : "'9460008990','9413333853'",
+					action : "getFirmsDetails"
+				},
+				method : "post",
+				
+				success : function(data){
+					console.log("Success"+data);
+					// alert("Success : "+data.firms[0].name);
+					firmSelect = data.firms;
+					$('#firmDiv').html("");
+					for(var i = 0; i < data.firms.length; i++)
+					{
+						var firm = data.firms[i];
+						var f = "";
+						f += "<div class='row'>";
+						f += "<label class='radio radio-inline'>"; 
+						f += "<input type='radio' name='firmID' value='"+firm.id+"' class='form-control' />"; 
+						f += "<i class='input-helper'></i>";
+						f += "<p>"+firm.name+"</p>";
+						f += "<label>"+firm.mobile+"</label>";
+						f += "<label>"+firm.tin+"</label>";
+						console.log(f);
+						f += "<label>"+firm.address.houseNo+", "+firm.address.line1+", "+firm.address.line2+", "+firm.address.city+" - "+firm.address.zip+", "+firm.address.state+"</label></label>";
+						f += "<p></p></div>";
+						$('#firmDiv').append(f);
+					}
+					$('#modalPrint').modal('show');
+				},
+				
+				error : function(data){
+					console.log("Error"+data);
+					alert("Error");
+				}
+			});
 }
 
 
@@ -361,7 +451,7 @@ function showComment(order_id)
  	e5.setAttribute("type", "button");
     e5.setAttribute("class", "btn btn-primary btn-lg col-sm-3");
     e5.setAttribute("id", "submitRequest");
-    $(e5).text("Complain >>>");
+    $(e5).text("Complaint >>>");
     ee4.appendChild(e5);
     e4.appendChild(ee4);
     q.appendChild(e4);
@@ -464,7 +554,7 @@ $("#SearchOrderbtn").click(function(e)
 			    tbhdrow.appendChild(tbhdtd9);
 			    
 			    tbhead.appendChild(tbhdrow);
-			    table.appendChild(tbhead);  //Header inserted 
+			    table.appendChild(tbhead);  // Header inserted
 			    
 			    
 			    
@@ -563,44 +653,8 @@ $("#sendOrderDetails").click(
 				},
 				success : function(data) {
 					// alert("Success : " + data.customers[0].name);
-
-					var div = document.getElementById('custList');
-					div.innerHTML = "";
-					// customers = new Array();
-					// alert("Number of customers : "+data.customers.length);
-					customers = data.customers;
-
-					for (var j = 0; j < data.customers.length; j++) {
-
-						var label = document.createElement('label');
-						label
-								.setAttribute("class",
-										"radio radio-inline m-r-20");
-
-						var input = document.createElement('input');
-						input.setAttribute("type", "radio");
-						input.setAttribute("name", "custID");
-						input.setAttribute("value", customers[j].id);
-
-						var i = document.createElement('i');
-						i.setAttribute("class", "input-helper");
-
-						var p = document.createElement('p');
-						p.setAttribute('style', 'margin-top: -7px');
-
-						label.appendChild(input);
-						label.appendChild(i);
-						var radioText = customers[j].name.replace('"', '');
-						var text = document.createTextNode(radioText + " - "
-								+ customers[j].mobile);
-						p.appendChild(text);
-						label.appendChild(p);
-
-						div.appendChild(label);
-					}
-
-					$('#modalCustomer').modal('show');
-
+					$('#modalMobile').modal('hide');
+					swal("SMS/Email Sent Successfully !", "Order details has been sent to the mobile and the email ids.", "success");
 				}
 			});
 		});

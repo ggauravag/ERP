@@ -6,7 +6,35 @@ public class Order_item {
 	int product_id;
 	int quantity;
 	int amount;
+	int ship_id;
+	String product_name;
 	
+	public String getProduct_name() {
+		return product_name;
+	}
+
+	public void setProduct_name(String product_name) {
+		this.product_name = product_name;
+	}
+
+	public Order_item(int order_id, int product_id, int quantity, int amount,
+			int ship_id) {
+		super();
+		this.order_id = order_id;
+		this.product_id = product_id;
+		this.quantity = quantity;
+		this.amount = amount;
+		this.ship_id = ship_id;
+	}
+
+	public int getShip_id() {
+		return ship_id;
+	}
+
+	public void setShip_id(int ship_id) {
+		this.ship_id = ship_id;
+	}
+
 	public Order_item() {
 		// TODO Auto-generated constructor stub
 		this.order_id = 0;

@@ -8,6 +8,8 @@ public class Order
 {
 	private Customer customer;
 	private List<Product> products;
+	private List<Order_item> orderitems;
+	
 	private int id;
 	private Date datetime;
 	private int amount;
@@ -24,6 +26,14 @@ public class Order
 	 * @param amount
 	 * @param time
 	 */
+	public Order(int id,int amount,Customer customer,Date datetime)
+	{
+		this.id = id;
+		this.amount = amount;
+		this.customer = customer;
+		this.datetime = datetime;
+	}
+	
 	public Order(int id, int cust_id, int amount, String time, String date) {
 		super();
 		this.id = id;
@@ -56,6 +66,14 @@ public class Order
 	}
 	public void setDate(String date) {
 		this.date = date;
+	}
+	
+	public List<Order_item> getOrderitems() {
+		return orderitems;
+	}
+
+	public void setOrderitems(List<Order_item> orderitems) {
+		this.orderitems = orderitems;
 	}
 	
 	public int getCust_id() {
