@@ -1,17 +1,24 @@
 package com.dbt.forms;
 
 import javax.servlet.http.HttpServletRequest;
-
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
+import org.json.simple.JSONArray;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 public class ProcessOrderForm extends ActionForm {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	int orderID;
 	int[] prodID;
 	String mediumType,vehicleNum,mediumName,contactMedium,shipDate;
+	JSONArray items;
 	
 	@Override
 	public ActionErrors validate(ActionMapping mapping,
@@ -26,6 +33,14 @@ public class ProcessOrderForm extends ActionForm {
 		mediumType = request.getParameter("mediumType");
 		contactMedium = request.getParameter("contactMedium");
 		shipDate = request.getParameter("shipDate");
+		String json = request.getParameter("itemJSON");
+		try {
+			items = (JSONArray)new JSONParser().parse(json);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		System.out.println("ProcessOrderForm JSON is : "+json);
 		
 		if(orderid == null || "".equals(orderid))
 			errors.add("orderError", new ActionMessage("order.blankError"));
@@ -43,6 +58,14 @@ public class ProcessOrderForm extends ActionForm {
 		if(shipDate == null || "".equals(shipDate))
 			errors.add("dateError", new ActionMessage("date.blankError"));
 		return errors;
+	}
+
+	public JSONArray getItems() {
+		return items;
+	}
+
+	public void setItems(JSONArray items) {
+		this.items = items;
 	}
 
 	public int getOrderID() {

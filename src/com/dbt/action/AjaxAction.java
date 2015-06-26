@@ -3,11 +3,11 @@ package com.dbt.action;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import javax.websocket.Session;
 
 import org.apache.commons.validator.EmailValidator;
 import org.apache.struts.action.Action;
@@ -17,7 +17,6 @@ import org.apache.struts.action.ActionMapping;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 
 import com.dbt.dao.ComplaintDAO;
 import com.dbt.dao.CustomerDAO;
@@ -31,6 +30,7 @@ import com.dbt.data.Order_item;
 import com.dbt.data.Product;
 import com.dbt.support.DBTSms;
 import com.dbt.support.Email;
+import com.dbt.vo.Shipment;
 
 public class AjaxAction extends Action {
 
@@ -63,6 +63,10 @@ public class AjaxAction extends Action {
 			getFirmsDetails(request, response);
 		}
 
+		if ("sendShipmentDetails".equals(action)) {
+			sendShipmentDetails(request, response);
+		}
+
 		if ("setFirm".equals(action)) {
 			setFirm(request, response);
 		}
@@ -71,6 +75,38 @@ public class AjaxAction extends Action {
 		}
 
 		return null;
+	}
+
+	private void sendShipmentDetails(HttpServletRequest request,
+			HttpServletResponse response) throws IOException {
+
+		String mobileReg = "^[7-9]{1}[0-9]{9}$";
+
+		String emails = request.getParameter("email");
+		String mobiles = request.getParameter("mobile");
+		String[] email = emails.split(",");
+		String[] mobile = mobiles.split(",");
+
+		for (int i = 0; i < email.length; i++) {
+			if (!EmailValidator.getInstance().isValid(email[i]))
+				email[i] = null;
+		}
+
+		for (int i = 0; i < mobile.length; i++) {
+			if (!mobile[i].matches(mobileReg))
+				mobile[i] = null;
+		}
+
+		Shipment shipment = (Shipment) request.getSession().getAttribute(
+				"shipment");
+		int orderid = Integer.parseInt(request.getSession()
+				.getAttribute("orderID").toString());
+		Order order = new OrderDAO().getOrder(orderid);
+		Email.sendShipment(email, shipment, order);
+		DBTSms.sendShipmentSMS(mobile, shipment, order);
+
+		response.getWriter().write("{ \"status\":\"success\" }");
+
 	}
 
 	public void getOrder(HttpServletRequest request,
@@ -97,6 +133,7 @@ public class AjaxAction extends Action {
 			for (int i = 0; i < items.size(); i++) {
 				Order_item itemJava = items.get(i);
 				JSONObject itemJSON = new JSONObject();
+				itemJSON.put("order_id", itemJava.getOrder_id());
 				itemJSON.put("product_id", itemJava.getProduct_id());
 				itemJSON.put("product_name", itemJava.getProduct_name());
 				itemJSON.put("product_qty", itemJava.getQuantity());

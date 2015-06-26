@@ -23,12 +23,14 @@
 	</div>
 
 	<div class="card">
-		<form class="form-horizontal" action="../ProcessOrder.do" method="get" role="form">
+		<form class="form-horizontal" action="../ProcessOrder.do"
+			method="post" role="form">
 
 			<div class="card-header">
 				<h2>Enter Order ID or Name or Mobile and verify the details</h2>
 			</div>
 			<div class="card-body card-padding">
+				<font color="red"><html:errors property="orderError" /></font>
 				<div class="form-group">
 					<label for="inputOrder" class="col-sm-2 control-label">Order
 						ID</label>
@@ -95,7 +97,7 @@
 						Name</label>
 					<div class="col-sm-8">
 						<div class="fg-line">
-							<input type="text" class="form-control" id="selectName" disabled>
+							<input type="text" class="form-control" id="selectName" readonly>
 						</div>
 						<span class="md md-person form-control-feedback"></span>
 					</div>
@@ -104,8 +106,8 @@
 					<label for="inputEmail" class="col-sm-2 control-label">Email</label>
 					<div class="col-sm-8">
 						<div class="fg-line">
-							<input type="email" class="form-control" id="selectEmail"
-								disabled>
+							<input type="email" name="email" class="form-control" id="selectEmail"
+								readonly>
 						</div>
 						<span class="md md-email form-control-feedback"></span>
 					</div>
@@ -115,8 +117,8 @@
 						Number</label>
 					<div class="col-sm-8">
 						<div class="fg-line">
-							<input type="text" class="form-control" id="selectMobile"
-								disabled>
+							<input type="text" name="mobile" class="form-control" id="selectMobile"
+								readonly>
 						</div>
 						<span class="md-phone-android form-control-feedback"></span>
 					</div>
@@ -124,7 +126,7 @@
 
 				<div>
 					<h4>Product Details :</h4>
-					
+
 					<div class="form-group">
 						<div class="col-sm-2 col-sm-offset-1">
 							<label class="control-label"><strong>Is Shipped
@@ -139,6 +141,7 @@
 						</div>
 					</div>
 					<div id="productDetails"></div>
+					<font color="red"><html:errors property="productError" /></font>
 				</div>
 			</div>
 			<!-- card-body card-padding div 2-->
@@ -147,6 +150,7 @@
 				<h2>Shipping Details</h2>
 			</div>
 			<div class="card-body card-padding">
+				<input type="hidden" name="itemJSON" id="itemJSON" />
 				<div class="row">
 					<div class="form-input">
 						<label for="inputMedium" class="col-sm-2 control-label">Shipping
@@ -160,6 +164,8 @@
 								<option>Transport Company</option>
 							</select>
 						</div>
+						<small class="help-block"><font color="red"><html:errors
+									property="mediumError" /></font></small>
 					</div>
 
 					<div class="form-input">
@@ -189,6 +195,7 @@
 								<input type="text" name="contactMedium" class="form-control"
 									id="inputAddress1" placeholder="Contact Number">
 							</div>
+
 						</div>
 					</div>
 				</div>
@@ -205,6 +212,8 @@
 									aria-expanded="true" id="inputDate"
 									placeholder="Shipping Date & Time">
 							</div>
+							<small class="help-block"><font color="red"><html:errors
+										property="dateError" /></font></small>
 						</div>
 					</div>
 				</div>
@@ -217,18 +226,14 @@
 				<div class="col-sm-offset-2 col-sm-10">
 					<button type="submit" class="btn btn-primary btn-lg col-sm-3">Process
 						Order</button>
-					<button type="reset" class="btn btn-default btn-lg col-sm-3"
-						style="margin-left: 10%">Modify Order</button>
+
 				</div>
 			</div>
 		</form>
 	</div>
-
+	<br>
 </div>
-<!-- card div -->
-
-</div>
-<!-- container div --> </section> </section>
+<!-- card div --> <!-- container div --> </section> </section>
 
 <%@include file="../js/includejs.jsp"%>
 <script

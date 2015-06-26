@@ -26,7 +26,7 @@
 
 		<action path="/ProcessOrder" validate="true" name="processForm"
 			input="/operator/processOrder.jsp" type="com.dbt.action.ProcessOrderAction" scope="request">
-			<forward name="success" path="/operator/shipOrder.jsp"></forward>
+			<forward name="success" redirect="true" path="/operator/shipOrder.jsp"></forward>
 			<forward name="failure" path="/operator/processOrder.jsp"></forward>
 		</action>
 

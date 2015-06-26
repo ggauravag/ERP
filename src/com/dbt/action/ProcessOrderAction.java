@@ -2,14 +2,17 @@ package com.dbt.action;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.json.simple.JSONArray;
 
 import com.dbt.dao.OrderProcessDAO;
 import com.dbt.forms.ProcessOrderForm;
+import com.dbt.vo.Shipment;
 
 public class ProcessOrderAction extends Action
 {
@@ -18,7 +21,7 @@ public class ProcessOrderAction extends Action
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		// TODO Auto-generated method stub
-		String result = "failure";
+		String result = "success";
 		ProcessOrderForm orderform = (ProcessOrderForm)form;
 		int[] prodID = orderform.getProdID();
 		int orderID = orderform.getOrderID();
@@ -27,9 +30,17 @@ public class ProcessOrderAction extends Action
 		String shipNum = orderform.getVehicleNum();
 		String shipdate = orderform.getShipDate();
 		String contact = orderform.getContactMedium();
-		
-		new OrderProcessDAO().shipProducts(orderID,prodID,mediumType, mediumName, shipNum, contact, shipdate);
-		
+		JSONArray items = orderform.getItems();
+		Shipment s = new OrderProcessDAO().shipProducts(items,orderID,prodID,mediumType, mediumName, shipNum, contact, shipdate);
+		if(s == null || s.getItems().size() == 0)
+		{
+			result = "failure";
+		}
+		HttpSession session = request.getSession();
+		session.setAttribute("shipment", s);
+		session.setAttribute("orderID", orderID);
+		session.setAttribute("mobile", request.getParameter("mobile"));
+		session.setAttribute("email", request.getParameter("email"));
 		return mapping.findForward(result);
 	}
 }

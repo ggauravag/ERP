@@ -8,6 +8,7 @@ import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 
 import com.dbt.data.Order;
+import com.dbt.vo.Shipment;
 
 public class DBTSms {
 
@@ -134,6 +135,20 @@ public class DBTSms {
 				+ order.getId() + ", and amount of order (VAT Exclusive) is : "
 				+ order.getAmount()
 				+ ". Please refer the order ID for future purposes.";
+		StringBuffer buffer = new StringBuffer();
+		for (int i = 0; i < mobile.length; i++) {
+			if (mobile[i] != null && i != mobile.length - 1)
+				buffer.append(mobile[i] + ",");
+			else if (mobile[i] != null)
+				buffer.append(mobile[i]);
+		}
+		sendSMS(buffer.toString(), text);
+	}
+	
+	public static void sendShipmentSMS(String[] mobile, Shipment shipment,Order order) {
+		String text = "Dear " + order.getCustomer().getName()
+				+ ",\nYour order has been shipped by "+shipment.getMedium()+", No.("+shipment.getMediumNumber()+"). Contact : "+shipment.getMediumName()+" ( "+shipment.getContact()+" ) for further tracking.";
+				
 		StringBuffer buffer = new StringBuffer();
 		for (int i = 0; i < mobile.length; i++) {
 			if (mobile[i] != null && i != mobile.length - 1)

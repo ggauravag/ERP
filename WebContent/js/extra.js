@@ -8,53 +8,82 @@ $("#searchOrderButton").click(function() {
 	var orderID = $("#inputOrderID").val();
 });
 
+$("#sendShipment").click(
+		function()
+		{
+			$('#modalMobile').modal('show');
+		}		
+);
 
-function showProducts(value)
-{
-   //alert("product : "+value);
-   var selectedOrder = null;
-   for(var i = 0; i < orderdetails.length; i++)
-   {
-	   if(orderdetails[i].oid == value)
-	   {
-		   selectedOrder = orderdetails[i];
-		   $("#orderID").val(orderdetails[i].oid);
-		   break;
-	   }
-   }
-   
-   $("#selectName").val(selectedOrder.Customer.name);
-   
-   $("#selectEmail").val(selectedOrder.Customer.email);
-   $("#selectMobile").val(selectedOrder.Customer.mobile);
-   $("#productDetails").html("");
-   for(var j = 0; j < selectedOrder.items.length; j++)
-   {
-	   var item = selectedOrder.items[j];
-	   //alert("Product id is : "+item.product_id);
-	   var app = "<div class=\"form-group\">";
-	   app += "<div class=\"col-sm-2 col-sm-offset-1\">";
-	   if(item.ship_id == 0)
-	   {
-		   app += "<input type='checkbox' name='prodID' value='"+item.product_id+"' />";
-	   }
-	   else
-	   {
-		   app += "<input type='checkbox' name='prodID' value='"+item.product_id+"' disabled checked/>";
-	   }
-	   app += "</div>";
-	   app += "<div class=\"col-sm-2 col-sm-offset-1\">";
-	   app += "<label class=\"control-label\"><strong>"+item.product_name+"";
-	   app += "</strong></label>";
-	   app += "</div>";
-	   app += "<div class=\"col-sm-2 col-sm-offset-1\">";
-	   app += "<label class=\"control-label\"><strong>"+item.product_qty+"</strong></label>";
-	   app += "</div></div>";
-	   $("#productDetails").append(app);
-   } 
+
+$("#sendShipmentDetails")
+		.click(
+				function() {
+					$
+							.ajax({
+								url : "../ajaxServlet.do",
+								data : {
+									mobile : $("#sendMobiles").val(),
+									email : $("#sendEmails").val(),
+									action : "sendShipmentDetails"
+								},
+								method : "post",
+								error : function(data) {
+									alert("Error : " + data);
+								},
+								success : function(data) {
+									// alert("Success : " +
+									// data.customers[0].name);
+									$('#modalMobile').modal('hide');
+									swal(
+											"SMS/Email Sent Successfully !",
+											"Shipment details has been sent to the mobile and the email ids.",
+											"success");
+								}
+							});
+				});
+
+function showProducts(value) {
+	// alert("product : "+value);
+	var selectedOrder = null;
+	for (var i = 0; i < orderdetails.length; i++) {
+		if (orderdetails[i].oid == value) {
+			selectedOrder = orderdetails[i];
+			$("#orderID").val(orderdetails[i].oid);
+			break;
+		}
+	}
+
+	$("#selectName").val(selectedOrder.Customer.name);
+	$("#itemJSON").val(JSON.stringify(selectedOrder.items));
+	$("#selectEmail").val(selectedOrder.Customer.email);
+	$("#selectMobile").val(selectedOrder.Customer.mobile);
+	$("#productDetails").html("");
+	for (var j = 0; j < selectedOrder.items.length; j++) {
+		var item = selectedOrder.items[j];
+		// alert("Product id is : "+item.product_id);
+		var app = "<div class=\"form-group\">";
+		app += "<div class=\"col-sm-2 col-sm-offset-1\">";
+		if (item.ship_id == 0) {
+			app += "<input type='checkbox' name='prodID' value='"
+					+ item.product_id + "' />";
+		} else {
+			app += "<input type='checkbox' name='prodID' value='"
+					+ item.product_id + "' disabled checked/>";
+		}
+		app += "</div>";
+		app += "<div class=\"col-sm-2 col-sm-offset-1\">";
+		app += "<label class=\"control-label\"><strong>" + item.product_name
+				+ "";
+		app += "</strong></label>";
+		app += "</div>";
+		app += "<div class=\"col-sm-2 col-sm-offset-1\">";
+		app += "<label class=\"control-label\"><strong>" + item.product_qty
+				+ "</strong></label>";
+		app += "</div></div>";
+		$("#productDetails").append(app);
+	}
 }
-
-
 
 $("#searchOrderButton")
 		.click(
@@ -152,7 +181,7 @@ $("#searchOrderButton")
 
 									tbhead.appendChild(tbhdrow);
 									table.appendChild(tbhead); // Header
-																// inserted
+									// inserted
 
 									orderdetails = data.orderdetails;
 

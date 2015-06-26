@@ -1,6 +1,15 @@
 package com.dbt.data;
 
 public class Product {
+	int orderID;
+	public int getOrderID() {
+		return orderID;
+	}
+
+	public void setOrderID(int orderID) {
+		this.orderID = orderID;
+	}
+
 	int id;
 	int category;
 	String name;

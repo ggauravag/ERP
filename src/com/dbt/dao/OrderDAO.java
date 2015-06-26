@@ -19,8 +19,6 @@ import com.dbt.exception.NoConnectionException;
 import com.dbt.support.Email;
 
 public class OrderDAO {
-	
-	
 
 	public static boolean takeOrder(Order order) {
 		boolean success = false;
@@ -145,12 +143,42 @@ public class OrderDAO {
 		return categories;
 	}
 
+	public Order getOrder(int id) {
+		Order order = null;
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet res = null;
+
+		try {
+			con = DBConnection.getConnection();
+			stmt = con
+					.prepareStatement("select order._id,cust_id,amount,time,concat(first_name,' ',last_name) as name,email,mobile,type from `order` join `user` on order.cust_id = user._id where order._id = ?");
+			stmt.setInt(1, id);
+			res = stmt.executeQuery();
+			if (res.next()) {
+				order = new Order(new Customer(res.getInt("cust_id"),
+						res.getString("name"), res.getString("mobile"),
+						res.getString("email"), null, res.getString("type")),
+						null, id, res.getDate("time"), res.getInt("amount"));
+			}
+		} catch (NoConnectionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			DBConnection.closeResource(con, stmt, res);
+		}
+		return order;
+	}
+
 	public static List<Order> getOrderDetails(String id, String name,
 			String mobile) {
 		List<Order> orders = new ArrayList<Order>();
-		if(name != null && !"".equals(name))
+		if (name != null && !"".equals(name))
 			name = "%" + name + "%";
-		
+
 		Connection con = null;
 		PreparedStatement stmt = null;
 		ResultSet res = null;
@@ -164,7 +192,7 @@ public class OrderDAO {
 					+ id
 					+ " or concat(user.first_name,' ',last_name) like '"
 					+ name + "' or user.mobile = '" + mobile + "'";
-			System.out.println("Query : "+sql);
+			System.out.println("Query : " + sql);
 			stmt = con.prepareStatement(sql);
 			res = stmt.executeQuery();
 			Order order = null;
@@ -203,9 +231,7 @@ public class OrderDAO {
 		} catch (SQLException e) {
 			Email.sendExceptionReport(e);
 			e.printStackTrace();
-		}
-		finally
-		{
+		} finally {
 			DBConnection.closeResource(con, stmt, res);
 		}
 

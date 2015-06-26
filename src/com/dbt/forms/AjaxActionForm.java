@@ -8,6 +8,10 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 
 public class AjaxActionForm extends ActionForm {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	String action, catgid, email, mobile, name;
 
 	public String getAction() {
@@ -69,10 +73,11 @@ public class AjaxActionForm extends ActionForm {
 
 		} else if ("setFirm".equals(action)) {
 
-		}
-		else if ("getOrder".equals(action)) {
+		} else if ("getOrder".equals(action)) {
 
-		}else {
+		} else if ("sendShipmentDetails".equals(action)) {
+
+		} else {
 			errors.add("error", new ActionMessage("request.invalid"));
 		}
 

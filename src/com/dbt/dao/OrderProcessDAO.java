@@ -3,47 +3,57 @@ package com.dbt.dao;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.SQLData;
 import java.sql.SQLException;
-import java.sql.SQLType;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import com.dbt.data.Order_item;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+
 import com.dbt.data.Product;
 import com.dbt.database.DBConnection;
 import com.dbt.exception.NoConnectionException;
 import com.dbt.support.Email;
+import com.dbt.vo.Shipment;
 
 public class OrderProcessDAO {
-	
-	public void shipProducts(int orderID,int[] prodID,String type, String name, String number,
-			String contact, String datetime)
-	{
-		int shipID = addShipment(type, name, number, contact, datetime);
-		
+
+	public Shipment shipProducts(JSONArray itemJSON, int orderID, int[] prodID,
+			String type, String name, String number, String contact,
+			String datetime) {
+		Shipment shipment = addShipment(type, name, number, contact, datetime);
+
 		Connection con = null;
 		PreparedStatement stmt = null;
-		
+		List<Product> items = new ArrayList<Product>();
+
 		try {
 			con = DBConnection.getConnection();
 			StringBuffer cond = new StringBuffer("");
-			for(int k = 0; k < prodID.length; k++)
-			{
-				if(k != prodID.length - 1)
-					cond.append(prodID[k]+",");
+			for (int k = 0; k < prodID.length; k++) {
+				if (k != prodID.length - 1)
+					cond.append(prodID[k] + ",");
 				else
 					cond.append(prodID[k]);
+				JSONObject obj = (JSONObject) itemJSON.get(k);
+				Product p = new Product(Integer.parseInt(obj.get("product_id")
+						.toString()), 0, obj.get("product_name").toString(),
+						Integer.parseInt(obj.get("product_qty").toString()),
+						-1, -1);
+				p.setOrderID(Integer.parseInt(obj.get("order_id").toString()));
+				items.add(p);
 			}
-			
-			String sql = "update order_item set ship_id = ? where order_id = ? and product_id in ("+cond.toString()+")";
+			shipment.setItems(items);
+			String sql = "update order_item set ship_id = ? where order_id = ? and product_id in ("
+					+ cond.toString() + ")";
 			stmt = con.prepareStatement(sql);
-			stmt.setInt(1, shipID);
+			stmt.setInt(1, shipment.getId());
 			stmt.setInt(2, orderID);
 			stmt.executeUpdate();
-		
+
 		} catch (NoConnectionException e) {
 			// TODO Auto-generated catch block
 			Email.sendExceptionReport(e);
@@ -52,15 +62,17 @@ public class OrderProcessDAO {
 			// TODO Auto-generated catch block
 			Email.sendExceptionReport(e);
 			e.printStackTrace();
+		} finally {
+			DBConnection.closeResource(con, stmt, null);
 		}
-		
-		
+
+		return shipment;
 	}
-	
-	
-	public int addShipment(String type, String name, String number,
+
+	public Shipment addShipment(String type, String name, String number,
 			String contact, String datetime) {
 		int shipmentID = 0;
+		Shipment shipment = null;
 		Timestamp timestamp = null;
 		try {
 			SimpleDateFormat format = new SimpleDateFormat(
@@ -87,6 +99,8 @@ public class OrderProcessDAO {
 			stmt.registerOutParameter(6, java.sql.Types.INTEGER);
 			stmt.execute();
 			shipmentID = stmt.getInt(6);
+			shipment = new Shipment(shipmentID, type, name, number, contact,
+					timestamp);
 		} catch (NoConnectionException e) {
 			// TODO Auto-generated catch block
 			Email.sendExceptionReport(e);
@@ -95,12 +109,10 @@ public class OrderProcessDAO {
 			// TODO Auto-generated catch block
 			Email.sendExceptionReport(e);
 			e.printStackTrace();
-		}
-		finally
-		{
+		} finally {
 			DBConnection.closeResource(con, stmt, null);
 		}
 
-		return shipmentID;
+		return shipment;
 	}
 }
