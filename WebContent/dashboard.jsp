@@ -1,4 +1,3 @@
-
 <%@page import="com.dbt.dao.LoginDAO"%>
 <%@page import="com.dbt.data.Privilege"%>
 <%@page import="java.util.Iterator"%>
@@ -6,8 +5,10 @@
 	pageEncoding="ISO-8859-1"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
-
-<%@ page import="com.dbt.data.User" %>
+<%
+	String basePath = request.getContextPath();
+%>
+<%@ page import="com.dbt.data.User"%>
 <%@ taglib prefix="jspcore" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html>
 <!--[if IE 9 ]><html class="ie9"><![endif]-->
@@ -17,7 +18,7 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title><bean:message key="operator.dashboard.label"/></title>
+<title><bean:message key="operator.dashboard.label" /></title>
 
 <!-- Vendor CSS -->
 <link href="vendors/fullcalendar/fullcalendar.css" rel="stylesheet">
@@ -33,19 +34,18 @@
 
 </head>
 <body>
-	
-	<%@ include file="header.jsp" %>
+	<input type="hidden" id="basePath" value="<%=basePath%>">
+	<%@ include file="header.jsp"%>
 
 	<section id="main">
-	
-	<%@include file="panel/leftpanel.jsp" %>
-	   
+
+		<%@include file="panel/leftpanel.jsp"%>
+
 
 		<section id="content">
 			<div class="container">
 				<div class="block-header">
 					<h2>Dashboard</h2>
-
 					<ul class="actions">
 						<li><a href="#"> <i class="md md-trending-up"></i>
 						</a></li>
@@ -61,7 +61,6 @@
 								<li><a href="#">Widgets Settings</a></li>
 							</ul></li>
 					</ul>
-
 				</div>
 
 				<div class="card">
@@ -339,296 +338,7 @@
 							</div>
 							<div id="recent-items-chart" class="flot-chart"></div>
 						</div>
-						<!-- 
-                            <div id="todo-lists">
-                                <div class="tl-header">
-                                    <h2>Todo Lists</h2>
-                                    <small>Add, edit and manage your Todo Lists</small>
-                                    
-                                    <ul class="actions actions-alt">
-                                        <li class="dropdown">
-                                            <a href="#" data-toggle="dropdown">
-                                                <i class="md md-more-vert"></i>
-                                            </a>
-                                            
-                                            <ul class="dropdown-menu dropdown-menu-right">
-                                                <li>
-                                                    <a href="#">Refresh</a>
-                                                </li>
-                                                <li>
-                                                    <a href="#">Manage Widgets</a>
-                                                </li>
-                                                <li>
-                                                    <a href="#">Widgets Settings</a>
-                                                </li>
-                                            </ul>
-                                        </li>
-                                    </ul>
-                                </div>
-                                    
-                                <div class="clearfix"></div>
-                                    
-                                <div class="tl-body">
-                                    <div id="add-tl-item">
-                                        <i class="add-new-item md md-add"></i>
-                                        
-                                        <div class="add-tl-body">
-                                            <textarea placeholder="What you want to do..."></textarea>
-                                            
-                                            <div class="add-tl-actions">
-                                                <a href="#" data-tl-action="dismiss"><i class="md md-close"></i></a>
-                                                <a href="#" data-tl-action="save"><i class="md md-check"></i></a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="checkbox media">
-                                        <div class="pull-right">
-                                            <ul class="actions actions-alt">
-                                                <li class="dropdown">
-                                                    <a href="#" data-toggle="dropdown">
-                                                        <i class="md md-more-vert"></i>
-                                                    </a>
-                                                    
-                                                    <ul class="dropdown-menu dropdown-menu-right">
-                                                        <li><a href="#">Delete</a></li>
-                                                        <li><a href="#">Archive</a></li>
-                                                    </ul>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                        <div class="media-body">
-                                            <label>
-                                                <input type="checkbox">
-                                                <i class="input-helper"></i>
-                                                <span>Duis vitae nibh molestie pharetra augue vitae</span>
-                                            </label>
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="checkbox media">
-                                        <div class="pull-right">
-                                            <ul class="actions actions-alt">
-                                                <li class="dropdown">
-                                                    <a href="#" data-toggle="dropdown">
-                                                        <i class="md md-more-vert"></i>
-                                                    </a>
-                                                    
-                                                    <ul class="dropdown-menu dropdown-menu-right">
-                                                        <li><a href="#">Delete</a></li>
-                                                        <li><a href="#">Archive</a></li>
-                                                    </ul>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                        <div class="media-body">
-                                            <label>
-                                                <input type="checkbox">
-                                                <i class="input-helper"></i>
-                                                <span>In vel imperdiet leoorbi mollis leo sit amet quam fringilla varius mauris orci turpis</span>
-                                            </label>
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="checkbox media">
-                                        <div class="pull-right">
-                                            <ul class="actions actions-alt">
-                                                <li class="dropdown">
-                                                    <a href="#" data-toggle="dropdown">
-                                                        <i class="md md-more-vert"></i>
-                                                    </a>
-                                                    
-                                                    <ul class="dropdown-menu dropdown-menu-right">
-                                                        <li><a href="#">Delete</a></li>
-                                                        <li><a href="#">Archive</a></li>
-                                                    </ul>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                        <div class="media-body">
-                                            <label>
-                                                <input type="checkbox">
-                                                <i class="input-helper"></i>
-                                                <span>Suspendisse quis sollicitudin erosvel dictum nunc</span>
-                                            </label>
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="checkbox media">
-                                        <div class="pull-right">
-                                            <ul class="actions actions-alt">
-                                                <li class="dropdown">
-                                                    <a href="#" data-toggle="dropdown">
-                                                        <i class="md md-more-vert"></i>
-                                                    </a>
-                                                    
-                                                    <ul class="dropdown-menu dropdown-menu-right">
-                                                        <li><a href="#">Delete</a></li>
-                                                        <li><a href="#">Archive</a></li>
-                                                    </ul>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                        <div class="media-body">
-                                            <label>
-                                                <input type="checkbox">
-                                                <i class="input-helper"></i>
-                                                <span>Curabitur egestas finibus sapien quis faucibusras bibendum ut justo at sagittis. In hac habitasse platea dictumst</span>
-                                            </label>
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="checkbox media">
-                                        <div class="pull-right">
-                                            <ul class="actions actions-alt">
-                                                <li class="dropdown">
-                                                    <a href="#" data-toggle="dropdown">
-                                                        <i class="md md-more-vert"></i>
-                                                    </a>
-                                                    
-                                                    <ul class="dropdown-menu dropdown-menu-right">
-                                                        <li><a href="#">Delete</a></li>
-                                                        <li><a href="#">Archive</a></li>
-                                                    </ul>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                        <div class="media-body">
-                                            <label>
-                                                <input type="checkbox">
-                                                <i class="input-helper"></i>
-                                                <span>Suspendisse potenti. Cras dolor augue, tincidunt sit amet lorem id, blandit rutrum libero</span>
-                                            </label>
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="checkbox media">
-                                        <div class="pull-right">
-                                            <ul class="actions actions-alt">
-                                                <li class="dropdown">
-                                                    <a href="#" data-toggle="dropdown">
-                                                        <i class="md md-more-vert"></i>
-                                                    </a>
-                                                    
-                                                    <ul class="dropdown-menu dropdown-menu-right">
-                                                        <li><a href="#">Delete</a></li>
-                                                        <li><a href="#">Archive</a></li>
-                                                    </ul>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                        <div class="media-body">
-                                            <label>
-                                                <input type="checkbox">
-                                                <i class="input-helper"></i>
-                                                <span>Proin luctus dictum nisl id auctor. Nullam lobortis condimentum arcu sit amet gravida</span>
-                                            </label>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>  Todo Lists -->
 
-
-
-						<!-- 
-                            <div class="card">
-                                <div class="card-header ch-alt m-b-20">
-                                    <h2>Recent Posts <small>Phasellus condimentum ipsum id auctor imperdie</small></h2>
-                                    <ul class="actions">
-                                        <li>
-                                            <a href="#">
-                                                <i class="md md-cached"></i>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="#">
-                                                <i class="md md-file-download"></i>
-                                            </a>
-                                        </li>
-                                        <li class="dropdown">
-                                            <a href="#" data-toggle="dropdown">
-                                                <i class="md md-more-vert"></i>
-                                            </a>
-                                            
-                                            <ul class="dropdown-menu dropdown-menu-right">
-                                                <li>
-                                                    <a href="#">Change Date Range</a>
-                                                </li>
-                                                <li>
-                                                    <a href="#">Change Graph Type</a>
-                                                </li>
-                                                <li>
-                                                    <a href="#">Other Settings</a>
-                                                </li>
-                                            </ul>
-                                        </li>
-                                    </ul>
-                                    
-                                    <button class="btn bgm-cyan btn-float"><i class="md md-add"></i></button>
-                                </div>
-                                
-                                <div class="card-body">
-                                    <div class="listview">
-                                        <a class="lv-item" href="#">
-                                            <div class="media">
-                                                <div class="pull-left">
-                                                    <img class="lv-img-sm" src="img/profile-pics/1.jpg" alt="">
-                                                </div>
-                                                <div class="media-body">
-                                                    <div class="lv-title">David Belle</div>
-                                                    <small class="lv-small">Cum sociis natoque penatibus et magnis dis parturient montes</small>
-                                                </div>
-                                            </div>
-                                        </a>
-                                        <a class="lv-item" href="#">
-                                            <div class="media">
-                                                <div class="pull-left">
-                                                    <img class="lv-img-sm" src="img/profile-pics/2.jpg" alt="">
-                                                </div>
-                                                <div class="media-body">
-                                                    <div class="lv-title">Jonathan Morris</div>
-                                                    <small class="lv-small">Nunc quis diam diamurabitur at dolor elementum, dictum turpis vel</small>
-                                                </div>
-                                            </div>
-                                        </a>
-                                        <a class="lv-item" href="#">
-                                            <div class="media">
-                                                <div class="pull-left">
-                                                    <img class="lv-img-sm" src="img/profile-pics/3.jpg" alt="">
-                                                </div>
-                                                <div class="media-body">
-                                                    <div class="lv-title">Fredric Mitchell Jr.</div>
-                                                    <small class="lv-small">Phasellus a ante et est ornare accumsan at vel magnauis blandit turpis at augue ultricies</small>
-                                                </div>
-                                            </div>
-                                        </a>
-                                        <a class="lv-item" href="#">
-                                            <div class="media">
-                                                <div class="pull-left">
-                                                    <img class="lv-img-sm" src="img/profile-pics/4.jpg" alt="">
-                                                </div>
-                                                <div class="media-body">
-                                                    <div class="lv-title">Glenn Jecobs</div>
-                                                    <small class="lv-small">Ut vitae lacus sem ellentesque maximus, nunc sit amet varius dignissim, dui est consectetur neque</small>
-                                                </div>
-                                            </div>
-                                        </a>
-                                        <a class="lv-item" href="#">
-                                            <div class="media">
-                                                <div class="pull-left">
-                                                    <img class="lv-img-sm" src="img/profile-pics/4.jpg" alt="">
-                                                </div>
-                                                <div class="media-body">
-                                                    <div class="lv-title">Bill Phillips</div>
-                                                    <small class="lv-small">Proin laoreet commodo eros id faucibus. Donec ligula quam, imperdiet vel ante placerat</small>
-                                                </div>
-                                            </div>
-                                        </a>
-                                        <a class="lv-footer" href="#">View All</a>
-                                    </div>
-                                </div>
-                                Recent Posts -->
 					</div>
 				</div>
 			</div>
@@ -678,34 +388,6 @@
         <![endif]-->
 
 	<!-- Javascript Libraries -->
-	<script src="js/jquery-2.1.1.min.js"></script>
-	<script src="js/bootstrap.min.js"></script>
-
-	<script src="vendors/flot/jquery.flot.min.js"></script>
-	<script src="vendors/flot/jquery.flot.resize.min.js"></script>
-	<script src="vendors/flot/plugins/curvedLines.js"></script>
-	<script src="vendors/sparklines/jquery.sparkline.min.js"></script>
-	<script src="vendors/easypiechart/jquery.easypiechart.min.js"></script>
-
-	<script src="vendors/fullcalendar/lib/moment.min.js"></script>
-	<script src="vendors/fullcalendar/fullcalendar.min.js"></script>
-	<script src="vendors/simpleWeather/jquery.simpleWeather.min.js"></script>
-	<script src="vendors/auto-size/jquery.autosize.min.js"></script>
-	<script src="vendors/nicescroll/jquery.nicescroll.min.js"></script>
-	<script src="vendors/waves/waves.min.js"></script>
-	<script src="vendors/bootstrap-growl/bootstrap-growl.min.js"></script>
-	<script src="vendors/sweet-alert/sweet-alert.min.js"></script>
-
-	<script src="js/flot-charts/curved-line-chart.js"></script>
-	<script src="js/flot-charts/line-chart.js"></script>
-	<script src="js/charts.js"></script>
-
-	<script src="js/charts.js"></script>
-	<script src="js/functions.js"></script>
-	<script src="js/demo.js"></script>
-
-
+	<%@include file="js/includejs.jsp"%>
 </body>
-
-<!-- Mirrored from byrushan.com/projects/ma/v1-3-1/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 21 May 2015 12:10:00 GMT -->
 </html>

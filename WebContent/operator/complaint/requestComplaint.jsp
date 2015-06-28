@@ -1,5 +1,8 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
-
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+	pageEncoding="ISO-8859-1"%>
+<%
+	String basePath = request.getContextPath();
+%>
 <%@page import="java.util.Iterator"%>
 <%@page import="com.dbt.data.User"%>
 <%@page import="com.dbt.dao.LoginDAO"%>
@@ -17,98 +20,86 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Request Complaint</title>
 
-	<%@include file="../../css/includecss.jsp" %>
+<%@include file="../../css/includecss.jsp"%>
 
 </head>
 
 <body>
-     <%@ include file="../../header.jsp"%>
-     
-     <section id="main"> 
-		<%@include file="../../panel/leftpanel.jsp" %>
-<section id="content">
+	<input type="hidden" id="basePath" value="<%=basePath%>">
+	<%@ include file="../../header.jsp"%>
+
+	<section id="main"> <%@include
+		file="../../panel/leftpanel.jsp"%> <section
+		id="content">
 	<div class="container">
 		<div class="block-header">
 			<h1>Request Complaint</h1>
 		</div>
-     
-          <div class="card">
-			<form class="form-horizontal" role="form" method="post">
 
-		
-		      <div class="card-header">
+		<div class="card">
+			<form class="form-horizontal" role="form" method="post">
+				<div class="card-header">
 					<h2>Order Details</h2>
-			   </div>
-				
-			  <div class="card-body card-padding">
-			      <div class="form-group">
+				</div>
+
+				<div class="card-body card-padding">
+					<div class="form-group">
 						<label for="inputOrderId" class="col-sm-2 control-label">Order
 							Id</label>
 						<div class="col-sm-8">
 							<div class="fg-line">
-							<input type="text" class="form-control" id="inputOrderId"
+								<input type="text" class="form-control" id="inputOrderId"
 									placeholder="Enter Order Id" />
 							</div>
 							<span class="md-visibility form-control-feedback"></span>
-					    </div>
-			       </div>
-			       
-			      <div class="form-group">
-						<label for="inputMobile" class="col-sm-2 control-label">Mobile Number
-							</label>
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label for="inputMobile" class="col-sm-2 control-label">Mobile
+							Number </label>
 						<div class="col-sm-8">
 							<div class="fg-line">
-							<input type="text" class="form-control" id="inputMobile"
+								<input type="text" class="form-control" id="inputMobile"
 									placeholder="Enter Mobile Number" />
 							</div>
 							<span class="md-phone-android form-control-feedback"></span>
-					    </div>
-			       </div>
-			       
-			       
-			       <div class="form-group">
+						</div>
+					</div>
+
+
+					<div class="form-group">
 						<label for="inputName" class="col-sm-2 control-label">Name
-							</label>
+						</label>
 						<div class="col-sm-8">
 							<div class="fg-line">
-							<input type="text" class="form-control" id="inputName"
+								<input type="text" class="form-control" id="inputName"
 									placeholder="Enter Name" />
 							</div>
 							<span class="md md-person form-control-feedback"></span>
-					    </div>
-			       </div>
-			       
-			       
-			       <div class="form-group">
-						<div class="col-sm-offset-2 col-sm-10">
-						  <button type="button" class="btn btn-primary btn-lg col-sm-2" id="SearchOrderbtn">Search
-									</button>
-						  
 						</div>
-				  </div>
-			 
-		  
-		 
-		  <div id="fillOrderDetails">
-			  
-			  
-			 
-		                 
-                              
-              </div>          
-             
-		 <div id="fillComment">
-		 
-		 </div>
-		 </div>  <!-- 	End of Card Template-->
-		    </form>
-		  </div>
-     
-     </div>
-     </section>
-     <!-- Javascript Libraries -->
-	 
-	<%@include file="../../js/includejs.jsp" %>
-	
+					</div>
+
+
+					<div class="form-group">
+						<div class="col-sm-offset-2 col-sm-10">
+							<button type="button" class="btn btn-primary btn-lg col-sm-2"
+								id="SearchOrderbtn">Search</button>
+
+						</div>
+					</div>
+
+
+
+					<div id="fillOrderDetails"></div>
+
+					<div id="fillComment"></div>
+				</div>
+				<!-- 	End of Card Template-->
+			</form>
+		</div>
+
+	</div>
+	</section> <!-- Javascript Libraries --> <%@include file="../../js/includejs.jsp"%>
 </body>
 </html>

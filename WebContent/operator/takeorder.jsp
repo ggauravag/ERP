@@ -1,12 +1,6 @@
-<%@page import="com.dbt.data.Category"%>
-<%@page import="java.util.List"%>
-<%@page import="com.dbt.dao.OrderDAO"%>
-<%@page import="com.dbt.data.Privilege"%>
-<%@page import="com.dbt.dao.LoginDAO"%>
-<%@page import="java.util.Iterator"%>
-<%@page import="com.dbt.data.User"%>
-
-
+<%
+	String basePath = request.getContextPath();
+%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -23,6 +17,7 @@
 </head>
 
 <body>
+    <input type="hidden" id="basePath" value="<%=basePath%>">
 	<%@ include file="../header.jsp"%>
 
 	<section id="main"> 
@@ -309,7 +304,11 @@
 	<!-- Javascript Libraries -->
 
 	<%@include file="/js/includejs.jsp" %>
-	
+	<jspcore:if test="${status == 'failure'}">
+		<script>
+			swal("Try Again", "Some exception occurred ! Please try again !", "error");   
+		</script>
+	</jspcore:if>
 	<script>
 		function load(id) {
 			console.log("Selected : " + id);

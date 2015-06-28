@@ -56,6 +56,10 @@ public class CustomerDAO
 			Email.sendExceptionReport(e);
 			e.printStackTrace();
 		}
+		finally
+		{
+			DBConnection.closeResource(con, stmt, null);
+		}
 		return result;
 	}
 	

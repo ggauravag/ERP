@@ -2,6 +2,7 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib prefix="jspcore" uri="http://java.sun.com/jsp/jstl/core"%>
+
 <!doctype html>
 <html lang="en">
 <head>
@@ -48,10 +49,9 @@ body,h1,h2,h3,h4,h5,h6 {
 					<jspcore:set var="merAdd" value="${merchant.address}"></jspcore:set>
 					<div class="panel-body">
 						<p>
-							<strong> ${merAdd.houseNo}, ${merAdd.line1}<br> ${merAdd.line2}, 
-								${merAdd.city} - ${merAdd.zip}
-							</strong> <br> ${merchant.mobile} <br>
-							${merchant.email}
+							<strong> ${merAdd.houseNo}, ${merAdd.line1}<br>
+								${merAdd.line2}, ${merAdd.city} - ${merAdd.zip}
+							</strong> <br> ${merchant.mobile} <br> ${merchant.email}
 						</p>
 					</div>
 				</div>
@@ -143,6 +143,7 @@ body,h1,h2,h3,h4,h5,h6 {
 						</jspcore:forEach>
 					</jspcore:otherwise>
 				</jspcore:choose>
+			</tbody>
 		</table>
 		<div class="row text-right">
 			<div class="col-xs-2 col-xs-offset-8">
@@ -181,7 +182,8 @@ body,h1,h2,h3,h4,h5,h6 {
 							<p>&nbsp;&nbsp;</p>
 							<p>&nbsp;&nbsp;</p>
 							<p>
-							<strong><h5 class="text-right">Authorised Signatory</h5></strong>
+								<strong><h5 class="text-right">Authorised
+										Signatory</h5></strong>
 							</p>
 
 						</div>

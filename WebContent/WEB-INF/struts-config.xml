@@ -43,6 +43,7 @@
 
 		<action path="/PrintOrder" type="com.dbt.action.PrintAction">
 			<forward name="printOrder" path="/operator/printOrder.jsp"></forward>
+			<forward name="printChallan" path="/operator/order/challan.jsp"></forward>
 			<forward name="error" path="/errors/error-au.jsp"></forward>
 		</action>
 

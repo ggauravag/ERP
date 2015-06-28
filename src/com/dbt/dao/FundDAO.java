@@ -34,6 +34,10 @@ public class FundDAO {
 			Email.sendExceptionReport(e);
 			e.printStackTrace();
 		}
+		finally
+		{
+			DBConnection.closeResource(con, stmt, null);
+		}
 		return false;
 	}
 	
@@ -59,6 +63,10 @@ public class FundDAO {
 			// TODO Auto-generated catch block
 			Email.sendExceptionReport(e);
 			e.printStackTrace();
+		}
+		finally
+		{
+			DBConnection.closeResource(con, stmt, null);
 		}
 		return false;
 	}

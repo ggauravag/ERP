@@ -25,7 +25,7 @@ public class OrderProcessDAO {
 			String type, String name, String number, String contact,
 			String datetime) {
 		Shipment shipment = addShipment(type, name, number, contact, datetime);
-
+		
 		Connection con = null;
 		PreparedStatement stmt = null;
 		List<Product> items = new ArrayList<Product>();

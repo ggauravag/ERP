@@ -8,20 +8,103 @@ $("#searchOrderButton").click(function() {
 	var orderID = $("#inputOrderID").val();
 });
 
-$("#sendShipment").click(
-		function()
-		{
-			$('#modalMobile').modal('show');
-		}		
-);
+$("#sendShipment").click(function() {
+	$('#modalMobile').modal('show');
+});
 
+$("#generateChallan").click(function() {
+	loadFirms();
+});
+
+$('#selectFirmID').click(
+		function() {
+			// alert("button clicked");
+			var firmID = $("input[name='firmID']:checked").val();
+			// alert('Value is : '+firmID);
+			var selectFirm;
+			for (var j = 0; j < firmSelect.length; j++) {
+				if (firmSelect[j].id == firmID)
+					selectFirm = firmSelect[j];
+			}
+
+			$.ajax({
+				url : $("#basePath").val() + "/ajaxServlet.do",
+				data : {
+					firm : firmID,
+					action : "setFirm",
+					firmString : JSON.stringify(selectFirm)
+				},
+				method : "post",
+
+				success : function(data) {
+					// console.log("Result :"+data);
+					if (data.Response == "Success") {
+						$('#modalFirm').modal('hide');
+						window.open($("#basePath").val()
+								+ "/PrintOrder.do?print=challan", "", "");
+					} else if (data.Response == "Error") {
+						$('#modalFirm').modal('hide');
+						alert("Some error can't print Challan ! ");
+					}
+				},
+
+				error : function(data) {
+					alert("Some error ! " + data);
+				}
+			});
+		});
+
+
+function loadFirms() {
+	console.log("Load Firms called");
+	$.ajax({
+		url : $("#basePath").val() + "/ajaxServlet.do",
+		data : {
+			mobile : "'9460008990','9413333853'",
+			action : "getFirmsDetails"
+		},
+		method : "post",
+
+		success : function(data) {
+			console.log("Success" + data);
+			// alert("Success : "+data.firms[0].name);
+			firmSelect = data.firms;
+			$('#firmDiv').html("");
+			for (var i = 0; i < data.firms.length; i++) {
+				var firm = data.firms[i];
+				var f = "";
+				f += "<div class='row'>";
+				f += "<label class='radio radio-inline'>";
+				f += "<input type='radio' name='firmID' value='" + firm.id
+						+ "' class='form-control' />";
+				f += "<i class='input-helper'></i>";
+				f += "<p>" + firm.name + "</p>";
+				f += "<label>" + firm.mobile + "</label>";
+				f += "<label>" + firm.tin + "</label>";
+				console.log(f);
+				f += "<label>" + firm.address.houseNo + ", "
+						+ firm.address.line1 + ", " + firm.address.line2 + ", "
+						+ firm.address.city + " - " + firm.address.zip + ", "
+						+ firm.address.state + "</label></label>";
+				f += "<p></p></div>";
+				$('#firmDiv').append(f);
+			}
+			$('#modalFirm').modal('show');
+		},
+
+		error : function(data) {
+			console.log("Error" + data);
+			alert("Error");
+		}
+	});
+}
 
 $("#sendShipmentDetails")
 		.click(
 				function() {
 					$
 							.ajax({
-								url : "../ajaxServlet.do",
+								url : $("#basePath").val() + "/ajaxServlet.do",
 								data : {
 									mobile : $("#sendMobiles").val(),
 									email : $("#sendEmails").val(),
@@ -106,7 +189,7 @@ $("#searchOrderButton")
 					$
 							.ajax({
 
-								url : "../ajaxServlet.do",
+								url : $("#basePath").val() + "/ajaxServlet.do",
 
 								data : {
 									name : ipnm,

@@ -1,7 +1,10 @@
 package com.dbt.vo;
 
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.List;
+
+import org.apache.commons.digester.xmlrules.FromXmlRuleSet;
 
 import com.dbt.data.Product;
 
@@ -18,7 +21,16 @@ public class Shipment
 	public List<Product> getItems() {
 		return items;
 	}
-
+	
+	
+	public String getPrintableTime()
+	{
+		String date = "";
+		SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy | hh:mm");
+		date = format.format(time);
+		return date;
+	}
+	
 	public void setItems(List<Product> items) {
 		this.items = items;
 	}

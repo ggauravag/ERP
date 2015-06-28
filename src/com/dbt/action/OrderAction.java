@@ -143,7 +143,7 @@ public class OrderAction extends Action {
 			request.setAttribute("order", order);
 			result = "modify";
 		}
-
+		request.setAttribute("status", "failure");
 		return mapping.findForward(result);
 	}
 }

@@ -7,7 +7,6 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import javax.websocket.Session;
 
 import org.apache.commons.validator.EmailValidator;
 import org.apache.struts.action.Action;
@@ -28,6 +27,7 @@ import com.dbt.data.Merchant;
 import com.dbt.data.Order;
 import com.dbt.data.Order_item;
 import com.dbt.data.Product;
+import com.dbt.data.User;
 import com.dbt.support.DBTSms;
 import com.dbt.support.Email;
 import com.dbt.vo.Shipment;
@@ -67,6 +67,10 @@ public class AjaxAction extends Action {
 			sendShipmentDetails(request, response);
 		}
 
+		if ("getUserName".equals(action)) {
+			getUserName(request, response);
+		}
+
 		if ("setFirm".equals(action)) {
 			setFirm(request, response);
 		}
@@ -75,6 +79,24 @@ public class AjaxAction extends Action {
 		}
 
 		return null;
+	}
+
+	private void getUserName(HttpServletRequest request,
+			HttpServletResponse response) throws IOException {
+		HttpSession session = request.getSession();
+		User user = (User) session.getAttribute("user");
+		JSONObject userJSON = new JSONObject();
+		if (user == null) {
+			userJSON.put("name", "");
+			userJSON.put("session", false);
+		} else {
+			userJSON.put("name", user.getFirstName() + " " + user.getLastName());
+			userJSON.put("session", true);
+			userJSON.put("lastlog", user.getLogip());
+		}
+		String responseText = userJSON.toJSONString();
+		response.setContentType("text/json");
+		response.getWriter().write(responseText);
 	}
 
 	private void sendShipmentDetails(HttpServletRequest request,

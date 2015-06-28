@@ -75,6 +75,8 @@ public class AjaxActionForm extends ActionForm {
 
 		} else if ("getOrder".equals(action)) {
 
+		} else if ("getUserName".equals(action)) {
+
 		} else if ("sendShipmentDetails".equals(action)) {
 
 		} else {

@@ -3,7 +3,7 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib prefix="jspcore" uri="http://java.sun.com/jsp/jstl/core"%>
-
+<%String basePath = request.getContextPath(); %>
 <html>
 <head>
 <meta charset="utf-8">
@@ -28,7 +28,7 @@
 
 <body class="login-content">
 	<!-- Login -->
-
+	<input type="hidden" id="basePath" value="<%=basePath%>">
 	<div class="lc-block toggled" id="l-login">
 		<form action="./login.do" id="loginForm" method="post">
 			<div class="input-group m-b-20">

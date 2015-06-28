@@ -1,6 +1,7 @@
 
-
-
+<%
+	String basePath = request.getContextPath();
+%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -18,6 +19,7 @@
 </head>
 
 <body>
+	<input type="hidden" id="basePath" value="<%=basePath%>">
 	<%@ include file="../header.jsp"%>
 
 	<section id="main"> <%@ include file="../panel/leftpanel.jsp"%>
@@ -199,9 +201,7 @@
 					<div class="modal-header">
 						<h4 class="modal-title">Select Billing Firm :</h4>
 					</div>
-					<div class="modal-body" id="firmDiv">
-						
-					</div>
+					<div class="modal-body" id="firmDiv"></div>
 					<div class="modal-footer">
 						<button type="button" id="selectFirmDetails" class="btn btn-link">Select</button>
 						<button type="button" class="btn btn-link" data-dismiss="modal">Close</button>

@@ -1,6 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
-
+<%
+	String basePath = request.getContextPath();
+%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -15,6 +17,7 @@
 </head>
 
 <body>
+	<input type="hidden" id="basePath" value="<%=basePath%>">
 	<%@ include file="../header.jsp"%>
 
 	<section id="main"> <%@ include file="../panel/leftpanel.jsp"%>
@@ -26,7 +29,8 @@
 		</div>
 
 		<div class="card">
-			<form class="form-horizontal" action="./ConfirmOrder.do" method="post" role="form">
+			<form class="form-horizontal" action="./ConfirmOrder.do"
+				method="post" role="form">
 
 				<div class="card-header">
 					<h2>Customer Details</h2>
@@ -138,8 +142,8 @@
 					<div id="productForm">
 
 						<jspcore:forEach var="i" begin="0" end="${param.numProd - 1}">
-								
-								
+
+
 							<div class="row">
 								<label for="selectProduct" class="col-sm-2 control-label">Product
 									Name</label>
@@ -155,7 +159,7 @@
 
 							<div class="row">
 								<label for="inputProduct" class="col-sm-2 control-label">Quantity</label>
-								
+
 								<div class="col-sm-3">
 									<div class="form-group">
 										<div class="fg-line">
@@ -169,15 +173,16 @@
 
 								<label for="inputProduct" class="col-sm-2 control-label">Price</label>
 								<div class="col-sm-3">
-								<jspcore:set var="index">${"prodPrice"}${i}</jspcore:set>
+									<jspcore:set var="index">${"prodPrice"}${i}</jspcore:set>
 									<div class="form-group">
 										<div class="fg-line">
-											<input type="text" id="price" class="form-control" value='${paramValues.prodPrice[i]}'
-												disabled>
+											<input type="text" id="price" class="form-control"
+												value='${paramValues.prodPrice[i]}' disabled>
 										</div>
-								
+
 										<span class="md-attach-money form-control-feedback"></span> <small
-											class="help-block">Total Price : Rs <label>${param[index]}</label> </small>
+											class="help-block">Total Price : Rs <label>${param[index]}</label>
+										</small>
 									</div>
 									<input type="hidden" id="buttonValue" name="confirm" value="">
 								</div>
@@ -188,10 +193,11 @@
 					<br /> <br /> <br />
 					<div class="form-group">
 						<div class="col-sm-offset-2 col-sm-10">
-							<button type="submit" id="submitBTN" class="btn btn-primary btn-lg col-sm-3">Confirm
+							<button type="submit" id="submitBTN"
+								class="btn btn-primary btn-lg col-sm-3">Confirm Order</button>
+							<button type="reset" id="resetBTN"
+								class="btn btn-default btn-lg col-sm-3" style="margin-left: 10%">Modify
 								Order</button>
-							<button type="reset" id="resetBTN" class="btn btn-default btn-lg col-sm-3"
-								style="margin-left: 10%">Modify Order</button>
 						</div>
 					</div>
 				</div>

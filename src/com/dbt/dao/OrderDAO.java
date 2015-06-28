@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import com.dbt.data.Address;
 import com.dbt.data.Category;
 import com.dbt.data.Customer;
 import com.dbt.data.Order;
@@ -36,7 +37,7 @@ public class OrderDAO {
 			order.setId(orderId);
 			stmt.close();
 			Iterator<Product> products = order.getProducts().iterator();
-			String sql = "insert into order_item values(order_id,product_id,quantity,amount) ";
+			String sql = "insert into order_item(order_id,product_id,quantity,amount) values";
 			while (products.hasNext()) {
 				products.next();
 				if (products.hasNext())
@@ -152,14 +153,27 @@ public class OrderDAO {
 		try {
 			con = DBConnection.getConnection();
 			stmt = con
-					.prepareStatement("select order._id,cust_id,amount,time,concat(first_name,' ',last_name) as name,email,mobile,type from `order` join `user` on order.cust_id = user._id where order._id = ?");
+					.prepareStatement("select (select tin from merchant where merchant._id = user._id) as tin,house_no,line_1,line_2,city,state,zip,order._id,cust_id,amount,time,concat(first_name,' ',last_name) as name,email,mobile,type from `order` join `user` join address on order.cust_id = user._id and address.user_id = user._id where order._id = ?");
 			stmt.setInt(1, id);
 			res = stmt.executeQuery();
 			if (res.next()) {
 				order = new Order(new Customer(res.getInt("cust_id"),
 						res.getString("name"), res.getString("mobile"),
-						res.getString("email"), null, res.getString("type")),
+						res.getString("email"), new Address(res.getString("house_no"), res.getString("line_1"), res.getString("line_2"), res.getString("city"), res.getString("state"), res.getString("zip")), res.getString("type"), res.getString("tin")),
 						null, id, res.getDate("time"), res.getInt("amount"));
+				PreparedStatement ps = con.prepareStatement("select _id,name,category,amount,order_item.quantity from order_item join product on order_item.product_id = product._id and order_item.order_id = ?");
+				ps.setInt(1, id);
+				ResultSet set = ps.executeQuery();
+				List<Order_item> products = new ArrayList<Order_item>(); 
+				while(set.next())
+				{
+					Order_item item = new Order_item(id, set.getInt("_id"), set.getInt("quantity"), set.getInt("amount"));
+					item.setProduct_name(set.getString("name"));
+					products.add(item);
+				}
+				order.setOrderitems(products);
+				DBConnection.closeResource(null, ps, set);
+			
 			}
 		} catch (NoConnectionException e) {
 			// TODO Auto-generated catch block
