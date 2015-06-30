@@ -22,6 +22,7 @@ import com.dbt.data.Address;
 import com.dbt.data.Customer;
 import com.dbt.data.Order;
 import com.dbt.data.Product;
+import com.dbt.data.User;
 import com.dbt.support.DBTSms;
 import com.dbt.support.Email;
 
@@ -79,13 +80,13 @@ public class AjaxAction extends Action {
 			 ord.put("date", o.getDate());
 			 ord.put("time", o.getTime());
 		    
-			        JSONObject custom = new JSONObject();
-			        Customer cus = o.getCustomer();
-			        custom.put("name", cus.getName());
-			        custom.put("mobile", cus.getMobile());
-			        custom.put("email", cus.getEmail());
+			        JSONObject usr = new JSONObject();
+			        User user = o.getUser();
+			        usr.put("name", user.getFirstName()+" "+user.getLastName());
+			        usr.put("mobile", user.getMobile());
+			        usr.put("email", user.getEmail());
 		
-		  ord.put("Customer",custom);
+		  ord.put("User",usr);
 		 custArray.add(ord);
 		}
 		list.put("orderdetails", custArray);

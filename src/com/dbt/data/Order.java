@@ -11,7 +11,7 @@ public class Order
 	private int id;
 	private Date datetime;
 	private int amount;
-	
+	private User user;
 	
 	int cust_id;
 	
@@ -32,18 +32,21 @@ public class Order
 		this.time = time;
 		this.date = date;
 	}
+	
+	
+	
 	/**
 	 * @param id
 	 * @param amount
 	 * @param time
 	 */
-	public Order(int id, int amount, String date, String time, Customer customer) {
+	public Order(int id, int amount, String date, String time, User user) {
 		super();
 		this.id = id;
 		this.amount = amount;
 		this.date = date;
 		this.time = time;
-		this.customer = customer;
+		this.setUser(user);
 	}
 	public int getId() {
 		return id;
@@ -119,6 +122,18 @@ public class Order
 	}
 	public void setAmount(int amount) {
 		this.amount = amount;
+	}
+
+
+
+	public User getUser() {
+		return user;
+	}
+
+
+
+	public void setUser(User user) {
+		this.user = user;
 	}
 	
 	

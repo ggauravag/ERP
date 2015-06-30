@@ -27,6 +27,15 @@ public class User {
 		status = null;
 	}
 
+	public User(String firstName, String lastName, String email, String mobile) {
+		super();
+		
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.email = email;
+		this.mobile = mobile;
+	}
+
 	public User(int id, String firstName, String lastName, String email,
 			String mobile, String password, String status, String type,
 			String logip,Time st_time, Time end_time) {

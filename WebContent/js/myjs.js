@@ -39,157 +39,6 @@ function showErrorValidation(div, message) {
 	}
 }
 
-
-$("#loanForm").submit(function() {
-	
-	var amount = $('#inputAmount').val();
-	var tenure = $('#inputTenure').val();
-	var installment = $('#inputInstallment').val();
-	var interest = $('#inputInterest').val();
-	var validity = /^[0-9]\d*$/;
-	
-	var success = true;
-	var div = "#amountDiv";
-	if (amount == "") {
-		showErrorValidation(div, "Amount can't be blank !");
-		success = false;
-	} else
-		clearError(div);
-	if (!validity.test(amount)) {
-		showErrorValidation(div, "Amount can take integer values only !");
-		success = false;
-	} else
-		clearError(div);
-	var div = "#tenureDiv";
-	if (tenure == "") {
-		showErrorValidation(div, "Tenure can't be blank !");
-		success = false;
-	} else
-		clearError(div);
-	if (!validity.test(tenure)) {
-		showErrorValidation(div, "Tenure can take integer values only !");
-		success = false;
-	} else
-		clearError(div);
-	var div = "#monthlyDiv";
-	if (installment == "") {
-		showErrorValidation(div, "Monthly Installment can't be blank !");
-		success = false;
-	} else
-		clearError(div);
-	if (!validity.test(installment)) {
-		showErrorValidation(div, "Monthly installement can take integer values only !");
-		success = false;
-	} else
-		clearError(div);
-	var div = "#interestDiv";
-	if (interest == "") {
-		showErrorValidation(div, "Interest rate can't be blank !");
-		success = false;
-	} else
-		clearError(div);
-	if (!validity.test(interest)) {
-		showErrorValidation(div, "Interest can take integer values only !");
-		success = false;
-	} else
-		clearError(div);
-	
-	return success;
-}
-);
-
-$('#capitalForm').submit(function() {
-	
-	var amount = $('#inputAmount').val();
-	var rate = $('#inputRate').val();
-	var lender = $('#inputLender').val();
-	var validity = /^[0-9]\d*$/;
-	
-	console.log("Lender : " + lender);
-	
-	var success = true;
-	var div = "#amountDiv";
-	if (amount == "") {
-		showErrorValidation(div, "Amount can't be blank");
-		success = false;
-	} else
-		clearError(div);
-	if (!validity.test(amount)) {
-		showErrorValidation(div, "Amount can take integer values only !");
-		success = false;
-	} else
-		clearError(div);
-	var div = "#rateDiv";
-	if (rate == "") {
-		showErrorValidation(div, "Interest Rate can't be blank !");
-		success = false;
-	} else
-		clearError(div);
-	if (!validity.test(rate)) {
-		showErrorValidation(div, "Interest can take integer values only !");
-		success = false;
-	} else
-		clearError(div);
-	var div = "#lenderDiv";
-
-	if (lender == "") {
-		console.log("showed error");		
-		showErrorValidation(div, "Input the lender name please !");
-		success = false;
-	} else
-		clearError(div);
-	if (validity.test(lender)) {
-		showErrorValidation(div, "Name can't take integer values !");
-		success = false;
-	} else
-		clearError(div);
-
-	return success;
-}
-);
-
-function notify(from, msg, align, icon, type, animIn, animOut){
-    $.growl({
-        icon: icon,
-        title: '',
-        message: msg,
-        url: ''
-    },{
-            element: 'body',
-            type: type,
-            allow_dismiss: true,
-            placement: {
-                    from: from,
-                    align: align
-            },
-            offset: {
-                x: 20,
-                y: 85
-            },
-            spacing: 10,
-            z_index: 1031,
-            delay: 2500,
-            timer: 1000,
-            url_target: '_blank',
-            mouse_over: false,
-            animate: {
-                    enter: animIn,
-                    exit: animOut
-            },
-            icon_type: 'class',
-            template: '<div data-growl="container" class="alert" role="alert">' +
-                            '<button type="button" class="close" data-growl="dismiss">' +
-                                '<span aria-hidden="true">&times;</span>' +
-                                '<span class="sr-only">Close</span>' +
-                            '</button>' +
-                            '<span data-growl="icon"></span>' +
-                            '<span data-growl="title"></span>' +
-                            '<span data-growl="message"></span>' +
-                            '<a href="#" data-growl="url"></a>' +
-                        '</div>'
-    });
-};
-
 $('#submitBTN').click(function() {
 	$('#buttonValue').val("submit");
 });
@@ -315,8 +164,8 @@ function showComment(order_id)
 	ind.setAttribute("class", "fg-line");
 	var ee2 = document.createElement('input');
 	ee2.setAttribute("type", "text");
-	ee2.setAttribute("disabled", "true");
-	ee2.setAttribute("name", "orderid");
+	ee2.setAttribute("readonly", "true");
+	ee2.setAttribute("name", "order_id");
 	ee2.setAttribute("class","form-control");
     ee2.setAttribute("value", order_id);
     ind.appendChild(ee2);
@@ -341,15 +190,28 @@ function showComment(order_id)
  	var ee3 = document.createElement('textarea');
 	ee3.setAttribute("name", "comment");
 	ee3.setAttribute("class","form-control");
+	ee3.setAttribute("required", "true");
 	ee3.setAttribute("placeholder", "Enter the detailed description of the Problem occured");
 	ee3.setAttribute("autocomplete","off");
 	ee3.setAttribute("rows","4");
     ind1.appendChild(ee3); 
     indiv1.appendChild(ind1); 
     
+    var indiv2 = document.createElement('div');
+    indiv2.setAttribute("class", "has-error");
+    var div2 = document.createElement('h3');
+    var div3 = document.createElement('small');
+    div3.setAttribute("class", "help-block");
+    var div4 = document.createElement('html:errors');
+    div4.setAttribute("property", "Comment.blankError");
+    
+    div3.appendChild(div4);
+    div2.appendChild(div3);
+    indiv2.appendChild(div2);
     
     e2.appendChild(e3);
     e2.appendChild(indiv1);
+    e2.appendChild(indiv2);
     q.appendChild(e2);
      
     
@@ -358,10 +220,10 @@ function showComment(order_id)
  	var ee4 = document.createElement('div');
  	ee4.setAttribute("class", "col-sm-offset-5");
  	var e5 = document.createElement('button');
- 	e5.setAttribute("type", "button");
+ 	e5.setAttribute("type", "submit");
     e5.setAttribute("class", "btn btn-primary btn-lg col-sm-3");
     e5.setAttribute("id", "submitRequest");
-    $(e5).text("Complain >>>");
+    $(e5).text("Complaint >>>");
     ee4.appendChild(e5);
     e4.appendChild(ee4);
     q.appendChild(e4);
@@ -459,9 +321,9 @@ $("#SearchOrderbtn").click(function(e)
 			    tbhdrow.appendChild(tbhdtd8);
 			    
 			    
-			    var tbhdtd9 = document.createElement('td');
+			    /*var tbhdtd9 = document.createElement('td');
 			    $(tbhdtd9).text("View Details");
-			    tbhdrow.appendChild(tbhdtd9);
+			    tbhdrow.appendChild(tbhdtd9);*/
 			    
 			    tbhead.appendChild(tbhdrow);
 			    table.appendChild(tbhead);  //Header inserted 
@@ -492,16 +354,16 @@ $("#SearchOrderbtn").click(function(e)
 					    tbbdrw.appendChild(tbbdtd1);
 					    
 					    var tbbdtd2 = document.createElement('td');
-					    $(tbbdtd2).text(orderdetails[i].Customer.name);
+					    $(tbbdtd2).text(orderdetails[i].User.name);
 					    tbbdrw.appendChild(tbbdtd2);
 					    
 					    var tbbdtd3 = document.createElement('td');
-					    $(tbbdtd3).text(orderdetails[i].Customer.email);
+					    $(tbbdtd3).text(orderdetails[i].User.email);
 					    tbbdrw.appendChild(tbbdtd3);
 					    
 					    
 					    var tbbdtd4 = document.createElement('td');
-					    $(tbbdtd4).text(orderdetails[i].Customer.mobile);
+					    $(tbbdtd4).text(orderdetails[i].User.mobile);
 					    tbbdrw.appendChild(tbbdtd4);
 					    
 					    var tbbdtd5 = document.createElement('td');
@@ -516,7 +378,7 @@ $("#SearchOrderbtn").click(function(e)
 					    $(tbbdtd7).text(orderdetails[i].time);
 					    tbbdrw.appendChild(tbbdtd7);
 					    
-					    var tbbdtd8 = document.createElement('td');
+					    /*var tbbdtd8 = document.createElement('td');
 					    var vdiv = document.createElement('div');
 					    vdiv.setAttribute("class", "row dialog col-sm-2");
 					    var vdetail = document.createElement('button');
@@ -528,7 +390,7 @@ $("#SearchOrderbtn").click(function(e)
 					    $(vdetail).text("Click here");
 					    vdiv.appendChild(vdetail);
 					    tbbdtd8.appendChild(vdiv);
-					    tbbdrw.appendChild(tbbdtd8);
+					    tbbdrw.appendChild(tbbdtd8);*/
 					    
 					    
 					tbbody.appendChild(tbbdrw);

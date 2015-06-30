@@ -44,6 +44,7 @@
 				<h3>
 					<small class="help-block"><html:errors
 							property="emailError" /></small>
+						
 				</h3>
 			</div>
 			<div class="input-group m-b-20">
