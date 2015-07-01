@@ -20,7 +20,6 @@ import com.dbt.data.Customer;
 import com.dbt.data.Order;
 import com.dbt.data.Product;
 import com.dbt.forms.OrderForm;
-import com.sun.scenario.effect.impl.prism.PrDrawable;
 
 public class OrderAction extends Action {
 
@@ -28,7 +27,7 @@ public class OrderAction extends Action {
 
 		name = name.toLowerCase();
 		boolean isMerchant = false;
-		String[] names = { "enterprise", "trading", "co.", "company",
+		String[] names = { "enterprise","canning","plastic","material","and", "trading", "co.", "company",
 				"furniture", "market", "store", "service", "sons" };
 
 		for (String each : names) {
@@ -70,7 +69,8 @@ public class OrderAction extends Action {
 
 			Address address = new Address(house, line1, line2, city, state, zip);
 
-			Customer cust = new Customer(cid, name, mobile, email, address, type, tin);
+			Customer cust = new Customer(cid, name, mobile, email, address,
+					type, tin);
 
 			int numProducts = Integer.parseInt(orderform.getNumProd());
 
@@ -91,7 +91,7 @@ public class OrderAction extends Action {
 
 			Order order = new Order(cust, products, 0, new Date(), amount);
 			request.getSession().setAttribute("order", order);
-			if(isMerchant(name))
+			if (isMerchant(name))
 				order.getCustomer().setType("MERCHANT");
 			else
 				order.getCustomer().setType("CUSTOMER");
@@ -109,7 +109,7 @@ public class OrderAction extends Action {
 
 					if (cid != 0) {
 						result = "success";
-						
+
 					} else
 						result = "failure";
 				} else {
@@ -121,8 +121,7 @@ public class OrderAction extends Action {
 				}
 			} else {
 				result = "success";
-				
-				
+
 			}
 
 			System.out.println("OrderAction - Submit Clicked, result is : "
@@ -133,12 +132,14 @@ public class OrderAction extends Action {
 				if (!isOrderTaken)
 					result = "failure";
 				else {
-					
+
 					request.setAttribute("order", order);
 				}
 			}
 
 		} else if ("reset".equals(method)) {
+			Order order = (Order) request.getSession().getAttribute("order");
+			request.setAttribute("order", order);
 			result = "modify";
 		}
 

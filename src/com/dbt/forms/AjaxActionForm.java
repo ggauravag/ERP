@@ -65,6 +65,14 @@ public class AjaxActionForm extends ActionForm {
 
 		} else if ("getOrderByNameIDMobile".equals(action)) {
 
+		} else if ("getFirmsDetails".equals(action)) {
+
+		} else if ("setFirm".equals(action)) {
+			
+		} else if ("getExpenditureDetail".equals(action)) {
+			
+		} else if ("getEmployeeDetails".equals(action)) {
+
 		} else {
 			errors.add("error", new ActionMessage("request.invalid"));
 		}

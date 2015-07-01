@@ -1,11 +1,12 @@
 package com.dbt.dao;
 
+import static java.lang.System.out;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import com.dbt.data.Privilege;
@@ -15,12 +16,20 @@ import com.dbt.exception.NoConnectionException;
 import com.dbt.support.Email;
 import com.dbt.support.Utils;
 
-import static java.lang.System.out;
-
 public class LoginDAO {
 	
 	
-	public static Iterator<Privilege> getPrivileges(String type)
+	public static boolean isSubMenu(String curPage,String menu)
+	{
+		boolean isSubMenu = false;
+		//System.out.println("LoginDAO, URI : "+curPage+", Menu : "+menu);
+		String nMenu = menu.toLowerCase().replace('s', '\u0000');
+		if(curPage.toLowerCase().contains(nMenu)|| curPage.toLowerCase().contains(menu.toLowerCase()))
+			isSubMenu = true;
+		return isSubMenu;
+	}
+	
+	public static List<Privilege> getPrivileges(String type)
 	{
 		
 		Connection con = null;
@@ -62,7 +71,7 @@ public class LoginDAO {
 				DBConnection.closeResource(con, stmt, res);
 			}
 		   
-		return privs.iterator();
+		return privs;
 	}
 	
 	public static User getOwner()

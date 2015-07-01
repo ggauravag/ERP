@@ -65,7 +65,7 @@
 				<li class="sub-menu"><a href="#"><i
 						class="md-my-library-add"></i>Expenditure</a>
 					<ul>
-						<li><a href="operator/takeorder.jsp">Add Expenditure</a></li>
+						<li><a href="">Add Expenditure</a></li>
 					</ul></li>
 			</ul>
 		</div>

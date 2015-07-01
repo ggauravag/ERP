@@ -14,14 +14,22 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 
 import com.dbt.dao.ComplaintDAO;
 import com.dbt.dao.CustomerDAO;
+import com.dbt.dao.EmployeeDAO;
+import com.dbt.dao.ExpenditureDAO;
+import com.dbt.dao.MerchantDAO;
 import com.dbt.dao.OrderDAO;
 import com.dbt.data.Address;
+import com.dbt.data.Capital;
 import com.dbt.data.Customer;
+import com.dbt.data.Loan;
+import com.dbt.data.Merchant;
 import com.dbt.data.Order;
 import com.dbt.data.Product;
+import com.dbt.data.User;
 import com.dbt.support.DBTSms;
 import com.dbt.support.Email;
 
@@ -47,55 +55,127 @@ public class AjaxAction extends Action {
 		if ("getProductByCategory".equals(action)) {
 			getProductsByCategory(request, response);
 		}
-		 
-		if("getOrderByNameIDMobile".equals(action)){
+
+		if ("getOrderByNameIDMobile".equals(action)) {
 			getOrderByNameIDMobile(request, response);
+		}
+
+		if ("getFirmsDetails".equals(action)) {
+			getFirmsDetails(request, response);
+		}
+		
+		if("setFirm".equals(action))
+		{
+			setFirm(request, response);
+		}
+		
+		if("getExpenditureDetail".equals(action))
+		{
+			getExpenditureDetail(request, response);
+		}
+		
+		if("getEmployeeDetails".equals(action))
+		{
+			getEmployeeDetails(request, response);
 		}
 
 		return null;
 	}
-
 	
-	public void getOrderByNameIDMobile(HttpServletRequest request,HttpServletResponse response) throws IOException
+	public void setFirm(HttpServletRequest request,
+			HttpServletResponse response) throws IOException
 	{
+		String firm = request.getParameter("firmString");
+		int fid = Integer.parseInt(request.getParameter("firm"));
+		System.out.println(firm+" || "+fid);
+		JSONParser parser = new JSONParser();
+		try {
+			JSONObject firmObj = (JSONObject)parser.parse(firm);
+			JSONObject addObj = (JSONObject)firmObj.get("address");
+			Address address = new Address(addObj.get("houseNo").toString(), addObj.get("line1").toString(), addObj.get("line2").toString(), addObj.get("city").toString(), addObj.get("state").toString(), addObj.get("zip").toString());
+			Merchant merchant = new Merchant(Integer.parseInt(firmObj.get("id").toString()), firmObj.get("name").toString(), address, firmObj.get("tin").toString(), firmObj.get("mobile").toString(), firmObj.get("email").toString(), firmObj.get("logo").toString());
+			request.getSession().setAttribute("merchant", merchant);
+			response.setContentType("text/json");
+			response.getWriter().write("{ \"Response\":\"Success\" }");
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			response.setContentType("text/json");
+			response.getWriter().write("{ \"Response\":\"Error\" }");
+		}
+	}
+	
+	
+	public void getFirmsDetails(HttpServletRequest request,
+			HttpServletResponse response) throws IOException {
+		String mobiles = request.getParameter("mobile");
+		List<Merchant> merchants = new MerchantDAO().getFirms(mobiles);
+		JSONObject resp = new JSONObject();
+		JSONArray mer = new JSONArray();
+		Iterator<Merchant> iterator = merchants.iterator();
+		while (iterator.hasNext()) {
+			Merchant merchant = iterator.next();
+			JSONObject singleMer = new JSONObject();
+			singleMer.put("id", merchant.getId());
+			singleMer.put("name", merchant.getName());
+			singleMer.put("mobile", merchant.getMobile());
+			singleMer.put("email", merchant.getEmail());
+			singleMer.put("tin", merchant.getTin());
+			singleMer.put("logo", merchant.getLogo());
+			JSONObject addressJSON = new JSONObject();
+			Address add = merchant.getAddress();
+			addressJSON.put("houseNo", add.getHouseNo());
+			addressJSON.put("line1", add.getLine1());
+			addressJSON.put("line2", add.getLine2());
+			addressJSON.put("city", add.getCity());
+			addressJSON.put("state", add.getState());
+			addressJSON.put("zip", add.getZip());
+			singleMer.put("address", addressJSON);
+			mer.add(singleMer);
+		}
+		resp.put("firms", mer);
+		String responseText = resp.toJSONString();
+		System.out.println("AjaxActionServlet Firms - Response JSON is : "+responseText);
+		response.setContentType("text/json");
+		response.getWriter().write(responseText);
+	}
+
+	public void getOrderByNameIDMobile(HttpServletRequest request,
+			HttpServletResponse response) throws IOException {
 		String name = request.getParameter("name");
 		String oid = request.getParameter("order");
 		String mob = request.getParameter("mobile");
 		String responseText = "";
-		//System.out.println("AjaxActionServlet : "+name+oid+mob);
-		
-		List<Order> order = ComplaintDAO.getOrderDetails(name,oid,mob);
+		// System.out.println("AjaxActionServlet : "+name+oid+mob);
+
+		List<Order> order = ComplaintDAO.getOrderDetails(name, oid, mob);
 		Iterator<Order> iter = order.iterator();
 		JSONObject list = new JSONObject();
 		JSONArray custArray = new JSONArray();
-		while (iter.hasNext()) 
-		{
-		 Order o = iter.next();
-		 
-			 JSONObject ord = new JSONObject();
-			 
-			 ord.put("oid", o.getId());
-			 ord.put("amount", o.getAmount());
-			 ord.put("date", o.getDate());
-			 ord.put("time", o.getTime());
-		    
-			        JSONObject custom = new JSONObject();
-			        Customer cus = o.getCustomer();
-			        custom.put("name", cus.getName());
-			        custom.put("mobile", cus.getMobile());
-			        custom.put("email", cus.getEmail());
-		
-		  ord.put("Customer",custom);
-		 custArray.add(ord);
+		while (iter.hasNext()) {
+			Order o = iter.next();
+			JSONObject ord = new JSONObject();
+			ord.put("oid", o.getId());
+			ord.put("amount", o.getAmount());
+			ord.put("date", o.getDate());
+			ord.put("time", o.getTime());
+
+			JSONObject custom = new JSONObject();
+			Customer cus = o.getCustomer();
+			custom.put("name", cus.getName());
+			custom.put("mobile", cus.getMobile());
+			custom.put("email", cus.getEmail());
+			ord.put("Customer", custom);
+			custArray.add(ord);
 		}
 		list.put("orderdetails", custArray);
 		responseText = list.toJSONString();
-		//System.out.println("AjaxActionServletFromRequestComplaint : Response JSON is : "+ responseText);
+		System.out.println("AjaxActionServletFromRequestComplaint : Response JSON is : "+
+		 responseText);
 		response.setContentType("text/json");
 		response.getWriter().write(responseText);
 	}
-	
-	
+
 	public void getCustomerDetails(HttpServletRequest request,
 			HttpServletResponse response) throws IOException {
 		String name = request.getParameter("name");
@@ -188,5 +268,87 @@ public class AjaxAction extends Action {
 		response.setContentType("text/json");
 		response.getWriter().write(responseText);
 	}
+	
+	public void getExpenditureDetail(HttpServletRequest request,
+			HttpServletResponse response) throws IOException
+	{
+		String responseString = "";
+		//System.out.println("Inside getExpenditureDetail()");
+		String type = request.getParameter("expType");
+		JSONObject list = new JSONObject();
+		JSONArray detailArray = new JSONArray();
+		//System.out.println(type);
+		
+		if(type.equals("loan"))
+		{
+			List<Loan> loanDetails = ExpenditureDAO.getLoanDetails();
+			Iterator<Loan> itr = loanDetails.iterator();
+			while(itr.hasNext())
+			{
+				Loan l = itr.next();
+				JSONObject loan = new JSONObject();
+				loan.put("id", l.getId());
+				loan.put("amount", l.getAmount());
+				loan.put("installment", l.getInstallement());
+				detailArray.add(loan);
+				//System.out.println(l.getAmount() + ", " + l.getInstallement());
+			}
+			list.put("expDetail", detailArray);
+			list.put("type", "loan");
+			responseString = list.toJSONString();
+			
+			System.out.println("AjaxAction : Response JSON is : " + responseString);
+			response.setContentType("text/json");
+			response.getWriter().write(responseString);
+		}
+		else if(type.equals("interest"))
+		{
+			List<Capital> interestDetails = ExpenditureDAO.getInterestDetail();
+			Iterator<Capital> itr = interestDetails.iterator();
+			while(itr.hasNext())
+			{
+				Capital c = itr.next();
+				JSONObject interest = new JSONObject();
+				interest.put("id", c.getId());
+				interest.put("amount", c.getAmount());
+				interest.put("lender", c.getLender());
+				detailArray.add(interest);
+				System.out.println(c.getAmount() + ", " + c.getLender());
+			}
+			list.put("expDetail", detailArray);
+			list.put("type", "interest");
+			responseString = list.toJSONString();
+			
+			System.out.println("AjaxAction : Response JSON is : " + responseString);
+			response.setContentType("text/json");
+			response.getWriter().write(responseString);
+		}
+	}
+	
+	public void getEmployeeDetails(HttpServletRequest request,
+			HttpServletResponse response) throws IOException{
+		
+		String responseText = "";
+		List<User> employees = EmployeeDAO.getEmployee();
+		Iterator<User> iter = employees.iterator();
+		JSONObject list = new JSONObject();
+		JSONArray employeeArray = new JSONArray();
+		
+		while (iter.hasNext()) {
+			User p = iter.next();
+			JSONObject employee = new JSONObject();
+			employee.put("empId", p.getId());
+			employee.put("name", p.getFirstName() + " " + p.getLastName());
+			/*employee.put("lastName", p.getLastName());*/
+			employee.put("mobile", p.getMobile());
 
+			employeeArray.add(employee);
+		}
+		list.put("employees", employeeArray);
+		responseText = list.toJSONString();
+		System.out.println("AjaxActionServlet : Response JSON is : "
+				+ responseText);
+		response.setContentType("text/json");
+		response.getWriter().write(responseText);
+	}
 }

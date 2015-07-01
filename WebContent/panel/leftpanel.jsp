@@ -8,8 +8,20 @@
             	   String type = user.getType();
             	   String path = request.getContextPath();
             	   String uri = request.getRequestURI();
-            	   Iterator<Privilege> iter = LoginDAO.getPrivileges(type);
+            	   Iterator<Privilege> iter = LoginDAO.getPrivileges(type).iterator();
+            	  /*  <jspcore:set var="privileges"
+       					value="${LoginDAO.getPrivileges(type)}"></jspcore:set>
+       				<jspcore:forEach var="priv" items="${LoginDAO.getPrivileges(type)}">
+       					<jspcore:set var="subpriv" value="${priv.subprivs}"></jspcore:set>
+       					<li class="sub-menu"><a href="#"><i class="${subpriv.iconClass}"></i>${subpriv.name}></a>
+       						<ul>
+       				</jspcore:forEach>
+ */
+
 %>
+
+<jspcore:set var="user" value="${sessionScope.user}"></jspcore:set>
+
 <aside id="sidebar">
 	<div class="sidebar-inner">
 		<div class="si-inner">
@@ -20,8 +32,7 @@
 					</div>
 
 					<div class="profile-info">
-						<%=type%>
-						<i class="md md-arrow-drop-down"></i>
+						${user.type} <i class="md md-arrow-drop-down"></i>
 					</div>
 				</a>
 
@@ -31,34 +42,40 @@
 					<li><a href="#"><i class="md md-settings-input-antenna"></i>
 							Privacy Settings</a></li>
 					<li><a href="#"><i class="md md-settings"></i> Settings</a></li>
-					<li><a href="<%=request.getContextPath()%>/logout.do"><i class="md md-history"></i>
+					<li><a href="<%=path%>/logout.do"><i class="md md-history"></i>
 							Logout</a></li>
 				</ul>
 			</div>
 
 			<ul class="main-menu">
-				<li class="active"><a href="dashboard.jsp"><i
+				<li><a href="<%=path%>/dashboard.jsp"><i
 						class="md md-home"></i> Home</a></li>
+
+				
 
 				<%
 					while(iter.hasNext())
-																																	{
-																																		Privilege priv = iter.next();
-																																		Iterator<Privilege> iterin = priv.subprivs.iterator();
-																																		String classN = priv.getIconClass();
+							{
+								Privilege priv = iter.next();
+								Iterator<Privilege> iterin = priv.subprivs.iterator();
+								String classN = priv.getIconClass();
+								String active = "";
+								if(LoginDAO.isSubMenu(request.getRequestURI(), priv.getName()))
+								{
+									active = "active";
+								}
 				%>
-				<li class="sub-menu"><a href="#"><i class="<%=classN%>"></i><%=priv.getName()%></a>
+				<li class="sub-menu <%=active%>"><a href="#"><i class="<%=classN%>"></i><%=priv.getName()%></a>
 					<ul>
 						<%
 							while(iterin.hasNext())
-							 {
-						    	Privilege inpriv = iterin.next();
-						    	String className = "";
-						    	String p = inpriv.getPath();
-						    	String link = path +"/"+ p;
-						    	if(p != null && uri.contains(p))
-						    		className = "class='active'";
-																																																												   
+											 {
+										    	Privilege inpriv = iterin.next();
+										    	String className = "";
+										    	String p = inpriv.getPath();
+										    	String link = path +"/"+ p;
+										    	if(p != null && uri.contains(p))
+										    		className = "class='active'";
 						%>
 						<li><a href="<%=link%>" <%=className%>><%=inpriv.getName()%></a></li>
 						<%

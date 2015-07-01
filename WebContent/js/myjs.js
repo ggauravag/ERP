@@ -2,8 +2,11 @@
  * 
  */
 var products = new Array();
+var expDetail = new Array();
 var availProduct = new Array();
-var customers;
+var customers,employees;
+
+var firmSelect = new Array();
 
 function Product() {
 	this.name = "";
@@ -37,6 +40,94 @@ function showErrorValidation(div, message) {
 		div = div + " small#error";
 		$(div).text(message);
 	}
+}
+
+
+$('#selectFirmDetails').click(
+   function(){
+	   //alert("button clicked");
+	   var firmID = $("input[name='firmID']:checked").val();
+	   //alert('Value is : '+firmID);
+	   var selectFirm;
+	   for(var j = 0; j < firmSelect.length; j++)
+		{
+		   	if(firmSelect[j].id == firmID)
+		   		selectFirm = firmSelect[j];
+		}
+	   
+	   $.ajax(
+		{
+			url : "../ajaxServlet.do",
+			data : {
+				firm : firmID,
+				action : "setFirm",
+				firmString : JSON.stringify(selectFirm)
+			},
+			method : "post",
+			
+			success : function(data){
+				//console.log("Result :"+data);
+				if(data.Response == "Success")
+				{
+					$('#modalPrint').modal('hide');
+					window.open("../PrintOrder.do?print=order","","");
+				}
+				else if(data.Response == "Error")
+				{
+					$('#modalPrint').modal('hide');
+					alert("Some error can't print Order Confirmation ! ");
+				}	
+			},
+			
+			error : function(data){
+			    alert("Some error ! "+data);	
+			}
+		}	   
+	   );
+   }		
+);
+
+function loadFirms()
+{
+	console.log("Load Firms called");
+	$.ajax(
+			{
+				url : "../ajaxServlet.do",
+				data : {
+					mobile : "'9460008990','9413333853'",
+					action : "getFirmsDetails"
+				},
+				method : "post",
+				
+				success : function(data){
+					console.log("Success"+data);
+					// alert("Success : "+data.firms[0].name);
+					firmSelect = data.firms;
+					$('#firmDiv').html("");
+					for(var i = 0; i < data.firms.length; i++)
+					{
+						var firm = data.firms[i];
+						var f = "";
+						f += "<div class='row'>";
+						f += "<label class='radio radio-inline'>"; 
+						f += "<input type='radio' name='firmID' value='"+firm.id+"' class='form-control' />"; 
+						f += "<i class='input-helper'></i>";
+						f += "<p>"+firm.name+"</p>";
+						f += "<label>"+firm.mobile+"</label>";
+						f += "<label>"+firm.tin+"</label>";
+						console.log(f);
+						f += "<label>"+firm.address.houseNo+", "+firm.address.line1+", "+firm.address.line2+", "+firm.address.city+" - "+firm.address.zip+", "+firm.address.state+"</label></label>";
+						f += "<p></p></div>";
+						$('#firmDiv').append(f);
+					}
+					$('#modalPrint').modal('show');
+				},
+				
+				error : function(data){
+					console.log("Error"+data);
+					alert("Error");
+				}
+			});
 }
 
 
@@ -361,7 +452,7 @@ function showComment(order_id)
  	e5.setAttribute("type", "button");
     e5.setAttribute("class", "btn btn-primary btn-lg col-sm-3");
     e5.setAttribute("id", "submitRequest");
-    $(e5).text("Complain >>>");
+    $(e5).text("Complaint >>>");
     ee4.appendChild(e5);
     e4.appendChild(ee4);
     q.appendChild(e4);
@@ -464,7 +555,7 @@ $("#SearchOrderbtn").click(function(e)
 			    tbhdrow.appendChild(tbhdtd9);
 			    
 			    tbhead.appendChild(tbhdrow);
-			    table.appendChild(tbhead);  //Header inserted 
+			    table.appendChild(tbhead);  // Header inserted
 			    
 			    
 			    
@@ -563,44 +654,8 @@ $("#sendOrderDetails").click(
 				},
 				success : function(data) {
 					// alert("Success : " + data.customers[0].name);
-
-					var div = document.getElementById('custList');
-					div.innerHTML = "";
-					// customers = new Array();
-					// alert("Number of customers : "+data.customers.length);
-					customers = data.customers;
-
-					for (var j = 0; j < data.customers.length; j++) {
-
-						var label = document.createElement('label');
-						label
-								.setAttribute("class",
-										"radio radio-inline m-r-20");
-
-						var input = document.createElement('input');
-						input.setAttribute("type", "radio");
-						input.setAttribute("name", "custID");
-						input.setAttribute("value", customers[j].id);
-
-						var i = document.createElement('i');
-						i.setAttribute("class", "input-helper");
-
-						var p = document.createElement('p');
-						p.setAttribute('style', 'margin-top: -7px');
-
-						label.appendChild(input);
-						label.appendChild(i);
-						var radioText = customers[j].name.replace('"', '');
-						var text = document.createTextNode(radioText + " - "
-								+ customers[j].mobile);
-						p.appendChild(text);
-						label.appendChild(p);
-
-						div.appendChild(label);
-					}
-
-					$('#modalCustomer').modal('show');
-
+					$('#modalMobile').modal('hide');
+					swal("SMS/Email Sent Successfully !", "Order details has been sent to the mobile and the email ids.", "success");
 				}
 			});
 		});
@@ -1034,3 +1089,341 @@ function showProduct(available, index, name, price, qty, total) {
 	// products.push(rowDiv);
 
 }
+
+function generate()
+{
+	var selectedValue = document.getElementById("selectType").value;
+	//alert(selectedValue);
+	var dynamic = document.getElementById("dynamic");
+	dynamic.innerHTML = "";
+	
+	var rowDiv = document.createElement("div");
+	rowDiv.setAttribute("class", "row");
+	
+	var formDiv = document.createElement("div");
+	formDiv.setAttribute("id", "dynamicDiv");
+	
+	var label = document.createElement("label");
+	label.setAttribute("class", "col-sm-2 control-label");
+	label.setAttribute("for", "dynamic1");
+	
+	var span = document.createElement("span");
+	var colDiv = document.createElement("div");
+	
+	var lineDiv = document.createElement("div");
+	lineDiv.setAttribute("class", "fg-line");
+	
+	var input = document.createElement("input");
+	input.setAttribute("class", "form-control");
+	input.setAttribute("id", "dynamic1");
+	input.setAttribute("name", "dynamic1");
+	input.setAttribute("type", "text");
+	
+	var small = document.createElement("small");
+	small.setAttribute("class", "help-block");
+	small.setAttribute("id", "error");
+	
+	if(selectedValue == "salary")
+	{
+		formDiv.setAttribute("class", "form-input");
+		
+		label.innerHTML = "Employee Name";
+		
+		colDiv.setAttribute("class", "col-sm-3 m-b-25");
+		
+		input.setAttribute("placeholder", "Enter Employee Name");
+		input.setAttribute("onClick", "showEmployees()");
+		
+		span.setAttribute("class", "md md-person form-control-feedback");
+		
+		var formDiv1 = document.createElement("div");
+		formDiv1.setAttribute("class", "form-input");
+		formDiv1.setAttribute("id", "dynamicDiv1");
+		
+		var label1 = document.createElement("label");
+		label1.setAttribute("class", "col-sm-2 control-label");
+		label1.setAttribute("for", "dynamic2");
+		label1.innerHTML = "Received By";
+		
+		var small1 = document.createElement("small");
+		small1.setAttribute("class", "help-block");
+		small1.setAttribute("id", "error");
+		
+		var span1 = document.createElement("span");
+		span1.setAttribute("class", "md md-person form-control-feedback");
+		
+		var colDiv1 = document.createElement("div");
+		colDiv1.setAttribute("class", "col-sm-3 m-b-25");
+		
+		var lineDiv1 = document.createElement("div");
+		lineDiv1.setAttribute("class", "fg-line");
+		
+		var input1 = document.createElement("input");
+		input1.setAttribute("class", "form-control");
+		input1.setAttribute("id", "dynamic2");
+		input1.setAttribute("name", "dynamic2");
+		input1.setAttribute("type", "text");
+		input1.setAttribute("placeholder", "Received By (person name)");
+		
+		var span1 = document.createElement("span");
+		span1.setAttribute("class", "md md-person form-control-feedback");
+		
+		formDiv.appendChild(label);
+		lineDiv.appendChild(input);
+		colDiv.appendChild(lineDiv);
+		colDiv.appendChild(span);
+		colDiv.appendChild(small);
+		formDiv.appendChild(colDiv);
+		rowDiv.appendChild(formDiv);
+		
+		dynamic.appendChild(rowDiv);
+		
+		// for 2 textfield
+		
+		formDiv1.appendChild(label1);
+		lineDiv1.appendChild(input1);
+		colDiv1.appendChild(lineDiv1);
+		colDiv1.appendChild(span1);
+		colDiv1.appendChild(small1);
+		formDiv1.appendChild(colDiv1);
+		rowDiv.appendChild(formDiv1);
+		
+		dynamic.appendChild(rowDiv);
+		
+	}
+	else if(selectedValue == "daily")
+	{
+		formDiv.setAttribute("class", "form-group");
+		label.innerHTML = "Expenditure Details";
+		colDiv.setAttribute("class", "col-sm-8 m-b-25");
+		input.setAttribute("placeholder", "Enter Details");
+		span.setAttribute("class", "md-description form-control-feedback");
+		
+		formDiv.appendChild(label);
+		lineDiv.appendChild(input);
+		colDiv.appendChild(lineDiv);
+		colDiv.appendChild(span);
+ 		colDiv.appendChild(small);
+		formDiv.appendChild(colDiv);
+		
+		dynamic.appendChild(formDiv);
+	}
+	else if(selectedValue == "loan" || selectedValue == "interest")
+	{
+		colDiv.setAttribute("class", "col-sm-6 m-b-25");
+		formDiv.setAttribute("class", "form-group");
+		
+		var select = document.createElement("select");
+		select.setAttribute("class", "form-control selectpicker");
+		select.setAttribute("name", "dynamic1");
+		select.setAttribute("id", "dynamic1");
+		
+		if(selectedValue == "interest")
+		{
+			label.innerHTML = "Select Lender Detail";
+		}
+		else
+		{
+			label.innerHTML = "Select Loan Detail";
+		}
+		
+		formDiv.appendChild(label);
+		colDiv.appendChild(select);
+		colDiv.appendChild(small);
+		formDiv.appendChild(colDiv);
+		dynamic.appendChild(formDiv);
+		
+		getExpenditureData(selectedValue);
+	}
+}
+
+$("#expForm").submit(function() {
+	
+	var selectedType = $('#selectType').val();
+	var amount = $('#amount').val();
+	var selectedMode = $('#selectMode').val();
+	var description = $('#inputDesc').val();
+	var paid = $('#inputPaid').val();
+	var dynamic1 = $('#dynamic1').val();
+	var dynamic2 = $('#dynamic2').val();
+	
+	var success = true;
+	var div = "#typeDiv";
+	if (selectedType == "noSelect") {
+		showErrorValidation(div, "Please select the type of Expenditure !");
+		success = false;
+	} else
+		clearError(div);
+	
+	var div = "#amountDiv";
+	if (amount == "") {
+		showErrorValidation(div, "Please enter the amount !");
+		success = false;
+	} else
+		clearError(div);
+	
+	var div = "#modeDiv";
+	if (selectedMode == "noSelect") {
+		showErrorValidation(div, "Please select the mode !");
+		success = false;
+	} else
+		clearError(div);
+	
+	var div = "#descDiv";
+	if (description == "") {
+		showErrorValidation(div, "Description can't be empty !");
+		success = false;
+	} else
+		clearError(div);
+	
+	var div = "#paidDiv";
+	if (paid == "") {
+		showErrorValidation(div, "Can't left empty. Enter the name please !");
+		success = false;
+	} else
+		clearError(div);
+	
+	if(dynamic1 == "" || dynamic1 == "noSelect")
+	{
+		var div = "#dynamicDiv";
+		if (dynamic1 == "" || dynamic1 == "noSelect") {
+			showErrorValidation(div, "This field can't be empty !");
+			success = false;
+		} else
+			clearError(div);
+	}
+	if(dynamic2 == "")
+	{
+		var div = "#dynamicDiv1";
+		if (dynamic2 == "") {
+			showErrorValidation(div, "The field can't be empty !");
+			success = false;
+		} else
+			clearError(div);
+	}
+	
+	return success;
+}
+);
+
+function getExpenditureData(type)
+{
+		$.get("../ajaxServlet.do", {
+			action : 'getExpenditureDetail',
+			expType : type
+		}, function(response) {
+			try {
+				if(response.type == "loan")
+				{
+					console.log("The length of Loan response is : "
+							+ response.expDetail.length);
+						showLoanData(response);
+				}
+				else
+				{
+					console.log("The length of Interest response is : "
+							+ response.expDetail.length);
+						showInterestData(response);
+				}
+				
+			} catch (err) {
+				alert(err);
+			}
+
+		});
+}
+
+function showLoanData(resp) {
+	var length = resp.expDetail.length;
+
+	var select = document.getElementById("dynamic1");
+	
+	for (var i = 0; i < length; i++) {
+		var loan = resp.expDetail[i];
+		var option = document.createElement("option");
+		option.setAttribute("value", loan.id);
+		option.innerText = "Amount : " + loan.amount + " , Installment : " + loan.installment;
+		select.appendChild(option);
+		console.log("Option appended : " + loan.id);
+	}
+}
+
+function showInterestData(resp) {
+	var length = resp.expDetail.length;
+
+	var select = document.getElementById("dynamic1");
+	
+	for (var i = 0; i < length; i++) {
+		var interest = resp.expDetail[i];
+		var option = document.createElement("option");
+		option.setAttribute("value", interest.id);
+		option.innerText = "Lender : " + interest.lender + " , Amount : " + interest.amount;
+		select.appendChild(option);
+		console.log("Option appended : " + interest.id);
+	}
+}
+
+function showEmployees()
+{
+	$.ajax({
+		url : "../ajaxServlet.do",
+		data : {
+			action : "getEmployeeDetails"
+		},
+		error : function(data) {
+			alert("Error : " + data);
+		},
+		success : function(data) {
+			//alert("Success : " + data.employees[0].empId);
+
+			var div = document.getElementById("employeeList");
+			div.innerHTML = "";
+			// customers = new Array();
+			// alert("Number of customers : "+data.customers.length);
+			
+			employees = data.employees;
+
+			for (var j = 0; j < data.employees.length; j++) {
+
+				var label = document.createElement('label');
+				label.setAttribute("class", "radio radio-inline m-r-20");
+
+				var input = document.createElement('input');
+				input.setAttribute("type", "radio");
+				input.setAttribute("name", "inputName");
+				input.setAttribute("value", employees[j].empId);
+
+				var i = document.createElement('i');
+				i.setAttribute("class", "input-helper");
+
+				var p = document.createElement('p');
+				p.setAttribute('style', 'margin-top: -7px');
+
+				label.appendChild(input);
+				label.appendChild(i);
+				var radioText = employees[j].name;
+				var text = document.createTextNode(radioText + " - "
+						+ employees[j].mobile);
+				p.appendChild(text);
+				label.appendChild(p);
+
+				div.appendChild(label);
+			}
+
+			$('#modalEmployee').modal('show');
+		}
+	});
+}
+
+$('#selectEmployeeBtn').click(function() {
+	var empId = document.forms["expForm"].inputName.value;
+	$('#modalEmployee').modal('hide');
+	for (var i = 0; i < employees.length; i++) {
+		if (employees[i].empId == empId) {
+			// alert(customers[i].name);
+			$('#dynamic1').val(employees[i].name + "");
+		}
+	}
+	// console.log(cid);
+	document.getElementById("empId").value = empId;
+});

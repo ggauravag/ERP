@@ -16,17 +16,14 @@ import com.dbt.database.DBConnection;
 import com.dbt.exception.NoConnectionException;
 import com.dbt.support.Email;
 
-public class OrderDAO 
-{
-	
-	public static boolean takeOrder(Order order)
-	{
+public class OrderDAO {
+
+	public static boolean takeOrder(Order order) {
 		boolean success = false;
-		
+
 		Connection con = null;
 		CallableStatement stmt = null;
-		try
-		{
+		try {
 			con = DBConnection.getConnection();
 			String query = "{Call CreateOrder(?,?)}";
 			stmt = con.prepareCall(query);
@@ -38,20 +35,18 @@ public class OrderDAO
 			stmt.close();
 			Iterator<Product> products = order.getProducts().iterator();
 			String sql = "insert into order_item values ";
-			while(products.hasNext())
-			{
+			while (products.hasNext()) {
 				products.next();
-				if(products.hasNext())
+				if (products.hasNext())
 					sql += "(?,?,?,?), ";
 				else
 					sql += "(?,?,?,?);";
 			}
-			
+
 			products = order.getProducts().iterator();
-			int i = 1,amount = 0;
+			int i = 1, amount = 0;
 			PreparedStatement ps = con.prepareStatement(sql);
-			while(products.hasNext())
-			{
+			while (products.hasNext()) {
 				Product p = products.next();
 				ps.setInt(i++, orderId);
 				ps.setInt(i++, p.getId());
@@ -59,41 +54,32 @@ public class OrderDAO
 				ps.setInt(i++, p.getSellPrice());
 				amount += p.getQuantity() * p.getSellPrice();
 			}
-			
+
 			int j = ps.executeUpdate();
-		    if(j >= 1)
-		    {
-		    	success = true;
-		    	sql = "update `order` set amount = ? where _id = ?";
-		    	ps.close();
-		    	ps = con.prepareStatement(sql);
-		    	ps.setInt(1, amount);
-		    	ps.setInt(2, orderId);
-		    	ps.executeUpdate();
-		    	ps.close();
-		    	order.setAmount(amount);
-		    }
-		    else
-		    	success = false;
-			
-		}
-		catch(NoConnectionException | SQLException ex)
-		{
+			if (j >= 1) {
+				success = true;
+				sql = "update `order` set amount = ? where _id = ?";
+				ps.close();
+				ps = con.prepareStatement(sql);
+				ps.setInt(1, amount);
+				ps.setInt(2, orderId);
+				ps.executeUpdate();
+				ps.close();
+				order.setAmount(amount);
+			} else
+				success = false;
+
+		} catch (NoConnectionException | SQLException ex) {
 			Email.sendExceptionReport(ex);
 			ex.printStackTrace();
-		}
-		finally
-		{
+		} finally {
 			DBConnection.closeResource(con, stmt, null);
 		}
-		
-		
+
 		return success;
 	}
-	
-	
-	public static List<Product> getProducts(int id)
-	{
+
+	public static List<Product> getProducts(int id) {
 		List<Product> products = new ArrayList<Product>();
 		Connection con = null;
 		PreparedStatement ps = null;
@@ -104,31 +90,29 @@ public class OrderDAO
 			ps = con.prepareStatement(sql);
 			ps.setInt(1, id);
 			res = ps.executeQuery();
-			while(res.next())
-			{
-				products.add(new Product(res.getInt("_id"),res.getInt("category"),res.getString("name"),res.getInt("quantity"),res.getInt("sell_price"),res.getInt("cost_price")));
+			while (res.next()) {
+				products.add(new Product(res.getInt("_id"), res
+						.getInt("category"), res.getString("name"), res
+						.getInt("quantity"), res.getInt("sell_price"), res
+						.getInt("cost_price")));
 			}
-			
+
 		} catch (NoConnectionException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
-		finally
-		{
+		} finally {
 			DBConnection.closeResource(con, ps, res);
 		}
- 
-		System.out.println("Number of products : "+products.size());
+
+		System.out.println("Number of products : " + products.size());
 		return products;
-	
+
 	}
-	
-	
-	public List<Category> getAllCategory()
-	{
+
+	public List<Category> getAllCategory() {
 		List<Category> categories = new ArrayList<Category>();
 		Connection con = null;
 		PreparedStatement ps = null;
@@ -138,27 +122,54 @@ public class OrderDAO
 			String sql = "select * from category";
 			ps = con.prepareStatement(sql);
 			res = ps.executeQuery();
-			while(res.next())
-			{
-				categories.add(new Category(res.getInt("_id"), res.getString("name")));
+			while (res.next()) {
+				categories.add(new Category(res.getInt("_id"), res
+						.getString("name")));
 			}
-			
+
 		} catch (NoConnectionException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
-		finally
-		{
+		} finally {
 			DBConnection.closeResource(con, ps, res);
 		}
- 
-		System.out.println("Number of categories : "+categories.size());
+
+		System.out.println("Number of categories : " + categories.size());
 		return categories;
 	}
-	
-	
-	
+
+	public static List<Order> getOrderDetails(String id,String name,String mobile) {
+		List<Order> orders = new ArrayList<Order>();
+		name = "%" + name + "%";
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet res = null;
+		String condition = "";
+		if(id == null || "".equals(id))
+			id = "0";
+		
+		try {
+			con = DBConnection.getConnection();
+			String sql = "select * from `order` join `user` on order.cust_id = user._id where order._id = "+id+" or concat(user.first_name,' ',last_name) like '"+name+"' or user.mobile = '"+mobile+"'";
+			stmt = con.prepareStatement(sql);
+			res = stmt.executeQuery();
+			while(res.next())
+			{
+				
+			}
+			
+		} catch (NoConnectionException e) {
+			Email.sendExceptionReport(e);
+			e.printStackTrace();
+		} catch (SQLException e) {
+			Email.sendExceptionReport(e);
+			e.printStackTrace();
+		}
+
+		return orders;
+	}
+
 }
