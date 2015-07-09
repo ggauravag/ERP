@@ -10,7 +10,9 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 
 import com.dbt.dao.OrderDAO;
+import com.dbt.dao.PaymentDAO;
 import com.dbt.data.Order;
+import com.dbt.data.Payment;
 import com.dbt.vo.Shipment;
 
 public class PrintAction extends Action {
@@ -36,18 +38,27 @@ public class PrintAction extends Action {
 			String oid = request.getParameter("oid");
 			if (oid != null) {
 				int id = Integer.parseInt(oid);
-				Order d = new Order();
+				Order d = new OrderDAO().getOrder(Integer.parseInt(oid));
 				request.setAttribute("order", d);
 				result = "printOrder";
 			}
 		} else if ("challan".equals(printType)) {
-			Shipment shipment = (Shipment)request.getSession().getAttribute("s");
-			String orderID = request.getSession().getAttribute("orderID").toString();
+			Shipment shipment = (Shipment) request.getSession().getAttribute(
+					"s");
+			String orderID = request.getSession().getAttribute("orderID")
+					.toString();
 			Order order = new OrderDAO().getOrder(Integer.parseInt(orderID));
-			//System.out.println("Products are : "+order.getProducts().size());
+			// System.out.println("Products are : "+order.getProducts().size());
 			request.setAttribute("order", order);
 			request.setAttribute("shipment", shipment);
 			result = "printChallan";
+		} else if ("receipt".equals(printType)) {
+			String paymentID = request.getParameter("payID");
+			if (paymentID != null && !"".equals(paymentID)) {
+				Payment payment = new PaymentDAO().getPaymentByID(Integer.parseInt(paymentID));
+				request.getSession().setAttribute("payment", payment);
+			}
+			result = "printReceipt";
 		}
 
 		return mapping.findForward(result);

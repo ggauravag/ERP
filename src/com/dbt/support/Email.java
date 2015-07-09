@@ -1,6 +1,7 @@
 package com.dbt.support;
 
 import com.dbt.data.Order;
+import com.dbt.data.Payment;
 import com.dbt.vo.Shipment;
 
 public class Email {
@@ -13,6 +14,11 @@ public class Email {
 	}
 	
 	public static void sendOrderDetails(String[] email,Order order)
+	{
+		
+	}
+	
+	public static void sendReceiptDetails(String[] email,Payment payment,Order order)
 	{
 		
 	}

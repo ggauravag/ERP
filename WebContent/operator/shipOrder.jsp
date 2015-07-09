@@ -34,17 +34,14 @@
 				<!-- card-body card-padding div 1-->
 
 				<div class="card-header">
-					<h2>Customer Details</h2>
+					<h2>Shipment Details</h2>
 				</div>
 				<div class="card-body card-padding">
-					<div class="form-group">
+					<div class="form-group row">
 						<label for="inputName" class="col-sm-2 control-label">Shipping
 							Medium : </label>
 						<div class="col-sm-8">
-							<div class="fg-line">
-								<label><stron>${shipment.medium}</strong></label>
-							</div>
-
+							<label class="control-label"><strong>${shipment.medium}</strong></label>
 						</div>
 					</div>
 					<div class="form-group">
@@ -52,7 +49,7 @@
 							Name : </label>
 						<div class="col-sm-8">
 							<div class="fg-line">
-								<label><stron>${shipment.mediumName}</strong></label>
+								<label class="control-label"><strong>${shipment.mediumName}</strong></label>
 							</div>
 
 						</div>
@@ -62,7 +59,7 @@
 							Number : </label>
 						<div class="col-sm-8">
 							<div class="fg-line">
-								<label><stron>${shipment.mediumNumber}</strong></label>
+								<label class="control-label"><strong>${shipment.mediumNumber}</strong></label>
 							</div>
 
 						</div>
@@ -72,7 +69,7 @@
 							Number : </label>
 						<div class="col-sm-8">
 							<div class="fg-line">
-								<label><stron>${shipment.contact}</strong></label>
+								<label class="control-label"><strong>${shipment.contact}</strong></label>
 							</div>
 
 						</div>
@@ -82,7 +79,7 @@
 							Time : </label>
 						<div class="col-sm-8">
 							<div class="fg-line">
-								<label><stron>${shipment.time}</strong></label>
+								<label class="control-label"><strong>${shipment.time}</strong></label>
 							</div>
 
 						</div>
@@ -145,25 +142,66 @@
 					</div>
 				</div>
 
-				<div class="form-group">
-					<div class="col-sm-9 col-sm-offset-1">
-						<button type="submit" id="processPayment"
-							class="col-sm-offset-1 btn btn-primary waves-effect waves-button waves-float">
-							<i class="md md-account-balance-wallet"></i> Process Payment
-						</button>
-						<button type="button" id="generateChallan"
-							class="col-sm-offset-1 btn btn-primary waves-effect waves-button waves-float">
-							<i class="md md-local-shipping"></i> Generate Challan
-						</button>
-						<button type="button" id="sendShipment"
-							class="col-sm-offset-1 btn btn-primary waves-effect waves-button waves-float">
-							<i class="md md-message"></i> SEND SMS/EMAIL CONFIRMATION
-						</button>
-					</div>
-				</div>
+				<div class="form-group row">
 
+					<button type="button" id="processPayment"
+						class="col-sm-offset-1 col-sm-3 btn btn-primary waves-effect waves-button waves-float">
+						<i class="md md-account-balance-wallet"></i> Process Payment
+					</button>
+					<button type="button" id="generateChallan"
+						class="col-sm-offset-1 col-sm-2 btn btn-primary waves-effect waves-button waves-float">
+						<i class="md md-local-shipping"></i> Generate Challan
+					</button>
+					<button type="button" id="sendShipment"
+						class="col-sm-offset-1 col-sm-3 btn btn-primary waves-effect waves-button waves-float">
+						<i class="md md-message"></i> SEND SMS/EMAIL CONFIRMATION
+					</button>
+
+				</div>
+				<br> <br> <br>
+				<div class="modal fade" data-modal-color="blue" id="modalMobile"
+					data-backdrop="static" data-keyboard="false" tabindex="-1"
+					role="dialog" aria-hidden="true">
+					<div class="modal-dialog">
+						<div class="modal-content">
+							<div class="modal-header">
+								<h4 class="modal-title">Send SMS/Email Confirmation</h4>
+							</div>
+							<div class="modal-body">
+								<div class="row">
+									<div class="form-group">
+										<label for="inputName" class="col-sm-6 control-label">Customer
+											Mobile (if Multiple,then CSV) :</label>
+										<div class="col-sm-12">
+											<div class="fg-line">
+												<input class="form-control" type="text" id="sendMobiles"
+													value="${sessionScope.mobile}" />
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="row">
+									<div class="form-group">
+										<label for="inputName" class="col-sm-6 control-label">Customer
+											Email (if Multiple,then CSV) :</label>
+										<div class="col-sm-12">
+											<div class="fg-line">
+												<input type="text" class="form-control" id="sendEmails"
+													value="${sessionScope.email}" />
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="modal-footer">
+								<button type="button" id="sendShipmentDetails"
+									class="btn btn-link">Send</button>
+								<button type="button" class="btn btn-link" data-dismiss="modal">Close</button>
+							</div>
+						</div>
+					</div>
 			</form>
-			<br>
+
 		</div>
 
 	</div>

@@ -1,3 +1,4 @@
+
 <%
 	String basePath = request.getContextPath();
 %>
@@ -12,18 +13,17 @@
 
 <!-- Vendor CSS -->
 
-   <%@include file="/css/includecss.jsp" %>
+
+<%@include file="/css/includecss.jsp"%>
 
 </head>
 
 <body>
-    <input type="hidden" id="basePath" value="<%=basePath%>">
+	<input type="hidden" id="basePath" value="<%=basePath%>">
 	<%@ include file="../header.jsp"%>
 
-	<section id="main"> 
-	 
-	 <%@ include file="../panel/leftpanel.jsp" %>
-	
+	<section id="main"> <%@ include file="../panel/leftpanel.jsp"%>
+
 	<section id="content">
 	<div class="container">
 		<div class="block-header">
@@ -41,16 +41,17 @@
 					<div id="nameDiv" class="form-group">
 						<label for="inputName" class="col-sm-2 control-label">Customer
 							Name</label>
-						<div  class="col-sm-8">
+						<div class="col-sm-8">
 							<div class="fg-line">
 								<input type="text" class="form-control" name="custName"
-									id="inputName" value="${order.customer.name}" placeholder="Enter Full Name">
+									id="inputName" value="${order.customer.name}"
+									placeholder="Enter Full Name">
 							</div>
 
 							<span class="md md-person form-control-feedback"></span> <small
-								id="error" class="help-block">
-								<html:errors property="nameError"/>
-								</small>
+								id="error" class="help-block"> <html:errors
+									property="nameError" />
+							</small>
 						</div>
 						<button type="button" class="btn btn-info" data-toggle="tooltip"
 							data-placement="top" title data-original-title="Search Customers"
@@ -86,15 +87,17 @@
 						<div class="col-sm-8">
 							<div class="fg-line">
 								<input type="email" class="form-control" name="custEmail"
-									id="inputEmail" value="${order.customer.email}" placeholder="Email">
+									id="inputEmail" value="${order.customer.email}"
+									placeholder="Email">
 
 							</div>
 							<span class="md md-email form-control-feedback"></span> <small
-								id="error" class="help-block"><html:errors property="emailError"/></small>
+								id="error" class="help-block"><html:errors
+									property="emailError" /></small>
 						</div>
 					</div>
-					<input type="hidden" name="tin" id="tin" value=""/>
-					<input type="hidden" name="type" id="type" value=""/>
+					<input type="hidden" name="tin" id="tin" value="" /> <input
+						type="hidden" name="type" id="type" value="" />
 					<jspcore:set value="${order.customer.address}" var="add" />
 					<div class="row">
 						<div id="houseDiv" class="form-input">
@@ -102,21 +105,25 @@
 							<div class="col-sm-2 m-b-25">
 								<div class="fg-line">
 									<input type="text" class="form-control" id="inputHouse"
-										name="custHouseNo" value="${add.houseNo}" placeholder="House No.">
+										name="custHouseNo" value="${add.houseNo}"
+										placeholder="House No.">
 
 								</div>
-								<small id="error" class="help-block"><html:errors property="houseError"/></small>
+								<small id="error" class="help-block"><html:errors
+										property="houseError" /></small>
 							</div>
 						</div>
 						<div id="addDiv" class="form-input">
 							<div class="col-sm-6 m-b-25">
 								<div class="fg-line">
 									<input type="text" class="form-control" id="inputAddress1"
-										name="custAdd1" value="${add.line1}" placeholder="Address line 1">
+										name="custAdd1" value="${add.line1}"
+										placeholder="Address line 1">
 
 								</div>
 								<span class="md md-location-on form-control-feedback"></span> <small
-									id="error" class="help-block"><html:errors property="line1Error"/></small>
+									id="error" class="help-block"><html:errors
+										property="line1Error" /></small>
 							</div>
 						</div>
 					</div>
@@ -126,7 +133,8 @@
 						<div class="col-sm-8">
 							<div class="fg-line">
 								<input type="text" class="form-control" id="inputAddress2"
-									name="custAdd2" value="${add.line2}" placeholder="Address line 2">
+									name="custAdd2" value="${add.line2}"
+									placeholder="Address line 2">
 							</div>
 						</div>
 					</div>
@@ -135,8 +143,9 @@
 						<div id="cityDiv" class="form-input">
 							<label for="inputCity" class="col-sm-2 control-label"></label>
 							<div class="col-sm-3 m-b-25 selectpicker">
-								<select class="form-control" id="inputCity" value="${add.city}" name="custCity">
-									<option >Select City</option>
+								<select class="form-control" id="inputCity" value="${add.city}"
+									name="custCity">
+									<option>Select City</option>
 									<option value="Jaipur">Jaipur</option>
 									<option value="Tonk">Tonk</option>
 									<option value="Jodhpur">Jodhpur</option>
@@ -146,15 +155,16 @@
 									<option value="Ahmedabad">Ahmedabad</option>
 									<option value="Chennai">Chennai</option>
 									<option value='Delhi'>Delhi</option>
-								</select>
-								<small id="error" class="help-block"><html:errors property="cityError"/></small>
+								</select> <small id="error" class="help-block"><html:errors
+										property="cityError" /></small>
 							</div>
-							
+
 						</div>
 
 						<div id="stateDiv" class="form-input">
-							<div  class="col-sm-3 m-b-25 selectpicker">
-								<select class="form-control" id="inputState" value="${add.state}" name="custState">
+							<div class="col-sm-3 m-b-25 selectpicker">
+								<select class="form-control" id="inputState"
+									value="${add.state}" name="custState">
 									<option>Select State</option>
 									<option value="Rajasthan">Rajasthan</option>
 									<option value="Maharashtra">Maharashtra</option>
@@ -162,22 +172,23 @@
 									<option value="Uttar Pradesh">Uttar Pradesh</option>
 									<option value="Gujarat">Gujarat</option>
 									<option value="Karnataka">Karnataka</option>
-								</select>
-								
-								  <small id="error" class="help-block"><html:errors property="stateError"/></small>
-							
+								</select> <small id="error" class="help-block"><html:errors
+										property="stateError" /></small>
+
 							</div>
-							
+
 						</div>
 
 						<div class="form-input">
 							<div id="pinDiv" class="col-sm-2">
 								<div class="fg-line">
 									<input type="text" class="form-control" id="inputPin"
-										placeholder="Enter PinCode" value="${add.zip}" name="custPinCode"> 
+										placeholder="Enter PinCode" value="${add.zip}"
+										name="custPinCode">
 								</div>
 								<span class="md md-my-location form-control-feedback"></span> <small
-									id="error" class="help-block"><html:errors property="pinError"/></small>
+									id="error" class="help-block"><html:errors
+										property="pinError" /></small>
 							</div>
 						</div>
 
@@ -189,11 +200,13 @@
 						<div class="col-sm-8">
 							<div class="fg-line">
 								<input type="text" class="form-control" id="inputMobile"
-									name="custMobile" value="${order.customer.mobile}" placeholder="Enter Mobile Number">
+									name="custMobile" value="${order.customer.mobile}"
+									placeholder="Enter Mobile Number">
 
 							</div>
 							<span class="md-phone-android form-control-feedback"></span> <small
-								id="error" class="help-block"><html:errors property="mobileError"/></small>
+								id="error" class="help-block"><html:errors
+									property="mobileError" /></small>
 						</div>
 					</div>
 				</div>
@@ -218,10 +231,10 @@
 										<jspcore:forEach var="cat" items="${list.allCategory}">
 											<option value="${cat.id}">${cat.name}</option>
 										</jspcore:forEach>
-									</select>
-									<small id="error" class="help-block"><html:errors property="productError"/></small>
+									</select> <small id="error" class="help-block"><html:errors
+											property="productError" /></small>
 								</div>
-								
+
 							</div>
 						</div>
 						<div class="row">
@@ -233,10 +246,9 @@
 										data-live-search="true">
 										<option value="">Select Product</option>
 
-									</select>
-									<small id="error" class="help-block"></small>
+									</select> <small id="error" class="help-block"></small>
 								</div>
-								
+
 							</div>
 
 						</div>
@@ -251,8 +263,8 @@
 
 									</div>
 									<span class="md-shopping-basket form-control-feedback"></span>
-									<small id="error" class="help-block"></small>
-									<small class="help-block">Quantity available : <label
+									<small id="error" class="help-block"></small> <small
+										class="help-block">Quantity available : <label
 										id="avail"></label></small>
 								</div>
 							</div>
@@ -265,9 +277,8 @@
 											placeholder="Enter Price">
 
 									</div>
-									<span class="md-attach-money form-control-feedback"></span>
-									  <small id="error" class="help-block"></small>
-									 <small
+									<span class="md-attach-money form-control-feedback"></span> <small
+										id="error" class="help-block"></small> <small
 										class="help-block">Selling Price : Rs <label
 										id="sellPrice"></label></small>
 								</div>
@@ -303,10 +314,11 @@
 
 	<!-- Javascript Libraries -->
 
-	<%@include file="/js/includejs.jsp" %>
+	<%@include file="/js/includejs.jsp"%>
 	<jspcore:if test="${status == 'failure'}">
 		<script>
-			swal("Try Again", "Some exception occurred ! Please try again !", "error");   
+			swal("Try Again", "Some exception occurred ! Please try again !",
+					"error");
 		</script>
 	</jspcore:if>
 	<script>

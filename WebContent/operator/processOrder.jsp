@@ -132,8 +132,8 @@
 
 						<div class="form-group">
 							<div class="col-sm-2 col-sm-offset-1">
-								<label class="control-label"><strong>Is Shipped
-										? (Checked)</strong></label>
+								<label class="control-label"><strong>To be Shipped
+										? </strong></label>
 							</div>
 							<div class="col-sm-2 col-sm-offset-1">
 								<label class="control-label"><strong>Product

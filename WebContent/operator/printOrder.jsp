@@ -109,7 +109,7 @@ body,h1,h2,h3,h4,h5,h6 {
 				</tr>
 			</thead>
 			<tbody>
-
+			<jspcore:if test="${order.products != null}">
 				<jspcore:forEach items="${order.products}" var="product">
 					<tr>
 						<td>${product.name}</td>
@@ -143,6 +143,42 @@ body,h1,h2,h3,h4,h5,h6 {
 						</jspcore:forEach>
 					</jspcore:otherwise>
 				</jspcore:choose>
+			</jspcore:if>
+			<jspcore:if test="${order.orderitems != null}">
+				<jspcore:forEach items="${order.orderitems}" var="product">
+					<tr>
+						<td>${product.product_name}</td>
+						<td class="text-right">${product.quantity}</td>
+						<td class="text-right"><span class="WebRupee">&#x20B9;
+						</span>${product.amount}</td>
+						<td class="text-right"><span class="WebRupee">&#x20B9;
+						</span>${product.quantity * product.amount}</td>
+					</tr>
+				</jspcore:forEach>
+
+				<jspcore:choose>
+					<jspcore:when test="${order.orderitems.size() <= 7}">
+						<jspcore:forEach begin="${order.orderitems.size() + 1}" end="${7}">
+							<tr>
+								<td>&nbsp;</td>
+								<td class="text-right">&nbsp;</td>
+								<td class="text-right">&nbsp;</td>
+								<td class="text-right">&nbsp;-</td>
+							</tr>
+						</jspcore:forEach>
+					</jspcore:when>
+					<jspcore:otherwise>
+						<jspcore:forEach begin="${order.orderitems.size() + 1}" end="${12}">
+							<tr>
+								<td>&nbsp;</td>
+								<td class="text-right">&nbsp;</td>
+								<td class="text-right">&nbsp;</td>
+								<td class="text-right">&nbsp;-</td>
+							</tr>
+						</jspcore:forEach>
+					</jspcore:otherwise>
+				</jspcore:choose>
+			</jspcore:if>
 			</tbody>
 		</table>
 		<div class="row text-right">

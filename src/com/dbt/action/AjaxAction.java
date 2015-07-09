@@ -21,11 +21,14 @@ import com.dbt.dao.ComplaintDAO;
 import com.dbt.dao.CustomerDAO;
 import com.dbt.dao.MerchantDAO;
 import com.dbt.dao.OrderDAO;
+import com.dbt.dao.PaymentDAO;
+import com.dbt.dao.ProductDAO;
 import com.dbt.data.Address;
 import com.dbt.data.Customer;
 import com.dbt.data.Merchant;
 import com.dbt.data.Order;
 import com.dbt.data.Order_item;
+import com.dbt.data.Payment;
 import com.dbt.data.Product;
 import com.dbt.data.User;
 import com.dbt.support.DBTSms;
@@ -78,7 +81,105 @@ public class AjaxAction extends Action {
 			getOrder(request, response);
 		}
 
+		if ("checkStock".equals(action)) {
+			checkStock(request, response);
+		}
+
+		if ("getPaymentDetails".equals(action)) {
+			getPaymentDetails(request, response);
+		}
+
+		if ("sendReceiptDetails".equals(action)) {
+			sendReceiptDetails(request, response);
+		}
+
 		return null;
+	}
+
+	private void sendReceiptDetails(HttpServletRequest request,
+			HttpServletResponse response) throws IOException {
+		String mobileReg = "^[7-9]{1}[0-9]{9}$";
+
+		String emails = request.getParameter("email");
+		String mobiles = request.getParameter("mobile");
+		String[] email = emails.split(",");
+		String[] mobile = mobiles.split(",");
+
+		for (int i = 0; i < email.length; i++) {
+			if (!EmailValidator.getInstance().isValid(email[i]))
+				email[i] = null;
+		}
+
+		for (int i = 0; i < mobile.length; i++) {
+			if (!mobile[i].matches(mobileReg))
+				mobile[i] = null;
+		}
+
+		Payment payment = (Payment) request.getSession().getAttribute(
+				"payment");
+		
+		Order order = (Order) request.getSession().getAttribute(
+				"order");
+		Email.sendReceiptDetails(email, payment, order);
+		DBTSms.sendReceiptSMS(mobile, payment, order);
+
+		response.getWriter().write("{ \"status\":\"success\" }");
+	}
+
+	private void getPaymentDetails(HttpServletRequest request,
+			HttpServletResponse response) throws IOException {
+		String orderID = request.getParameter("orderID");
+		if (orderID != null) {
+			int order = Integer.parseInt(orderID);
+			Iterator<Payment> payments = new PaymentDAO().getPayment(order)
+					.iterator();
+			JSONArray paymentArray = new JSONArray();
+			while (payments.hasNext()) {
+				Payment payment = payments.next();
+				JSONObject paymentJSON = new JSONObject();
+				paymentJSON.put("id", payment.getId());
+				paymentJSON.put("amount", payment.getAmount());
+				paymentJSON.put("mode", payment.getMode());
+				paymentJSON.put("type", payment.getType());
+				paymentJSON.put("paidBy", payment.getPaidBy());
+				paymentJSON.put("orderID", payment.getOrderId());
+				paymentJSON
+						.put("datetime", payment.getDatetime().toGMTString());
+				paymentArray.add(paymentJSON);
+			}
+			JSONObject resp = new JSONObject();
+			resp.put("status", "success");
+			resp.put("payments", paymentArray);
+			String responseText = resp.toJSONString();
+			response.setContentType("text/json");
+			System.out.println(responseText);
+			response.getWriter().write(responseText);
+		}
+	}
+
+	private void checkStock(HttpServletRequest request,
+			HttpServletResponse response) throws IOException {
+		String productID = request.getParameter("productID");
+		String prodQty = request.getParameter("prodQty");
+
+		if (prodQty != null && productID != null) {
+			int prodID = Integer.parseInt(productID);
+			int qty = Integer.parseInt(prodQty);
+			Product product = new ProductDAO().getProductQuantity(prodID);
+			JSONObject productJSON = new JSONObject();
+			productJSON.put("id", product.getId());
+			productJSON.put("quantity", product.getQuantity());
+			productJSON.put("name", product.getName());
+			productJSON.put("sellPrice", product.getSellPrice());
+			productJSON.put("costPrice", product.getCostPrice());
+			productJSON.put("status", "success");
+			String responseText = productJSON.toJSONString();
+			response.setContentType("text/json");
+			response.getWriter().write(responseText);
+		} else {
+			response.setContentType("text/json");
+			response.getWriter().write("{\"status\":\"error\"}");
+		}
 	}
 
 	private void getUserName(HttpServletRequest request,
@@ -159,6 +260,7 @@ public class AjaxAction extends Action {
 				itemJSON.put("product_id", itemJava.getProduct_id());
 				itemJSON.put("product_name", itemJava.getProduct_name());
 				itemJSON.put("product_qty", itemJava.getQuantity());
+				itemJSON.put("product_amount", itemJava.getAmount());
 				itemJSON.put("ship_id", itemJava.getShip_id());
 				itemArray.add(itemJSON);
 			}

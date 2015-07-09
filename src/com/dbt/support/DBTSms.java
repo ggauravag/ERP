@@ -8,6 +8,7 @@ import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 
 import com.dbt.data.Order;
+import com.dbt.data.Payment;
 import com.dbt.vo.Shipment;
 
 public class DBTSms {
@@ -30,8 +31,8 @@ public class DBTSms {
 		try {
 			// Construct The 11Post Data
 
-			SimpleDateFormat format1 = new SimpleDateFormat("dd-MM-yyyy");
-			SimpleDateFormat format2 = new SimpleDateFormat("HH:mm:00");
+			//SimpleDateFormat format1 = new SimpleDateFormat("dd-MM-yyyy");
+			//SimpleDateFormat format2 = new SimpleDateFormat("HH:mm:00");
 			// java.util.Date date = new java.util.Date();
 			// String sendondate =
 			// format1.format(date)+"T"+format2.format(date);
@@ -145,6 +146,27 @@ public class DBTSms {
 		sendSMS(buffer.toString(), text);
 	}
 	
+	public static void sendReceiptSMS(String[] mobile, Payment payment,Order order) {
+		String text = "Dear " + order.getCustomer().getName()
+				+ ",\nWe have received an amount of Rs. " + payment.getAmount() + " for Order ID "
+				+ order.getId() + " as "+payment.getMode();
+		if(!"".equals(payment.getDescription()))
+		{
+			text += "("+payment.getDescription()+")";
+		}
+		
+		text += " from "+payment.getPaidBy()+" wide Txn ID "+payment.getId()+".";
+		
+		StringBuffer buffer = new StringBuffer();
+		for (int i = 0; i < mobile.length; i++) {
+			if (mobile[i] != null && i != mobile.length - 1)
+				buffer.append(mobile[i] + ",");
+			else if (mobile[i] != null)
+				buffer.append(mobile[i]);
+		}
+		sendSMS(buffer.toString(), text);
+	}
+	
 	public static void sendShipmentSMS(String[] mobile, Shipment shipment,Order order) {
 		String text = "Dear " + order.getCustomer().getName()
 				+ ",\nYour order has been shipped by "+shipment.getMedium()+", No.("+shipment.getMediumNumber()+"). Contact : "+shipment.getMediumName()+" ( "+shipment.getContact()+" ) for further tracking.";
@@ -170,8 +192,8 @@ public class DBTSms {
 		try {
 			// Construct The 11Post Data
 
-			SimpleDateFormat format1 = new SimpleDateFormat("dd-MM-yyyy");
-			SimpleDateFormat format2 = new SimpleDateFormat("HH:mm:00");
+			//SimpleDateFormat format1 = new SimpleDateFormat("dd-MM-yyyy");
+			//SimpleDateFormat format2 = new SimpleDateFormat("HH:mm:00");
 			java.util.Date date = new java.util.Date();
 			// String sendondate =
 			// format1.format(date)+"T"+format2.format(date);

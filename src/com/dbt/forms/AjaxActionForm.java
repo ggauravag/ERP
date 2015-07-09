@@ -79,7 +79,14 @@ public class AjaxActionForm extends ActionForm {
 
 		} else if ("sendShipmentDetails".equals(action)) {
 
-		} else {
+		} else if ("getPaymentDetails".equals(action)) {
+
+		} else if ("checkStock".equals(action)) {
+
+		} else if ("sendReceiptDetails".equals(action)) {
+
+		}
+		else {
 			errors.add("error", new ActionMessage("request.invalid"));
 		}
 

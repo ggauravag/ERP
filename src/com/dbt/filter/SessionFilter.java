@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.dbt.data.User;
+import com.dbt.support.TestMemory;
 
 /**
  * Servlet Filter implementation class SessionFilter
@@ -45,7 +46,7 @@ public class SessionFilter implements Filter {
 		HttpSession session = httprequest.getSession();
 		User user = (User) session.getAttribute("user");
 		String uri = httprequest.getRequestURI();
-
+		TestMemory.printMemory();
 		if (uri.contains(".jsp") || uri.contains(".do")) {
 
 			if (user == null && !uri.contains("login.jsp")

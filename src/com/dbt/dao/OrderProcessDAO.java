@@ -47,12 +47,11 @@ public class OrderProcessDAO {
 				items.add(p);
 			}
 			shipment.setItems(items);
-			String sql = "update order_item set ship_id = ? where order_id = ? and product_id in ("
-					+ cond.toString() + ")";
+			String sql = "update product,order_item set product.quantity = product.quantity - order_item.quantity, order_item.ship_id = ? where product._id = order_item.product_id and order_item.order_id = ?";
 			stmt = con.prepareStatement(sql);
 			stmt.setInt(1, shipment.getId());
 			stmt.setInt(2, orderID);
-			stmt.executeUpdate();
+			int i = stmt.executeUpdate();
 
 		} catch (NoConnectionException e) {
 			// TODO Auto-generated catch block

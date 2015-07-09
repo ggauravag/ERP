@@ -6,7 +6,8 @@
 <head>
 <meta charset="UTF-8">
 <title>Challan Details</title>
-<link rel="stylesheet" href="<%=request.getContextPath()%>/css/bootstrap.css">
+<link rel="stylesheet"
+	href="<%=request.getContextPath()%>/css/bootstrap.css">
 <style>
 @import url(http://fonts.googleapis.com/css?family=Bree+Serif);
 
@@ -21,6 +22,11 @@ body,h1,h2,h3,h4,h5,h6 {
 	<jspcore:set var="merchant" value="${sessionScope.merchant}"></jspcore:set>
 	<div class="container">
 		<div class="row">
+		<button type="button" id="ORIGINAL" onclick="printChallan(this.id)" class="btn btn-primary col-xs-offset-1 col-xs-3">Print Original</button>
+		<button type="button" id="DUPLICATE" onclick="printChallan(this.id)" class="btn btn-warning col-xs-offset-1 col-xs-3">Print Duplicate</button>
+		<button type="button" id="TRIPLICATE" onclick="printChallan(this.id)" class="btn btn-info col-xs-offset-1 col-xs-3">Print Triplicate</button>
+	</div>
+		<div class="row">
 			<div class="col-xs-3">
 				<h1>
 					<img height="100px"
@@ -29,6 +35,7 @@ body,h1,h2,h3,h4,h5,h6 {
 			</div>
 			<div class="col-xs-9 text-right">
 				<h2>Delivery Challan</h2>
+				<h5 id="type"></h5>
 				<h1>
 					<small>Challan No. #${shipment.id + 2000} | Date :
 						${shipment.getPrintableTime()}</small>
@@ -93,10 +100,11 @@ body,h1,h2,h3,h4,h5,h6 {
 				<div class="panl panel-default">
 					<div class="panel-body">
 						<table>
-						
+
 							<jspcore:choose>
-						
-								<jspcore:when test='${shipment.medium == "Tempo / Owner Vehicle"}'>
+
+								<jspcore:when
+									test='${shipment.medium == "Tempo / Owner Vehicle"}'>
 									<tr>
 										<td>Shipping Medium</td>
 										<td>: Tempo / Commercial Vehicle</td>
@@ -163,7 +171,7 @@ body,h1,h2,h3,h4,h5,h6 {
 				</tr>
 			</thead>
 			<tbody>
-				
+
 				<jspcore:forEach items="${order.orderitems}" var="product">
 					<tr>
 						<td>${product.product_name}</td>
@@ -187,7 +195,8 @@ body,h1,h2,h3,h4,h5,h6 {
 						</jspcore:forEach>
 					</jspcore:when>
 					<jspcore:otherwise>
-						<jspcore:forEach begin="${order.orderitems.size() + 1}" end="${10}">
+						<jspcore:forEach begin="${order.orderitems.size() + 1}"
+							end="${10}">
 							<tr>
 								<td>&nbsp;</td>
 								<td class="text-right">&nbsp;</td>
@@ -243,5 +252,23 @@ body,h1,h2,h3,h4,h5,h6 {
 			</div>
 		</div>
 	</div>
+	
+
+<script>
+function printChallan(buttonID)
+{
+	document.getElementById("type").innerText = buttonID;
+	document.getElementById("ORIGINAL").style.display = "none";
+	document.getElementById("DUPLICATE").style.display = "none";
+	document.getElementById("TRIPLICATE").style.display = "none";
+	window.print();
+	document.getElementById("type").innerText = "";
+	document.getElementById("ORIGINAL").style.display = "initial";
+	document.getElementById("DUPLICATE").style.display = "initial";
+	document.getElementById("TRIPLICATE").style.display = "initial";
+}
+
+
+</script>
 </body>
 </html>
