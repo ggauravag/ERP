@@ -20,6 +20,16 @@ $("#generateChallan").click(function() {
 	loadFirms();
 });
 
+
+function addPanel()
+{
+	$("#panelDiv").append($("#example").html());
+}
+
+$("#payOpen").click(function(){
+	window.open("payment/payOrder.jsp", "_self", "", "");
+});
+
 $("#generateReceipt").click(function() {
 	loadFirms();
 });
@@ -105,6 +115,151 @@ function showErrorValidation(div, message) {
 	}
 }
 
+
+function showCompleteOrder(orderID)
+{
+	selectedOrder = null;
+	var value = $("input[name=orderID]:checked").val();
+	for (var i = 0; i < orderdetails.length; i++) {
+		if (orderdetails[i].oid == value) {
+			selectedOrder = orderdetails[i];
+			$("#orderID").val(orderdetails[i].oid);
+			break;
+		}
+	}
+
+	$("#selectName").val(selectedOrder.Customer.name);
+	$("#itemJSON").val(JSON.stringify(selectedOrder.items));
+	$("#selectEmail").val(selectedOrder.Customer.email);
+	$("#selectMobile").val(selectedOrder.Customer.mobile);
+	$("#productDetails").html("");
+	for (var j = 0; j < selectedOrder.items.length; j++) {
+		var item = selectedOrder.items[j];
+		// alert("Product id is : "+item.product_id);
+		var app = "<div class=\"form-group\">";
+		app += "<div class=\"col-sm-2 col-sm-offset-1\">";
+		app += "<label class=\"control-label\"><strong>" + item.product_name
+				+ "";
+
+		app += "</div>";
+		app += "<div class=\"col-sm-2 col-sm-offset-1\">";
+		app += "<label class=\"control-label\"><strong>" + item.product_amount
+				+ "";
+		app += "</strong></label>";
+		app += "</div>";
+		app += "<div class=\"col-sm-2 col-sm-offset-1\">";
+		app += "<label class=\"control-label\"><strong>" + item.product_qty
+				+ "</strong></label></div>";
+		app += "<div class=\"col-sm-2 col-sm-offset-1\">";
+		app += "<label class=\"control-label\"><strong>" + item.product_amount
+				* item.product_qty + "";
+		app += "</strong></label>";
+		app += "</div>";
+		app += "</div>";
+		$("#productDetails").append(app);
+	}
+
+	$("#total").text(selectedOrder.amount);
+	$("#loaderImage").show();
+	$
+			.ajax({
+				url : $("#basePath").val() + "/ajaxServlet.do",
+				data : {
+					action : "getPaymentDetails",
+					orderID : value
+				},
+				success : function(data) {
+					$("#loaderImage").hide();
+					if (data.status == "success") {
+						$("#paymentDetails").html("");
+						var paid = 0;
+						for (var i = 0; i < data.payments.length; i++) {
+							var payment = data.payments[i];
+							paid += payment.amount;
+							var html = "<tr>";
+							html += "<td>" + payment.id + "</td>";
+							html += "<td>" + payment.datetime + "</td>";
+							html += "<td>" + payment.amount + "</td>";
+							html += "<td>" + payment.mode.split(";")[0]
+									+ "</td>";
+							html += "<td>" + payment.paidBy + "</td>";
+							html += "<td>" + payment.orderID + "</td>";
+							html += "<td>" + payment.type + "</td>";
+							html += "<td><button type='button' class='btn bgm-indigo waves-effect waves-button waves-float' onclick='printReceipt("
+									+ payment.id + ")'>Generate</button></td>";
+							html += "</tr>";
+							$("#paymentDetails").append(html);
+						}
+						$("#paid").text(paid);
+						$("#due").text(selectedOrder.amount - paid);
+					} else {
+						swal("Error in fetching Payment Details");
+					}
+
+				},
+				error : function(err) {
+					$("#loaderImage").hide();
+				}
+			});
+	
+	$("#loaderImage").show();
+	$
+	.ajax({
+		url : $("#basePath").val() + "/ajaxServlet.do",
+		data : {
+			action : "getShipmentDetails",
+			orderID : value
+		},
+		success : function(data) {
+			$("#loaderImage").hide();
+			$("#panelDiv").html("");
+			if (data.status == "success") {
+				for(var i = 0; i < data.shipments.length;i++)
+				{
+					var shipment = data.shipments[i];
+					
+					var html = "<div class=\"panel panel-collapse\">";
+					html += "<div class=\"panel-heading\" role=\"tab\" id=\"heading"+i+"\">";
+					html += "<h4 class=\"panel-title\">";
+					html += "<a data-toggle=\"collapse\" data-parent=\"#accordion\"";
+					html += "href=\"#collapse"+i+"\" aria-expanded=\"false\"";
+					html += "aria-controls=\"collapse"+i+"\"> Shipment ID #"+shipment.id+"";
+					html += "&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;"+shipment.medium+"";
+					html += "&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;"+shipment.mediumNumber+"&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;"+shipment.mediumName+"";
+					html += "&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;"+shipment.contact+"&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;"+shipment.time+"";
+					html += "</a></h4></div>";
+					html += "<div id=\"collapse"+i+"\" class=\"collapse\" role=\"tabpanel\"";
+					html += "aria-labelledby=\"heading"+i+"\">";
+					html += "<div class=\"panel-body\">";
+					html += "<div class=\"row\">";
+					html += "<label class=\"control-label col-sm-4\"><strong>Product Name";
+					html += "</strong></label> <label class=\"control-label col-sm-4\"><strong>Shipped Quantity";
+					html += "</strong></label></div>";
+					for(var j = 0; j < shipment.products.length; j++)
+					{
+						var prod = shipment.products[j];
+						html += "<div class=\"row\"><label class=\"control-label col-sm-4\">"+prod.name+"</label> <label class=\"control-label col-sm-4\">"+prod.quantity+"</label></div>";
+					}
+					html += "</div></div></div>";
+					
+					$("#panelDiv").append(html);
+				}
+				
+			} else {
+				swal("Error in fetching Shipment Details");
+			}
+
+		},
+		error : function(err) {
+			$("#loaderImage").hide();
+			alert("Error : "+err);
+		}
+	});
+	
+	
+	
+}
+
 $('#selectFirmID')
 		.click(
 				function() {
@@ -117,6 +272,8 @@ $('#selectFirmID')
 							selectFirm = firmSelect[j];
 					}
 
+					$("#loaderImage").show();
+					
 					$
 							.ajax({
 								url : $("#basePath").val() + "/ajaxServlet.do",
@@ -129,6 +286,7 @@ $('#selectFirmID')
 
 								success : function(data) {
 									// console.log("Result :"+data);
+									$("#loaderImage").hide();
 									if (data.Response == "Success") {
 										$('#modalFirm').modal('hide');
 
@@ -170,6 +328,7 @@ $('#selectFirmID')
 								},
 
 								error : function(data) {
+									$("#loaderImage").hide();
 									alert("Some error ! " + data);
 								}
 							});
@@ -177,6 +336,7 @@ $('#selectFirmID')
 
 function loadFirms() {
 	console.log("Load Firms called");
+	$("#loaderImage").show();
 	$.ajax({
 		url : $("#basePath").val() + "/ajaxServlet.do",
 		data : {
@@ -187,6 +347,7 @@ function loadFirms() {
 
 		success : function(data) {
 			console.log("Success" + data);
+			$("#loaderImage").hide();
 			// alert("Success : "+data.firms[0].name);
 			firmSelect = data.firms;
 			$('#firmDiv').html("");
@@ -213,6 +374,7 @@ function loadFirms() {
 		},
 
 		error : function(data) {
+			$("#loaderImage").hide();
 			console.log("Error" + data);
 			alert("Error");
 		}
@@ -220,7 +382,11 @@ function loadFirms() {
 }
 
 $("#sendReceiptDetails").click(
+		
+	
 		function(){
+			$('#modalMobile').modal('hide');
+			$("#loaderImage").show();
 			$
 			.ajax({
 				url : $("#basePath").val() + "/ajaxServlet.do",
@@ -231,12 +397,13 @@ $("#sendReceiptDetails").click(
 				},
 				method : "post",
 				error : function(data) {
+					$("#loaderImage").hide();
 					alert("Error : " + data);
 				},
 				success : function(data) {
 					// alert("Success : " +
 					// data.customers[0].name);
-					$('#modalMobile').modal('hide');
+					$("#loaderImage").hide();
 					swal(
 							"SMS/Email Sent Successfully !",
 							"Payment Receipt has been sent to the mobile and the email ids.",
@@ -251,6 +418,8 @@ $("#sendReceiptDetails").click(
 $("#sendShipmentDetails")
 		.click(
 				function() {
+					$('#modalMobile').modal('hide');
+					$("#loaderImage").show();
 					$
 							.ajax({
 								url : $("#basePath").val() + "/ajaxServlet.do",
@@ -261,12 +430,14 @@ $("#sendShipmentDetails")
 								},
 								method : "post",
 								error : function(data) {
+									$("#loaderImage").hide();
 									alert("Error : " + data);
 								},
 								success : function(data) {
 									// alert("Success : " +
 									// data.customers[0].name);
-									$('#modalMobile').modal('hide');
+									$("#loaderImage").hide();
+									
 									swal(
 											"SMS/Email Sent Successfully !",
 											"Shipment details has been sent to the mobile and the email ids.",
@@ -292,7 +463,7 @@ function checkStock(checkbox) {
 		}
 
 	}
-
+	$("#loaderImage").show();
 	$
 			.ajax({
 				url : $("#basePath").val() + "/ajaxServlet.do",
@@ -303,6 +474,7 @@ function checkStock(checkbox) {
 				},
 				method : "post",
 				success : function(data) {
+					$("#loaderImage").hide();
 					if (data.status == "success") {
 						if (data.quantity < qty) {
 							swal(""
@@ -323,6 +495,7 @@ function checkStock(checkbox) {
 
 				},
 				error : function(data) {
+					$("#loaderImage").hide();
 					swal("Unable to check available product inventory.");
 				}
 			});
@@ -378,7 +551,7 @@ function showProductsDisplay(value) {
 	}
 
 	$("#total").text(selectedOrder.amount);
-
+	$("#loaderImage").show();
 	$
 			.ajax({
 				url : $("#basePath").val() + "/ajaxServlet.do",
@@ -387,6 +560,7 @@ function showProductsDisplay(value) {
 					orderID : value
 				},
 				success : function(data) {
+					$("#loaderImage").hide();
 					if (data.status == "success") {
 						$("#paymentDetails").html("");
 						var paid = 0;
@@ -415,7 +589,7 @@ function showProductsDisplay(value) {
 
 				},
 				error : function(err) {
-
+					$("#loaderImage").hide();
 				}
 			});
 }
@@ -469,6 +643,7 @@ function showProducts(value) {
 $("#searchOrderBtn")
 		.click(
 				function(e) {
+					
 					var s = document.getElementById("fillOrderDetails");
 
 					var ipnm = $("#inputName").val();
@@ -483,7 +658,7 @@ $("#searchOrderBtn")
 					}
 
 					s.innerHTML = "";
-
+					$("#loaderImage").show();
 					$
 							.ajax({
 
@@ -496,10 +671,11 @@ $("#searchOrderBtn")
 									action : "getOrder"
 								},
 								error : function(data) {
+									$("#loaderImage").hide();
 									alert("Error : " + data);
 								},
 								success : function(data) {
-
+									$("#loaderImage").hide();
 									var heading = document.createElement('div');
 									heading
 											.setAttribute("class",
@@ -578,9 +754,19 @@ $("#searchOrderBtn")
 												.createElement('input');
 										input.setAttribute("type", "radio");
 										input.setAttribute("name", "orderID");
-										input
-												.setAttribute("onchange",
-														"showProductsDisplay(this.value)");
+										if($("#page").val() == "viewOrder")
+										{
+											input
+											.setAttribute("onchange",
+													"showCompleteOrder(this.value)");
+										}
+										else
+										{
+											input
+											.setAttribute("onchange",
+													"showProductsDisplay(this.value)");
+										}
+										
 										input.setAttribute("value",
 												orderdetails[i].oid);
 										var tbbdtd = document
@@ -678,7 +864,7 @@ $("#searchOrderButton")
 					}
 
 					s.innerHTML = "";
-
+					$("#loaderImage").show();
 					$
 							.ajax({
 
@@ -691,10 +877,11 @@ $("#searchOrderButton")
 									action : "getOrder"
 								},
 								error : function(data) {
+									$("#loaderImage").hide();
 									alert("Error : " + data);
 								},
 								success : function(data) {
-
+									$("#loaderImage").hide();
 									var heading = document.createElement('div');
 									heading
 											.setAttribute("class",

@@ -9,6 +9,7 @@ var firmSelect = new Array();
 
 $(document).ready(
 		function() {
+			
 			$.ajax({
 				url : $("#basePath").val() + "/ajaxServlet.do",
 				data : {
@@ -75,7 +76,8 @@ $('#selectFirmDetails').click(
 				if (firmSelect[j].id == firmID)
 					selectFirm = firmSelect[j];
 			}
-
+			$('#modalPrint').modal('hide');
+			$("#loaderImage").show();
 			$.ajax({
 				url : $("#basePath").val() + "/ajaxServlet.do",
 				data : {
@@ -87,17 +89,19 @@ $('#selectFirmDetails').click(
 
 				success : function(data) {
 					// console.log("Result :"+data);
+					$("#loaderImage").hide();
 					if (data.Response == "Success") {
-						$('#modalPrint').modal('hide');
+						
 						window.open($("#basePath").val()
 								+ "/PrintOrder.do?print=order", "", "");
 					} else if (data.Response == "Error") {
-						$('#modalPrint').modal('hide');
+						
 						alert("Some error can't print Order Confirmation ! ");
 					}
 				},
 
 				error : function(data) {
+					$("#loaderImage").hide();
 					alert("Some error ! " + data);
 				}
 			});
@@ -105,6 +109,7 @@ $('#selectFirmDetails').click(
 
 function loadFirms() {
 	console.log("Load Firms called");
+	$("#loaderImage").show();
 	$.ajax({
 		url : $("#basePath").val() + "/ajaxServlet.do",
 		data : {
@@ -114,6 +119,7 @@ function loadFirms() {
 		method : "post",
 
 		success : function(data) {
+			$("#loaderImage").hide();
 			console.log("Success" + data);
 			// alert("Success : "+data.firms[0].name);
 			firmSelect = data.firms;
@@ -141,6 +147,7 @@ function loadFirms() {
 		},
 
 		error : function(data) {
+			$("#loaderImage").hide();
 			console.log("Error" + data);
 			alert("Error");
 		}
@@ -492,6 +499,7 @@ $("#SearchOrderbtn")
 
 					s.innerHTML = "";
 					p.innerHTML = "";
+					$("#loaderImage").show();
 					$
 							.ajax({
 
@@ -504,10 +512,11 @@ $("#SearchOrderbtn")
 									action : "getOrderByNameIDMobile"
 								},
 								error : function(data) {
+									$("#loaderImage").hide();
 									alert("Error : " + data);
 								},
 								success : function(data) {
-
+									$("#loaderImage").hide();
 									var heading = document.createElement('div');
 									heading
 											.setAttribute("class",
@@ -684,6 +693,8 @@ function getQueryStringValue(key) {
 $("#sendOrderDetails")
 		.click(
 				function() {
+					$('#modalMobile').modal('hide');
+					$("#loaderImage").show();
 					$
 							.ajax({
 								url : $("#basePath").val() + "/ajaxServlet.do",
@@ -694,12 +705,14 @@ $("#sendOrderDetails")
 								},
 								method : "post",
 								error : function(data) {
+									$("#loaderImage").hide();
 									alert("Error : " + data);
 								},
 								success : function(data) {
+									$("#loaderImage").hide();
 									// alert("Success : " +
 									// data.customers[0].name);
-									$('#modalMobile').modal('hide');
+									
 									swal(
 											"SMS/Email Sent Successfully !",
 											"Order details has been sent to the mobile and the email ids.",
@@ -743,7 +756,7 @@ $("#searchCust").click(
 			if (n == "" || n == null) {
 				return;
 			}
-
+			$("#loaderImage").show();
 			$.ajax({
 				url : $("#basePath").val() + "/ajaxServlet.do",
 				data : {
@@ -751,11 +764,12 @@ $("#searchCust").click(
 					action : "getCustomerDetails"
 				},
 				error : function(data) {
+					$("#loaderImage").hide();
 					alert("Error : " + data);
 				},
 				success : function(data) {
 					// alert("Success : " + data.customers[0].name);
-
+					$("#loaderImage").hide();
 					var div = document.getElementById('custList');
 					div.innerHTML = "";
 					// customers = new Array();

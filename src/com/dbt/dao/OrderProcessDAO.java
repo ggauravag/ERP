@@ -25,7 +25,7 @@ public class OrderProcessDAO {
 			String type, String name, String number, String contact,
 			String datetime) {
 		Shipment shipment = addShipment(type, name, number, contact, datetime);
-		
+
 		Connection con = null;
 		PreparedStatement stmt = null;
 		List<Product> items = new ArrayList<Product>();
@@ -47,7 +47,8 @@ public class OrderProcessDAO {
 				items.add(p);
 			}
 			shipment.setItems(items);
-			String sql = "update product,order_item set product.quantity = product.quantity - order_item.quantity, order_item.ship_id = ? where product._id = order_item.product_id and order_item.order_id = ?";
+			String sql = "update product,order_item set product.quantity = product.quantity - order_item.quantity, order_item.ship_id = ? where product._id = order_item.product_id and order_item.order_id = ? and order_item.product_id in ("
+					+ cond.toString() + ")";
 			stmt = con.prepareStatement(sql);
 			stmt.setInt(1, shipment.getId());
 			stmt.setInt(2, orderID);

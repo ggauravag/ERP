@@ -17,7 +17,8 @@
 </head>
 
 <body>
-	<input type="hidden" id="basePath" value="<%=basePath%>">
+
+
 	<%@ include file="../header.jsp"%>
 
 	<section id="main"> <%@ include file="../panel/leftpanel.jsp"%>

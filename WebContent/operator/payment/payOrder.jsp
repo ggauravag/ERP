@@ -10,7 +10,7 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Process Order</title>
+<title>Pay for Order</title>
 <%@include file="../../css/includecss.jsp"%>
 </head>
 
@@ -22,7 +22,7 @@
 		id="content">
 	<div class="container">
 		<div class="block-header">
-			<h1>Process Order</h1>
+			<h1>Make Payment</h1>
 		</div>
 
 		<div class="card">

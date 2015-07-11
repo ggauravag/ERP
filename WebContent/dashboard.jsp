@@ -27,7 +27,7 @@
 <link href="vendors/material-icons/material-design-iconic-font.min.css"
 	rel="stylesheet">
 <link href="vendors/socicon/socicon.min.css" rel="stylesheet">
-
+<link rel="icon" href="<%=basePath%>/img/favicon.ico"/>
 <!-- CSS -->
 <link href="css/app.min.1.css" rel="stylesheet">
 <link href="css/app.min.2.css" rel="stylesheet">

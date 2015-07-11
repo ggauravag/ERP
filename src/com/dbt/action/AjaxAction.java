@@ -23,6 +23,7 @@ import com.dbt.dao.MerchantDAO;
 import com.dbt.dao.OrderDAO;
 import com.dbt.dao.PaymentDAO;
 import com.dbt.dao.ProductDAO;
+import com.dbt.dao.ShipmentDAO;
 import com.dbt.data.Address;
 import com.dbt.data.Customer;
 import com.dbt.data.Merchant;
@@ -93,7 +94,55 @@ public class AjaxAction extends Action {
 			sendReceiptDetails(request, response);
 		}
 
+		if ("getShipmentDetails".equals(action)) {
+			getShipmentDetails(request, response);
+		}
+
 		return null;
+	}
+
+	public void getShipmentDetails(HttpServletRequest request,
+			HttpServletResponse response) throws IOException {
+		String orderID = request.getParameter("orderID");
+		JSONObject responseJSON = new JSONObject();
+		JSONArray shipmentArray = new JSONArray();
+		if (orderID != null && !"".equals(orderID)) {
+			responseJSON.put("status", "success");
+			int orderId = Integer.parseInt(orderID);
+			List<Shipment> shipments = new ShipmentDAO().getShipment(orderId);
+			for (int i = 0; i < shipments.size(); i++) {
+				Shipment shipment = shipments.get(i);
+				JSONObject shipmentJSON = new JSONObject();
+				shipmentJSON.put("id", shipment.getId());
+				shipmentJSON.put("medium", shipment.getMedium());
+				shipmentJSON.put("mediumName", shipment.getMediumName());
+				shipmentJSON.put("contact", shipment.getContact());
+				shipmentJSON.put("mediumNumber", shipment.getMediumNumber());
+				shipmentJSON.put("time", shipment.getPrintableTime());
+				JSONArray productArray = new JSONArray();
+				List<Product> products = shipment.getItems();
+				for (int j = 0; j < products.size(); j++) {
+					Product product = products.get(j);
+					JSONObject productJSON = new JSONObject();
+					productJSON.put("id", product.getId());
+					productJSON.put("name", product.getName());
+					productJSON.put("quantity", product.getQuantity());
+					productJSON.put("sellPrice", product.getSellPrice());
+					productJSON.put("category", product.getCategory());
+					productArray.add(productJSON);
+				}
+				shipmentJSON.put("products", productArray);
+				shipmentArray.add(shipmentJSON);
+			}
+			responseJSON.put("shipments", shipmentArray);
+		} else {
+			responseJSON.put("status", "failure");
+		}
+
+		String responseText = responseJSON.toJSONString();
+		response.setContentType("text/json");
+		System.out.println(responseText);
+		response.getWriter().write(responseText);
 	}
 
 	private void sendReceiptDetails(HttpServletRequest request,
@@ -115,11 +164,10 @@ public class AjaxAction extends Action {
 				mobile[i] = null;
 		}
 
-		Payment payment = (Payment) request.getSession().getAttribute(
-				"payment");
-		
-		Order order = (Order) request.getSession().getAttribute(
-				"order");
+		Payment payment = (Payment) request.getSession()
+				.getAttribute("payment");
+
+		Order order = (Order) request.getSession().getAttribute("order");
 		Email.sendReceiptDetails(email, payment, order);
 		DBTSms.sendReceiptSMS(mobile, payment, order);
 

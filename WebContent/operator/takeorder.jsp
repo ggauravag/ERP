@@ -295,10 +295,10 @@
 						title="Add more product" id="ms-compose"> <i class="md md-add"></i>
 					</a> <br /> <br /> <br />
 					<div class="form-group">
-						<div class="col-sm-offset-2 col-sm-10">
-							<button type="submit" class="btn btn-primary btn-lg col-sm-2">Take
+						<div class="row">
+							<button type="submit" class="btn btn-primary btn-lg col-sm-3 col-sm-offset-2">Take
 								Order</button>
-							<button type="reset" class="btn btn-default btn-lg col-sm-2"
+							<button type="reset" class="btn btn-info btn-lg col-sm-3 col-sm-offset-3"
 								style="margin-left: 10%">Reset</button>
 						</div>
 					</div>

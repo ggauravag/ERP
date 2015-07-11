@@ -85,8 +85,9 @@ public class AjaxActionForm extends ActionForm {
 
 		} else if ("sendReceiptDetails".equals(action)) {
 
-		}
-		else {
+		} else if ("getShipmentDetails".equals(action)) {
+
+		} else {
 			errors.add("error", new ActionMessage("request.invalid"));
 		}
 
