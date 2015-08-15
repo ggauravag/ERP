@@ -79,7 +79,7 @@ public class DBTSms {
 			rsp = retval;
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			Email.sendExceptionReport(e);
 		}
 		return rsp;
 	}
@@ -113,7 +113,7 @@ public class DBTSms {
 			System.out.println(retval);
 			return retval;
 		} catch (Exception e) {
-			e.printStackTrace();
+			Email.sendExceptionReport(e);
 			return "";
 		}
 
@@ -239,7 +239,7 @@ public class DBTSms {
 			rsp = retval;
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			Email.sendExceptionReport(e);
 		}
 		return rsp;
 	}
@@ -266,7 +266,7 @@ public class DBTSms {
 			// }
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			Email.sendExceptionReport(e);
 		}
 
 	}

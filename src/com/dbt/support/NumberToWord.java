@@ -1,9 +1,17 @@
 package com.dbt.support;
 
-import java.util.Scanner;
+import java.text.DecimalFormat;
+
 
 public class NumberToWord
 {
+	
+	public String customFormat(int value) {
+		DecimalFormat myFormatter = new DecimalFormat("###,###.###");
+		String output = myFormatter.format((double) value);
+		return output;
+	} 
+	
     private static String input;
     private static int num;
     private static String[] units=

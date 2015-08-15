@@ -10,6 +10,7 @@ import org.apache.struts.action.ActionMapping;
 
 import com.dbt.dao.FundDAO;
 import com.dbt.forms.CapitalForm;
+import com.dbt.support.Email;
 
 public class CapitalAction extends Action {
 
@@ -24,9 +25,9 @@ public class CapitalAction extends Action {
 		try{
 			CapitalForm myform = (CapitalForm)form;
 			
-			int amount = Integer.parseInt(myform.getCapitalAmount());
-			String lender = myform.getCapitalLender();
-			int interest = Integer.parseInt(myform.getCapitalRate());
+			int amount = myform.getInputAmount();
+			String lender = myform.getInputLender();
+			double interest = myform.getInputRate();
 			
 			boolean state = FundDAO.addCapital(amount, interest, lender);
 			
@@ -41,7 +42,7 @@ public class CapitalAction extends Action {
 		}
 		catch(Exception e)
 		{
-			e.printStackTrace();
+			Email.sendExceptionReport(e);
 		}
 		
 		return mapping.findForward(result);

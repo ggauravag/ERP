@@ -1,10 +1,12 @@
 
 <%
 	String basePath = request.getContextPath();
+    String bPath = request.getScheme() + "://" + request.getServerName () + ":" + request.getServerPort () + basePath + "/";
 %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
+<base href="<%=bPath%>">
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -31,7 +33,7 @@
 		</div>
 
 		<div class="card">
-			<form action="../TakeOrder.do" method="post" id="custForm"
+			<form action="operator/TakeOrder.do" method="post" id="custForm"
 				name="custForm" class="form-horizontal" role="form">
 
 				<div class="card-header">
@@ -145,16 +147,9 @@
 							<div class="col-sm-3 m-b-25 selectpicker">
 								<select class="form-control" id="inputCity" value="${add.city}"
 									name="custCity">
-									<option>Select City</option>
-									<option value="Jaipur">Jaipur</option>
-									<option value="Tonk">Tonk</option>
-									<option value="Jodhpur">Jodhpur</option>
-									<option value="Jaisalmer">Jaisalmer</option>
-									<option value='Kolkata'>Kolkata</option>
-									<option value="Mumbai">Mumbai</option>
-									<option value="Ahmedabad">Ahmedabad</option>
-									<option value="Chennai">Chennai</option>
-									<option value='Delhi'>Delhi</option>
+
+									<option>Select</option>
+
 								</select> <small id="error" class="help-block"><html:errors
 										property="cityError" /></small>
 							</div>
@@ -165,13 +160,13 @@
 							<div class="col-sm-3 m-b-25 selectpicker">
 								<select class="form-control" id="inputState"
 									value="${add.state}" name="custState">
+									<jsp:useBean id="orderDAO" class="com.dbt.dao.OrderDAO"
+										scope="page"></jsp:useBean>
+									<jspcore:set var="states" value="${orderDAO.getStates()}"></jspcore:set>
 									<option>Select State</option>
-									<option value="Rajasthan">Rajasthan</option>
-									<option value="Maharashtra">Maharashtra</option>
-									<option value="Madhya Pradesh">Madhya Pradesh</option>
-									<option value="Uttar Pradesh">Uttar Pradesh</option>
-									<option value="Gujarat">Gujarat</option>
-									<option value="Karnataka">Karnataka</option>
+									<jspcore:forEach var="state" items="${states}">
+										<option value="${state}">${state}</option>
+									</jspcore:forEach>
 								</select> <small id="error" class="help-block"><html:errors
 										property="stateError" /></small>
 
@@ -207,6 +202,23 @@
 							<span class="md-phone-android form-control-feedback"></span> <small
 								id="error" class="help-block"><html:errors
 									property="mobileError" /></small>
+						</div>
+					</div>
+					<div class="row">
+						<label for="inputDate" class="col-sm-2 control-label">Order
+							Date/Time</label>
+						<div class="col-sm-4">
+							<div class="input-group form-group">
+								<span class="input-group-addon"><i class="md md-event"></i></span>
+								<div class="dtp-container dropdown fg-line open">
+									<input type="text" name="orderTime"
+										class="form-control date-time-picker" data-toggle="dropdown"
+										aria-expanded="true" id="inputDate"
+										placeholder="Order Date & Time">
+								</div>
+								<small class="help-block"><font color="red"><html:errors
+											property="dateError" /></font></small>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -296,9 +308,11 @@
 					</a> <br /> <br /> <br />
 					<div class="form-group">
 						<div class="row">
-							<button type="submit" class="btn btn-primary btn-lg col-sm-3 col-sm-offset-2">Take
+							<button type="submit"
+								class="btn btn-primary btn-lg col-sm-3 col-sm-offset-2">Take
 								Order</button>
-							<button type="reset" class="btn btn-info btn-lg col-sm-3 col-sm-offset-3"
+							<button type="reset"
+								class="btn btn-warning btn-lg col-sm-3 col-sm-offset-3"
 								style="margin-left: 10%">Reset</button>
 						</div>
 					</div>
@@ -315,9 +329,9 @@
 	<!-- Javascript Libraries -->
 
 	<%@include file="/js/includejs.jsp"%>
-	<jspcore:if test="${status == 'failure'}">
+	<jspcore:if test="${status == false}">
 		<script>
-			swal("Try Again", "Some exception occurred ! Please try again !",
+			swal("Try Again", "Either Email entered is duplicate or Some exception occurred ! Please try again !",
 					"error");
 		</script>
 	</jspcore:if>
@@ -326,8 +340,19 @@
 			console.log("Selected : " + id);
 		}
 	</script>
-
-
+	<jspcore:remove var="order" scope="session"/>
+	<jspcore:remove var="order" scope="request"/>
+	<script
+		src="vendors/bootstrap-datetimepicker/bootstrap-datetimepicker.min.js"></script>
+	<script src="vendors/moment/moment.min.js"></script>
+	<script src="vendors/noUiSlider/jquery.nouislider.all.min.js"></script>
+	<script src="vendors/input-mask/input-mask.min.js"></script>
+	<script src="vendors/farbtastic/farbtastic.min.js"></script>
+	<script src="vendors/summernote/summernote.min.js"></script>
+	<script
+		src="vendors/bootstrap-datetimepicker/bootstrap-datetimepicker.min.js"></script>
+	<script src="vendors/fileinput/fileinput.min.js"></script>
+	<script type="text/javascript" src="js/extra.js"></script>
 
 </body>
 

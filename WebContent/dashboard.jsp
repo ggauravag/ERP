@@ -7,6 +7,7 @@
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%
 	String basePath = request.getContextPath();
+    String bPath = request.getScheme() + "://" + request.getServerName () + ":" + request.getServerPort () + basePath + "/";
 %>
 <%@ page import="com.dbt.data.User"%>
 <%@ taglib prefix="jspcore" uri="http://java.sun.com/jsp/jstl/core"%>
@@ -15,6 +16,7 @@
 
 <!-- Mirrored from byrushan.com/projects/ma/v1-3-1/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 21 May 2015 12:08:46 GMT -->
 <head>
+<base href="<%=bPath%>">
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -22,12 +24,7 @@
 
 <!-- Vendor CSS -->
 <link href="vendors/fullcalendar/fullcalendar.css" rel="stylesheet">
-<link href="vendors/animate-css/animate.min.css" rel="stylesheet">
-<link href="vendors/sweet-alert/sweet-alert.min.css" rel="stylesheet">
-<link href="vendors/material-icons/material-design-iconic-font.min.css"
-	rel="stylesheet">
-<link href="vendors/socicon/socicon.min.css" rel="stylesheet">
-<link rel="icon" href="<%=basePath%>/img/favicon.ico"/>
+<%@include file="css/includecss.jsp"%>
 <!-- CSS -->
 <link href="css/app.min.1.css" rel="stylesheet">
 <link href="css/app.min.2.css" rel="stylesheet">
@@ -388,6 +385,23 @@
         <![endif]-->
 
 	<!-- Javascript Libraries -->
-	<%@include file="js/includejs.jsp"%>
-</body>
-</html>
+		<%@include file="js/includejs.jsp"%>
+
+        <script src="vendors/flot/jquery.flot.min.js"></script>
+        <script src="vendors/flot/jquery.flot.resize.min.js"></script>
+        <script src="vendors/flot/plugins/curvedLines.js"></script>
+        <script src="vendors/sparklines/jquery.sparkline.min.js"></script>
+        <script src="vendors/easypiechart/jquery.easypiechart.min.js"></script>
+        
+        <script src="vendors/fullcalendar/lib/moment.min.js"></script>
+        <script src="vendors/fullcalendar/fullcalendar.min.js"></script>
+        <script src="vendors/simpleWeather/jquery.simpleWeather.min.js"></script>
+        
+        <script src="js/flot-charts/curved-line-chart.js"></script>
+        <script src="js/flot-charts/line-chart.js"></script>
+        <script src="js/charts.js"></script>
+        
+       
+        
+		</html>
+	

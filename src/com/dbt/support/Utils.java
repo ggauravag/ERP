@@ -3,11 +3,35 @@ package com.dbt.support;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.text.DecimalFormat;
 import java.util.Random;
+
+import org.apache.commons.lang3.text.WordUtils;
 
 
 
 public class Utils {
+	
+	
+	
+	
+	static public String customFormat(String pattern, int value) {
+		DecimalFormat myFormatter = new DecimalFormat(pattern);
+		String output = myFormatter.format((double) value);
+		return output;
+	}
+	
+	static public String customFormat(int value) {
+		DecimalFormat myFormatter = new DecimalFormat("###,###.###");
+		String output = myFormatter.format((double) value);
+		return output;
+	}
+	
+	static public String customFormat(String pattern, double value) {
+		DecimalFormat myFormatter = new DecimalFormat(pattern);
+		String output = myFormatter.format(value);
+		return output;
+	}
 
 	private static final String CHAR_LIST = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
 	private static final int RANDOM_STRING_LENGTH = 8;
@@ -54,9 +78,20 @@ public class Utils {
 		}
 		return null;
 	}*/
+	
+	public static String getPasswordToken()
+	{
+		String token = "";
+		for(int i = 0; i < 10; i++)
+		{
+			token += getRandomNumber();
+		}
+		return getMD5(token);
+	}
 
 	public static void main(String[] args) {
-		System.out.println(getMD5("password"));
+		System.out.println(getMD5("7562344545"));
+		System.out.println(WordUtils.capitalizeFully("gAURAV"));
 	}
 
 	/**

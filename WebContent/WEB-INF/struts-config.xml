@@ -14,29 +14,112 @@
 		<form-bean name="loanForm" type="com.dbt.forms.LoanForm"></form-bean>
 		<form-bean name="paymentForm" type="com.dbt.forms.PaymentForm"></form-bean>
 		<form-bean name="processForm" type="com.dbt.forms.ProcessOrderForm"></form-bean>
+		<form-bean name="expForm" type="com.dbt.forms.ExpenditureForm"></form-bean>
+		<form-bean name="stockForm" type="com.dbt.forms.StockForm"></form-bean>
+		<form-bean name="merchantForm" type="com.dbt.forms.MerchantDetailForm"></form-bean>
+		<form-bean name="addEmployeeForm" type="com.dbt.forms.AddEmpForm"></form-bean>
+		<form-bean name="markAttenForm" type="com.dbt.forms.ManageEmpForm"></form-bean>
+		<form-bean name="manageEmployee" type="com.dbt.forms.ManageEmployeeForm"></form-bean>
+		<form-bean name="returnForm" type="com.dbt.forms.ReturnForm"></form-bean>
+		<form-bean name="manageCusForm" type="com.dbt.forms.ManageCustomerForm"></form-bean>
+		<form-bean name="profileForm" type="com.dbt.forms.ProfileForm"></form-bean>
 	</form-beans>
+
+	<global-exceptions>
+		<exception type="java.lang.Exception" key="error.global.mesage"
+			handler="com.dbt.exception.StrutsExceptionHandler" path="/errors/error.jsp" />
+	</global-exceptions>
+
+
 
 	<action-mappings>
 
-		<action path="/AddCapital" validate="true" input="/owner/AddCapital.jsp"
-			name="capitalForm" type="com.dbt.action.CapitalAction" scope="request">
+
+		<action path="/Profile" type="com.dbt.action.ProfileAction"
+			validate="true" scope="request" name="profileForm" input="/Profile.jsp">
+			<forward name="success" path="/Profile.jsp"></forward>
+			<forward name="login" redirect="true" path="/logout.do"></forward>
+			<forward name="failure" path="/Profile.jsp"></forward>
+		</action>
+
+		<action path="/operator/return/TakeReturn" validate="true"
+			type="com.dbt.action.ReturnAction" name="returnForm"
+			input="/operator/return/ManageReturn.jsp" scope="request">
+			<forward name="success" redirect="true"
+				path="/operator/return/ManageReturn.jsp"></forward>
+			<forward name="failure" path="/operator/return/ManageReturn.jsp"></forward>
+			<forward name="confirm" redirect="true"
+				path="/operator/return/ReturnPayment.jsp"></forward>
+		</action>
+
+		<action path="/ManageCustomer" validate="true"
+			input="/operator/ManageCustomer.jsp" name="manageCusForm"
+			type="com.dbt.action.ManageCustomerAction" scope="request">
+			<forward name="success" redirect="true"
+				path="/operator/ManageCustomer.jsp"></forward>
+			<forward name="failure" redirect="true"
+				path="/operator/ManageCustomer.jsp"></forward>
+		</action>
+
+		<action path="/owner/employee/EmployeeAdd" name="addEmployeeForm"
+			validate="true" type="com.dbt.action.AddEmpAction" input="/owner/employee/addEmp.jsp"
+			scope="request">
+			<forward name="success" path="/owner/employee/addEmp.jsp"></forward>
+			<forward name="failure" path="/owner/employee/addEmp.jsp"></forward>
+		</action>
+		<action path="/AddExpenditure" validate="true"
+			input="/operator/AddExpenditure.jsp" name="expForm"
+			type="com.dbt.action.ExpenditureAction" scope="request">
+			<forward name="success" redirect="true"
+				path="/operator/AddExpenditure.jsp"></forward>
+			<forward name="failure" redirect="true"
+				path="/operator/AddExpenditure.jsp"></forward>
+		</action>
+
+		<action path="/operator/AttendEmp" name="markAttenForm"
+			validate="true" type="com.dbt.action.ManageEmpAction" input="/operator/MarkAttendance.jsp"
+			scope="request">
+			<forward name="success" path="/operator/MarkAttendance.jsp"></forward>
+			<forward name="failure" path="/operator/MarkAttendance.jsp"></forward>
+		</action>
+
+		<action path="/AddStock" validate="true" input="/operator/AddStock.jsp"
+			name="stockForm" type="com.dbt.action.StockAction" scope="request">
+			<forward name="success" redirect="true"
+				path="/operator/MerchantDetails.jsp"></forward>
+			<forward name="failure" redirect="true" path="/operator/AddStock.jsp"></forward>
+		</action>
+
+		<action path="/MerchantDetails" validate="true"
+			type="com.dbt.action.StockAction" input="/operator/MerchantDetails.jsp"
+			name="merchantForm" scope="request">
+			<forward name="success" redirect="true" path="/operator/AddStock.jsp"></forward>
+			<forward name="failure" redirect="true" path="/operator/AddStock.jsp"></forward>
+		</action>
+
+		<action path="/owner/AddCapital" validate="true"
+			input="/owner/AddCapital.jsp" name="capitalForm" type="com.dbt.action.CapitalAction"
+			scope="request">
 			<forward name="success" path="/owner/AddCapital.jsp"></forward>
 			<forward name="failure" path="/owner/AddCapital.jsp"></forward>
 		</action>
 
 
-		<action path="/ProcessOrder" validate="true" name="processForm"
-			input="/operator/processOrder.jsp" type="com.dbt.action.ProcessOrderAction" scope="request">
+		<action path="/operator/ProcessOrder" validate="true" name="processForm"
+			input="/operator/processOrder.jsp" type="com.dbt.action.ProcessOrderAction"
+			scope="request">
 			<forward name="success" redirect="true" path="/operator/shipOrder.jsp"></forward>
 			<forward name="failure" path="/operator/processOrder.jsp"></forward>
 		</action>
-	
-		<action path="/operator/payment/PayOrder" validate="true" name="paymentForm" input="/operator/payment/payOrder.jsp" type="com.dbt.action.PaymentAction">
-			<forward name="success" redirect="true" path="/operator/payment/amountPaid.jsp"></forward>
+
+		<action path="/operator/payment/PayOrder" validate="true"
+			name="paymentForm" input="/operator/payment/payOrder.jsp" type="com.dbt.action.PaymentAction">
+			<forward name="success" redirect="true"
+				path="/operator/payment/amountPaid.jsp"></forward>
 			<forward name="failure" path="/operator/payment/payOrder.jsp"></forward>
 		</action>
-	
-		<action path="/AddLoan" validate="true" input="/owner/AddLoan.jsp"
+
+		<action path="/owner/AddLoan" validate="true" input="/owner/AddLoan.jsp"
 			name="loanForm" type="com.dbt.action.LoanAction" scope="request">
 			<forward name="success" path="/owner/AddLoan.jsp"></forward>
 			<forward name="failure" path="/owner/AddLoan.jsp"></forward>
@@ -51,12 +134,19 @@
 			<forward name="printOrder" path="/operator/printOrder.jsp"></forward>
 			<forward name="printChallan" path="/operator/order/challan.jsp"></forward>
 			<forward name="printReceipt" path="/operator/order/receipt.jsp"></forward>
+			<forward name="printInvoice" path="/operator/order/invoice.jsp"></forward>
+			<forward name="printLetter" path="/operator/order/letterHead.jsp"></forward>
 			<forward name="error" path="/errors/error-au.jsp"></forward>
 		</action>
 
+		<action path="/owner/employee/ManageEmployee" name="manageEmployee"
+			validate="true" input="/owner/employee/ManageEmp.jsp" scope="request"
+			type="com.dbt.action.ManageEmployeeAction">
+			<forward name="success" path="/owner/employee/ManageEmp.jsp"></forward>
+			<forward name="failure" path="/owner/employee/ManageEmp.jsp"></forward>
+		</action>
 
-
-		<action path="/TakeOrder" name="orderForm" validate="true"
+		<action path="/operator/TakeOrder" name="orderForm" validate="true"
 			input="/operator/takeorder.jsp" type="com.dbt.action.OrderAction"
 			scope="request">
 			<forward name="modify" path="/operator/takeorder.jsp"></forward>
@@ -65,7 +155,7 @@
 			<forward name="failure" path="/operator/takeorder.jsp"></forward>
 		</action>
 
-		<action path="/ConfirmOrder" type="com.dbt.action.OrderAction"
+		<action path="/operator/ConfirmOrder" type="com.dbt.action.OrderAction"
 			scope="request">
 			<forward name="modify" path="/operator/takeorder.jsp"></forward>
 			<forward name="confirm" path="/operator/confirmorder.jsp"></forward>
@@ -74,22 +164,16 @@
 		</action>
 
 
-		<action path="/ForgotPassword" type="com.dbt.action.ForgotPasswordAction"
-			validate="true" input="/login.jsp" name="passwordForm">
+		<action path="/ForgotPassword" type="com.dbt.action.ResetPassword"
+			validate="true" input="/forgotPassword.jsp" name="passwordForm">
+			<forward name="success" redirect="true" path="/login.jsp"></forward>
+			<forward name="failure" path="/forgotPassword.jsp"></forward>
 		</action>
-
-		<action path="/otpAuth" type="com.dbt.action.LoginAction"
-			scope="request">
-			<forward name="success" redirect="true" path="/dashboard.jsp" />
-			<forward name="failure" path="/login.jsp" />
-		</action>
-
 
 		<action path="/login" type="com.dbt.action.LoginAction" name="loginForm"
 			scope="request" validate="true" input="/login.jsp">
 			<forward name="success" redirect="true" path="/dashboard.jsp" />
 			<forward name="failure" path="/login.jsp" />
-
 		</action>
 
 		<action path="/logout" type="com.dbt.action.LogOutAction"

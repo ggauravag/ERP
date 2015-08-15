@@ -8,6 +8,7 @@ import com.dbt.support.NumberToWord;
 
 public class Payment {
 	int id;
+	int receiptId;
 	String mode;
 	String paidBy;
 	Date datetime;
@@ -15,6 +16,14 @@ public class Payment {
 	int orderId;
 	String type;
 	String description;
+
+	public int getReceiptId() {
+		return receiptId;
+	}
+
+	public void setReceiptId(int receiptId) {
+		this.receiptId = receiptId;
+	}
 
 	public String getAmountInWords() {
 		return new NumberToWord().convertNumberToWords(amount);

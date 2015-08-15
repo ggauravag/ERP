@@ -18,6 +18,8 @@ import com.dbt.data.User;
 import com.dbt.forms.LoginForm;
 import com.dbt.support.AESCrypto;
 import com.dbt.support.DBTSms;
+import com.dbt.support.Email;
+import com.dbt.support.Utils;
 
 public class LoginAction extends Action {
 
@@ -83,7 +85,7 @@ public class LoginAction extends Action {
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 
-		HttpSession session = request.getSession(true);
+		HttpSession session = request.getSession(false);
 		String otp = (String) session.getAttribute("otp");
 		String inputOtp = request.getParameter("otp");
 		String result = "failure";
@@ -93,8 +95,28 @@ public class LoginAction extends Action {
 			session.removeAttribute("otp");
 			result = "success";
 		}
-
+		
+		request.setAttribute("errorOTP", "Incorrect OTP ! Please enter again !");
+		System.out.println("Mapping is : " + result);
 		return mapping.findForward(result);
+	}
+
+	public ActionForward retrievePassword(ActionMapping mapping,
+			ActionForm form, HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
+
+		String email = ((LoginForm) form).getEmail();
+
+		if (new LoginDAO().isRegisteredEmail(email)) {
+			String hashToken = Utils.getPasswordToken();
+			new LoginDAO().resetPassword(email, hashToken);
+			new Email().sendPasswordReset(email, hashToken);
+			request.setAttribute("sendStatus", true);
+		} else {
+			request.setAttribute("sendStatus", false);
+		}
+
+		return mapping.findForward("failure");
 	}
 
 	@Override
@@ -102,13 +124,29 @@ public class LoginAction extends Action {
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		// TODO Auto-generated method stub
-
+		LoginForm loginForm = null;
+		try
+		{
+			loginForm = (LoginForm) form;
+		}
+		catch(Exception e)
+		{
+			Email.sendExceptionReport(e);
+		}
+		
+		System.out.println("Action : " + loginForm.getAction());
 		String method = request.getParameter("method");
 		if (method != null && method.equals("otpVerify")) {
 			return otpVerify(mapping, form, request, response);
 		}
 
-		LoginForm loginForm = (LoginForm) form;
+		if ("otpVerify".equals(loginForm.getAction())) {
+			return otpVerify(mapping, form, request, response);
+		}
+
+		if ("forgotPassword".equals(loginForm.getAction())) {
+			return retrievePassword(mapping, loginForm, request, response);
+		}
 
 		String email = loginForm.getEmail();
 		String password = loginForm.getPassword();
@@ -117,11 +155,11 @@ public class LoginAction extends Action {
 		String logip = request.getRemoteAddr();
 		HttpSession session = request.getSession(true);
 
-		User user = LoginDAO.login(email, password);
+		User user = new LoginDAO().login(email, password);
 		String result = "failure";
 
 		if (user != null) {
-			LoginDAO.updateLogIp(user, logip);
+			new LoginDAO().updateLogIp(user, logip);
 			session.setAttribute("user", user);
 			result = "success";
 			compareStringOne = user.getSt_time().toString();
@@ -143,7 +181,7 @@ public class LoginAction extends Action {
 
 			if (result.equals("success") && !compareDates()) {
 				// System.out.println("Request not in time !");
-				User owner = LoginDAO.getOwner();
+				User owner = new LoginDAO().getOwner();
 				String otp = DBTSms.sendOwnerOTP(owner.getMobile(),
 						user.getFirstName() + " " + user.getLastName());
 				session.setAttribute("otp", otp);

@@ -1,4 +1,4 @@
-message += "<doctype html>\r\n";
+		  message += "<doctype html>\r\n";
 	      message += "<html lang=\"en\">\r\n";
 	      message += "<head>\r\n";
 	      message += "<meta charset=\"UTF-8\">\r\n";

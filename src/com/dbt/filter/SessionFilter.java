@@ -12,13 +12,16 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import com.dbt.data.User;
+import org.apache.log4j.Logger;
+
 import com.dbt.support.TestMemory;
 
 /**
  * Servlet Filter implementation class SessionFilter
  */
 public class SessionFilter implements Filter {
+
+	static Logger logger = Logger.getLogger(SessionFilter.class.getName());
 
 	/**
 	 * Default constructor.
@@ -43,23 +46,30 @@ public class SessionFilter implements Filter {
 		// place your code here
 		HttpServletRequest httprequest = (HttpServletRequest) request;
 		HttpServletResponse httpResponse = (HttpServletResponse) response;
-		HttpSession session = httprequest.getSession();
-		User user = (User) session.getAttribute("user");
+		HttpSession session = httprequest.getSession(false);
 		String uri = httprequest.getRequestURI();
 		TestMemory.printMemory();
-		if (uri.contains(".jsp") || uri.contains(".do")) {
 
-			if (user == null && !uri.contains("login.jsp")
-					&& !uri.contains("login.do")) {
+		if ((uri.contains(".jsp") || uri.contains(".do"))
+				&& !uri.contains("login") && !uri.contains("forgotPassword")
+				&& !uri.contains("ForgotPassword")) {
+			logger.info("SessionFilter : Called with session " + session);
+			if (session == null || session.getAttribute("user") == null) {
 				httpResponse.sendRedirect(httprequest.getContextPath()
 						+ "/login.jsp");
-				System.out.println("SessionFilter : Filter Called for URI - "
-						+ uri);
 				return;
+			} else if (session.getAttribute("user") != null) {
+				String otp = (String) session.getAttribute("otp");
+				if (otp != null) {
+					httpResponse.sendRedirect(httprequest.getContextPath()
+							+ "/login.jsp");
+					return;
+				}
 			}
-
 		}
 
+		logger.info("SessionFilter : Resource Invoked, resource : "
+				+ httprequest.getRequestURI());
 		// pass the request along the filter chain
 		chain.doFilter(request, response);
 	}

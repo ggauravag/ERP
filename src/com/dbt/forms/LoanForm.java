@@ -10,60 +10,61 @@ import org.apache.struts.action.ActionMessage;
 public class LoanForm extends ActionForm{
 
 	private static final long serialVersionUID = 1L;
-	private String loanAmount;
-	private String loanRate;
-	private String loanInstallment;
-	private String loanTenure;
 	
-	public String getLoanAmount() {
-		return loanAmount;
-	}
+	private int inputAmount;
+	private int inputTenure;
+	private int inputInstallment;
+	private double inputInterest;
 	
-	public void setLoanAmount(String loanAmount) {
-		this.loanAmount = loanAmount;
+	
+	
+	public int getInputAmount() {
+		return inputAmount;
 	}
 
-	public String getLoanRate() {
-		return loanRate;
+	public void setInputAmount(int inputAmount) {
+		this.inputAmount = inputAmount;
 	}
 
-	public void setLoanRate(String loanRate) {
-		this.loanRate = loanRate;
+	public int getInputTenure() {
+		return inputTenure;
 	}
 
-	public String getLoanInstallment() {
-		return loanInstallment;
+	public void setInputTenure(int inputTenure) {
+		this.inputTenure = inputTenure;
 	}
 
-	public void setLoanInstallment(String loanInstallment) {
-		this.loanInstallment = loanInstallment;
+	public int getInputInstallment() {
+		return inputInstallment;
 	}
 
-	public String getLoanTenure() {
-		return loanTenure;
+	public void setInputInstallment(int inputInstallment) {
+		this.inputInstallment = inputInstallment;
 	}
 
-	public void setLoanTenure(String loanTenure) {
-		this.loanTenure = loanTenure;
+	public double getInputInterest() {
+		return inputInterest;
 	}
+
+	public void setInputInterest(double inputInterest) {
+		this.inputInterest = inputInterest;
+	}
+
+	
 	
 	@Override
 	public ActionErrors validate(ActionMapping mapping,
 			HttpServletRequest request) {
 		
 		ActionErrors errors = new ActionErrors();
-		loanAmount = request.getParameter("inputAmount");
-		loanTenure = request.getParameter("inputTenure");
-		loanRate = request.getParameter("inputInterest");
-		loanInstallment = request.getParameter("inputInstallment");
 		
-		if (loanAmount == null || loanAmount == "")
+		if (inputAmount == 0)
 			errors.add("loanAmountError", new ActionMessage("loanAmount.blankError"));
-		if (loanTenure == null || loanTenure == "")
+		if (inputTenure == 0)
 			errors.add("loanTenureError", new ActionMessage("loanTenure.blankError"));
-		if (loanRate == null || loanRate == "")
+		if (inputInterest == 0.0)
 			errors.add("loanRate", new ActionMessage("loanRate.blankError"));
-		if (loanInstallment == null || loanInstallment == "")
+		if (inputInstallment == 0)
 			errors.add("loanInstallment", new ActionMessage("loanInstallment.blankError"));
 		
 		return errors;

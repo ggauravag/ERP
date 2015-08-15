@@ -2,10 +2,12 @@
 	pageEncoding="ISO-8859-1"%>
 <%
 	String basePath = request.getContextPath();
+    String bPath = request.getScheme() + "://" + request.getServerName () + ":" + request.getServerPort () + basePath + "/";
 %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
+<base href="<%=bPath%>">
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -13,7 +15,7 @@
 <title>Confirm Order</title>
 
 <!-- Vendor CSS -->
-<%@include file="/css/includecss.jsp"%>
+<%@include file="../css/includecss.jsp"%>
 </head>
 
 <body>
@@ -30,8 +32,8 @@
 		</div>
 
 		<div class="card">
-			<form class="form-horizontal" action="./ConfirmOrder.do"
-				method="post" role="form">
+			<form class="form-horizontal" action="operator/ConfirmOrder.do" method="post"
+				role="form">
 
 				<div class="card-header">
 					<h2>Customer Details</h2>
@@ -190,7 +192,41 @@
 							</div>
 						</jspcore:forEach>
 					</div>
-
+					<jspcore:if test="${needTin == true}">
+						<div class="modal fade" id="modalTinNumber" tabindex="-1"
+							role="dialog" aria-hidden="true">
+							<div class="modal-dialog modal-sm">
+								<div class="modal-content">
+									<div class="modal-header">
+										<h4 class="modal-title">TIN Number for Merchant M/s
+											${param.custName}</h4>
+									</div>
+									<div class="modal-body">
+										<p>You have just added a new Customer(Merchant) with name
+											M/s : ${param.custName}, You can also add the TIN Number for
+											the Merchant so that Invoices and Challans can have the same.</p>
+										<div class="form-group fg-float">
+											<div class="fg-line">
+												<input type="text" name="tinNumber" id="tinNumber"
+													class="form-control fg-input">
+											</div>
+											<label class="fg-label">Merchant's TIN Number</label>
+										</div>
+										<p>
+											<label class="control-label" style="color: red"
+												id="tinMessage"></label>
+										</p>
+									</div>
+									<div class="modal-footer">
+										<button type="button" class="btn btn-link"
+											onclick="checkTin()">Save TIN</button>
+										<button type="button" class="btn btn-link"
+											data-dismiss="modal">Close</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</jspcore:if>
 					<br /> <br /> <br />
 					<div class="form-group">
 						<div class="col-sm-offset-2 col-sm-10">
@@ -215,7 +251,23 @@
 	<!-- Javascript Libraries -->
 
 	<%@include file="../js/includejs.jsp"%>
+	<jspcore:if test="${needTin == true}">
+		<script>
+			$("#modalTinNumber").modal('show');
+			function checkTin() {
+				var tin = $("#tinNumber").val();
+				if (tin == "" || tin == null) {
+					$("#tinMessage").text("TIN Number can't be blank !");
+				} else if (tin.length != 11) {
+					$("#tinMessage").text(
+							"Invalid TIN Number ! Length has to be 11 only");
+				} else {
+					$("#modalTinNumber").modal('hide');
+				}
 
+			}
+		</script>
+	</jspcore:if>
 </body>
 
 </html>

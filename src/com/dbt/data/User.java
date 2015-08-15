@@ -11,6 +11,7 @@ public class User {
 	String password;
 	String status;
 	String type;
+	String photo;
 	String logip;
 	Time st_time;
 	Time end_time;
@@ -25,6 +26,14 @@ public class User {
 		logip = null;
 		type = null;
 		status = null;
+	}
+	
+	public User(String firstName, String lastName, String email, String mobile) {
+		
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.email = email;
+		this.mobile = mobile;
 	}
 
 	public User(int id, String firstName, String lastName, String email,
@@ -42,6 +51,17 @@ public class User {
 		this.logip = logip;
 		this.st_time = st_time;
 		this.end_time = end_time;
+	}
+
+	
+	
+	
+	public String getPhoto() {
+		return photo;
+	}
+
+	public void setPhoto(String photo) {
+		this.photo = photo;
 	}
 
 	public Time getSt_time() {

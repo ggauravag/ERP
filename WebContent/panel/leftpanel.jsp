@@ -28,7 +28,7 @@
 			<div class="profile-menu">
 				<a href="#">
 					<div class="profile-pic">
-						<img src="<%=path%>/img/profile-pics/mypic.jpg" alt="">
+						<img src="<%=path%>/${user.photo}" alt="Profile Photo">
 					</div>
 
 					<div class="profile-info">
@@ -37,10 +37,9 @@
 				</a>
 
 				<ul class="main-menu">
-					<li><a href="profile-about.html"><i class="md md-person"></i>
+					<li><a href="Profile.jsp"><i class="md md-person"></i>
 							View Profile</a></li>
-					<li><a href="#"><i class="md md-settings-input-antenna"></i>
-							Privacy Settings</a></li>
+					
 					<li><a href="#"><i class="md md-settings"></i> Settings</a></li>
 					<li><a href="<%=path%>/logout.do"><i class="md md-history"></i>
 							Logout</a></li>

@@ -87,7 +87,38 @@ public class AjaxActionForm extends ActionForm {
 
 		} else if ("getShipmentDetails".equals(action)) {
 
+		} else if ("getExpenditureDetail".equals(action)) {
+
+		} else if ("getEmployeeDetails".equals(action)) {
+
+		} else if ("addCategory".equals(action)) {
+
+		} else if ("addNewProduct".equals(action)) {
+
+		} else if ("addNewMerchant".equals(action)) {
+
+		} else if ("getComplaintByOIDCIDMobile".equals(action)) {
+
+		} else if ("getEmpDetails".equals(action)) {
+
+		} else if ("getCities".equals(action)) {
+
+		} else if ("getAttendanceDetails".equals(action)) {
+
+		} else if ("getPurchaseData".equals(action)) {
+
+		} else if ("getReturnDetails".equals(action)) {
+
+		} else if ("getEmployeesDetails".equals(action)) {
+
+		} else if ("getCustomerByNameMob".equals(action)) {
+
+		} else if ("getPurchaseDetail".equals(action)) {
+
+		} else if ("getPurchaseById".equals(action)) {
+
 		} else {
+
 			errors.add("error", new ActionMessage("request.invalid"));
 		}
 

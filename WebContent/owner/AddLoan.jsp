@@ -1,12 +1,17 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
 <%@ taglib prefix="jspcore" uri="http://java.sun.com/jsp/jstl/core"%>
+<%
+	String basePath = request.getContextPath();
+    String bPath = request.getScheme() + "://" + request.getServerName () + ":" + request.getServerPort () + basePath + "/";
+%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
+<base href="<%=bPath%>">
 	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 	<title>Add Loan</title>
-	
+
 	<%@include file="../css/includecss.jsp" %>
 	
 </head>
@@ -25,7 +30,7 @@
                     </div>
                     
                     <div class="card">
-                        <form action="<%=request.getContextPath()%>/AddLoan.do" method="post" 
+                        <form action="owner/AddLoan.do" method="post" 
                         		name="loanForm" id="loanForm" class="form-horizontal" role="form">
                             
                             <div class="card-header">
@@ -107,13 +112,13 @@
 			<jspcore:choose>
 				<jspcore:when test="${loanStatus == 'Success'}">
 					<script>
-						notify("top",'Loan details added successfully.', "right", "fa fa-comments", "success", "animated flipInY", "animated flipOutY");
+					swal("Success","Loan has been successfully added !","success");
 					</script>
 				</jspcore:when>
 				<jspcore:otherwise>
 					<jspcore:if test="${loanStatus == 'Failure'}">
 						<script>
-							notify("top",'Unable to add loan details.', "right", "fa fa-comments", "danger", "animated flipInY", "animated flipOutY");
+						swal("Failure","Unable to add Loan details, try again !","error");
 						</script>
 					</jspcore:if>
 				</jspcore:otherwise>	

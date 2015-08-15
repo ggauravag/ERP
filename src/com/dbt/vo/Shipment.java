@@ -4,20 +4,40 @@ import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
-import org.apache.commons.digester.xmlrules.FromXmlRuleSet;
-
 import com.dbt.data.Product;
 
 public class Shipment 
 {
 	int id;
+	int challanId;
 	String medium;
 	String mediumName;
 	String mediumNumber;
 	String contact;
 	Timestamp time;
+	int charge;
 	List<Product> items;
 	
+	
+	
+	
+	public int getCharge() {
+		return charge;
+	}
+
+	public void setCharge(int charge) {
+		this.charge = charge;
+	}
+
+	public int getChallanId() {
+		return challanId;
+	}
+
+	public void setChallanId(int challanId) {
+		this.challanId = challanId;
+	}
+
+
 	public List<Product> getItems() {
 		return items;
 	}

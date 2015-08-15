@@ -1,5 +1,6 @@
 package com.dbt.data;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -10,9 +11,11 @@ public class Order
 	private List<Product> products;
 	private List<Order_item> orderitems;
 	
+	
 	private int id;
 	private Date datetime;
 	private int amount;
+	private int discount;
 	
 	
 	int cust_id;
@@ -55,6 +58,17 @@ public class Order
 		this.time = time;
 		this.customer = customer;
 	}
+	
+	
+	
+	public int getDiscount() {
+		return discount;
+	}
+
+	public void setDiscount(int discount) {
+		this.discount = discount;
+	}
+
 	public int getId() {
 		return id;
 	}
@@ -83,6 +97,13 @@ public class Order
 		this.cust_id = cust_id;
 	}
 	
+	public String getPrintableTime()
+	{
+		String date = "";
+		SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy | hh:mm");
+		date = format.format(datetime);
+		return date;
+	}
 	
 	public String getTime() {
 		return time;

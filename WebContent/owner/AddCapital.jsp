@@ -1,12 +1,17 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
 <%@ taglib prefix="jspcore" uri="http://java.sun.com/jsp/jstl/core"%>
+<%
+	String basePath = request.getContextPath();
+    String bPath = request.getScheme() + "://" + request.getServerName () + ":" + request.getServerPort () + basePath + "/";
+%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
+<base href="<%=bPath%>">
 	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 	<title>Add Capital</title>
-	
+
 	<%@include file="../css/includecss.jsp" %>
 	
 </head>
@@ -25,7 +30,7 @@
                     </div>
                     
                     <div class="card">
-                        <form action="<%=request.getContextPath()%>/AddCapital.do" method="post" class="form-horizontal" 
+                        <form action="owner/AddCapital.do" method="post" class="form-horizontal" 
                         		name="capitalForm" id="capitalForm" role="form">
                             
                             <div class="card-header">
@@ -92,13 +97,13 @@
         	<jspcore:choose>
 				<jspcore:when test="${capitalStatus == 'Success'}">
 					<script>
-						notify("top",'Capital details added successfully.', "right", "fa fa-comments", "success", "animated flipInY", "animated flipOutY");
+						swal("Capital has been successfully added !");
 					</script>
 				</jspcore:when>
 				<jspcore:otherwise>
 					<jspcore:if test="${capitalStatus == 'Failure'}">
 						<script>
-							notify("top",'Unable to add capital details.', "right", "fa fa-comments", "danger", "animated flipInY", "animated flipOutY");
+						swal("Unable to add Capital now ! Try Again !");
 						</script>
 					</jspcore:if>
 				</jspcore:otherwise>	

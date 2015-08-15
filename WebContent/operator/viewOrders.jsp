@@ -2,10 +2,12 @@
 	pageEncoding="ISO-8859-1"%>
 <%
 	String basePath = request.getContextPath();
+    String bPath = request.getScheme() + "://" + request.getServerName () + ":" + request.getServerPort () + basePath + "/";
 %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
+<base href="<%=bPath%>">
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -29,7 +31,7 @@
 		</div>
 
 		<div class="card">
-			<form class="form-horizontal" action="PayOrder.do" method="post"
+			<form class="form-horizontal" action="operator/payment/PayOrder.do" method="post"
 				id="payForm" role="form">
 
 				<div class="card-header">
@@ -206,9 +208,9 @@
 				<br /> <br /> <br />
 				<div class="form-group">
 					<div class="col-sm-offset-2 col-sm-10">
-						<button type="button"  onclick="javascript:window.open('payment/payOrder.jsp', '_self', '', '');" class="btn btn-primary btn-lg col-sm-4">Pay
+						<button type="button"  onclick="javascript:window.open('operator/payment/payOrder.jsp', '_self', '', '');" class="btn btn-primary btn-lg col-sm-4">Pay
 							For Order</button>
-						<button type="button" onclick="javascript:window.open('processOrder.jsp', '_self', '', '');" class="btn btn-primary btn-lg col-sm-4 col-sm-offset-1">Ship Order</button>
+						<button type="button" onclick="javascript:window.open('operator/processOrder.jsp', '_self', '', '');" class="btn btn-primary btn-lg col-sm-4 col-sm-offset-1">Ship Order</button>
 					</div>
 				</div>
 				<br>

@@ -20,13 +20,44 @@ $("#generateChallan").click(function() {
 	loadFirms();
 });
 
-
-function addPanel()
-{
+function addPanel() {
 	$("#panelDiv").append($("#example").html());
 }
 
-$("#payOpen").click(function(){
+$("#generateInvoice").click(function() {
+	var order = $("input[name=orderID]:checked").val();
+	if (order == null || order == "") {
+		swal("Please select an order !");
+		return;
+	}
+
+	$("#printType").val("invoice");
+	loadFirms();
+});
+
+$("#generateOrderConfirm").click(function() {
+	var order = $("input[name=orderID]:checked").val();
+	if (order == null || order == "") {
+		swal("Please select an order !");
+		return;
+	}
+	$("#printType").val("orderPrint");
+	loadFirms();
+});
+
+$("input[name=vatApplicable]").change(function() {
+	if (this.value == "true") {
+		swal("Please enter the VAT Percentage !");
+		$("#vatDiv").show();
+		$("#inputVatPercent").prop('disabled', false);
+	} else {
+		$("#vatDiv").hide();
+		$("#inputVatPercent").prop('disabled', true);
+		swal("No VAT Applicable now !");
+	}
+});
+
+$("#payOpen").click(function() {
 	window.open("payment/payOrder.jsp", "_self", "", "");
 });
 
@@ -34,17 +65,110 @@ $("#generateReceipt").click(function() {
 	loadFirms();
 });
 
-$("#processPayment").click(function(){
-	window
-	.open(
-			$("#basePath")
-					.val()
-					+ "/operator/payment/payOrder.jsp",
-			"", "");
-});
+$("#processPayment").click(
+		function() {
+			window.open(
+					$("#basePath").val() + "/operator/payment/payOrder.jsp",
+					"", "");
+		});
 
 var isFromSideButton = false;
+var shipChallanID = 0;
+var orderChallanID = 0;
+var isChallan = false;
 var paymentID = 0;
+$("#empForm").submit(
+		function() {
+			var fname = $("#inputFname").val();
+			var lname = $("#inputSname").val();
+			var email = $("#inputEmail").val();
+			var mobile = $("#inputMobile").val();
+			var house_no = $("#inputHouse").val();
+			var ln1 = $("#inputAddress1").val();
+			var ln2 = $("#inputAddress2").val();
+			var cty = $("#inputCity").val();
+			var stat = $("#inputState").val();
+			var pin = $("#inputPin").val();
+			var role = $("#inputRole").val();
+			var sal = $("#inputSalary").val();
+			var doj = $("#inputDoj").val();
+
+			var success = true;
+			var div = "#nameDiv";
+			if (fname == "" || lname == "") {
+				showErrorValidation(div, "Name can't be blank !");
+				success = false;
+			} else
+				clearError(div);
+			div = "#emailDiv";
+			if ((role == "OPERATOR" || role == "DBA")
+					&& (email == null || email == "")) {
+				showErrorValidation(div, "Email can't be blank !");
+				success = false;
+			} else
+				clearError(div);
+			div = "#mobileDiv";
+			if (mobile == null || mobile == "") {
+				showErrorValidation(div, "Mobile can't be blank !");
+				success = false;
+			} else
+				clearError(div);
+			div = "#houseDiv";
+			if (house_no == null || house_no == "") {
+				showErrorValidation(div, "House No. can't be blank !");
+				success = false;
+			} else
+				clearError(div);
+			div = "#line1Div";
+			if (ln1 == null || ln1 == "") {
+				showErrorValidation(div, "Address Line1 can't be blank !");
+				success = false;
+			} else
+				clearError(div);
+			div = "#line2Div";
+			if (ln2 == null || ln2 == "") {
+				showErrorValidation(div, "Address Line2 can't be blank !");
+				success = false;
+			} else
+				clearError(div);
+			div = "#cityDiv";
+			if (cty == null || cty == "") {
+				showErrorValidation(div, "Please select the City !");
+				success = false;
+			} else
+				clearError(div);
+			div = "#stateDiv";
+			if (stat == null || stat == "") {
+				showErrorValidation(div, "Please select the State !");
+				success = false;
+			} else
+				clearError(div);
+			div = "#pinDiv";
+			if (pin == null || pin == "") {
+				showErrorValidation(div, "Pin Number can't be blank !");
+				success = false;
+			} else
+				clearError(div);
+			div = "#roleDiv";
+			if (role == null || role == "") {
+				showErrorValidation(div, "Please select the Role !");
+				success = false;
+			} else
+				clearError(div);
+			div = "#salaryDiv";
+			if (sal == null || sal == "") {
+				showErrorValidation(div, "Salary can't be blank !");
+				success = false;
+			} else
+				clearError(div);
+			div = "#dojDiv";
+			if (doj == null || doj == "") {
+				showErrorValidation(div, "Date of Joining can't be blank !");
+				success = false;
+			} else
+				clearError(div);
+			return success;
+		});
 $("#payForm").submit(function() {
 
 	var amount = $('#inputAmount').val();
@@ -115,9 +239,15 @@ function showErrorValidation(div, message) {
 	}
 }
 
+function printChallanBySide(shipID, orderID) {
+	isFromSideButton = true;
+	isChallan = true;
+	shipChallanID = shipID;
+	orderChallanID = orderID;
+	loadFirms();
+}
 
-function showCompleteOrder(orderID)
-{
+function showCompleteOrder(orderID) {
 	selectedOrder = null;
 	var value = $("input[name=orderID]:checked").val();
 	for (var i = 0; i < orderdetails.length; i++) {
@@ -159,7 +289,7 @@ function showCompleteOrder(orderID)
 		$("#productDetails").append(app);
 	}
 
-	$("#total").text(selectedOrder.amount);
+	
 	$("#loaderImage").show();
 	$
 			.ajax({
@@ -172,6 +302,7 @@ function showCompleteOrder(orderID)
 					$("#loaderImage").hide();
 					if (data.status == "success") {
 						$("#paymentDetails").html("");
+						$("#total").text(selectedOrder.amount+data.extraAmount);
 						var paid = 0;
 						for (var i = 0; i < data.payments.length; i++) {
 							var payment = data.payments[i];
@@ -191,7 +322,7 @@ function showCompleteOrder(orderID)
 							$("#paymentDetails").append(html);
 						}
 						$("#paid").text(paid);
-						$("#due").text(selectedOrder.amount - paid);
+						$("#due").text(selectedOrder.amount - paid + data.extraAmount);
 					} else {
 						swal("Error in fetching Payment Details");
 					}
@@ -201,63 +332,77 @@ function showCompleteOrder(orderID)
 					$("#loaderImage").hide();
 				}
 			});
-	
+
 	$("#loaderImage").show();
 	$
-	.ajax({
-		url : $("#basePath").val() + "/ajaxServlet.do",
-		data : {
-			action : "getShipmentDetails",
-			orderID : value
-		},
-		success : function(data) {
-			$("#loaderImage").hide();
-			$("#panelDiv").html("");
-			if (data.status == "success") {
-				for(var i = 0; i < data.shipments.length;i++)
-				{
-					var shipment = data.shipments[i];
-					
-					var html = "<div class=\"panel panel-collapse\">";
-					html += "<div class=\"panel-heading\" role=\"tab\" id=\"heading"+i+"\">";
-					html += "<h4 class=\"panel-title\">";
-					html += "<a data-toggle=\"collapse\" data-parent=\"#accordion\"";
-					html += "href=\"#collapse"+i+"\" aria-expanded=\"false\"";
-					html += "aria-controls=\"collapse"+i+"\"> Shipment ID #"+shipment.id+"";
-					html += "&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;"+shipment.medium+"";
-					html += "&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;"+shipment.mediumNumber+"&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;"+shipment.mediumName+"";
-					html += "&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;"+shipment.contact+"&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;"+shipment.time+"";
-					html += "</a></h4></div>";
-					html += "<div id=\"collapse"+i+"\" class=\"collapse\" role=\"tabpanel\"";
-					html += "aria-labelledby=\"heading"+i+"\">";
-					html += "<div class=\"panel-body\">";
-					html += "<div class=\"row\">";
-					html += "<label class=\"control-label col-sm-4\"><strong>Product Name";
-					html += "</strong></label> <label class=\"control-label col-sm-4\"><strong>Shipped Quantity";
-					html += "</strong></label></div>";
-					for(var j = 0; j < shipment.products.length; j++)
-					{
-						var prod = shipment.products[j];
-						html += "<div class=\"row\"><label class=\"control-label col-sm-4\">"+prod.name+"</label> <label class=\"control-label col-sm-4\">"+prod.quantity+"</label></div>";
-					}
-					html += "</div></div></div>";
-					
-					$("#panelDiv").append(html);
-				}
-				
-			} else {
-				swal("Error in fetching Shipment Details");
-			}
+			.ajax({
+				url : $("#basePath").val() + "/ajaxServlet.do",
+				data : {
+					action : "getShipmentDetails",
+					orderID : value
+				},
+				success : function(data) {
+					$("#loaderImage").hide();
+					$("#panelDiv").html("");
+					if (data.status == "success") {
+						for (var i = 0; i < data.shipments.length; i++) {
+							var shipment = data.shipments[i];
 
-		},
-		error : function(err) {
-			$("#loaderImage").hide();
-			alert("Error : "+err);
-		}
-	});
-	
-	
-	
+							var html = "<div class=\"panel panel-collapse\">";
+							html += "<div class=\"panel-heading\" role=\"tab\" id=\"heading"
+									+ i + "\">";
+							html += "<h4 class=\"panel-title\">";
+							html += "<a data-toggle=\"collapse\" data-parent=\"#accordion\"";
+							html += "href=\"#collapse" + i
+									+ "\" aria-expanded=\"false\"";
+							html += "aria-controls=\"collapse" + i
+									+ "\"> Shipment ID #" + shipment.id + "";
+							html += "&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;"
+									+ shipment.medium + "";
+							html += "&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;"
+									+ shipment.mediumNumber
+									+ "&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;"
+									+ shipment.mediumName + "";
+							html += "&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;"
+									+ shipment.contact
+									+ "&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;"
+									+ shipment.time + "";
+							html += "</a></h4></div>";
+							html += "<div id=\"collapse" + i
+									+ "\" class=\"collapse\" role=\"tabpanel\"";
+							html += "aria-labelledby=\"heading" + i + "\">";
+							html += "<div class=\"panel-body\">";
+							html += "<div class=\"row\">";
+							html += "<label class=\"control-label col-sm-3\"><strong>Product Name";
+							html += "</strong></label> <label class=\"control-label col-sm-3\"><strong>Shipped Quantity";
+							html += "</strong></label><button type='button' class='col-sm-offset-2 btn bgm-deeporange waves-effect waves-button waves-float' onclick='printChallanBySide("
+									+ shipment.id
+									+ ","
+									+ value
+									+ ");'>Generate Challan</button></div>";
+							for (var j = 0; j < shipment.products.length; j++) {
+								var prod = shipment.products[j];
+								html += "<div class=\"row\"><label class=\"control-label col-sm-3\">"
+										+ prod.name
+										+ "</label> <label class=\"control-label text-left col-sm-3\">"
+										+ prod.quantity + "</label></div>";
+							}
+							html += "</div></div></div>";
+
+							$("#panelDiv").append(html);
+						}
+
+					} else {
+						swal("Error in fetching Shipment Details");
+					}
+
+				},
+				error : function(err) {
+					$("#loaderImage").hide();
+					alert("Error : " + err);
+				}
+			});
+
 }
 
 $('#selectFirmID')
@@ -273,7 +418,7 @@ $('#selectFirmID')
 					}
 
 					$("#loaderImage").show();
-					
+
 					$
 							.ajax({
 								url : $("#basePath").val() + "/ajaxServlet.do",
@@ -289,20 +434,33 @@ $('#selectFirmID')
 									$("#loaderImage").hide();
 									if (data.Response == "Success") {
 										$('#modalFirm').modal('hide');
-
+										// alert("Is From Side Button :
+										// "+isFromSideButton);
 										if (isFromSideButton == false) {
 
-											if ($("#generateReceipt").attr(
-													"type") != null
+											if ($("#printDocForm").attr(
+													"method") != undefined) {
+												$("#printDocForm").submit();
+											} else if ($("#generateReceipt")
+													.attr("type") != null
 													&& $("#generateReceipt")
-															.attr("type") != "undefined") {
+															.attr("type") != undefined) {
+
 												window
 														.open(
 																$("#basePath")
 																		.val()
 																		+ "/PrintOrder.do?print=receipt",
 																"", "");
-											} else {
+											} else if($("#letterTextField").attr("type") != null && $("#letterTextField").attr("type") != undefined)
+											{
+												//alert("From Letter Head");
+												$("#letterTextField").val($(".note-editable").html());
+												console.log("HTML is : "+$(".note-editable").html());
+												$("#letterForm").submit();
+											}
+											else {
+
 												window
 														.open(
 																$("#basePath")
@@ -311,14 +469,31 @@ $('#selectFirmID')
 																"", "");
 											}
 										} else {
-											window
-													.open(
-															$("#basePath")
-																	.val()
-																	+ "/PrintOrder.do?print=receipt&payID="
-																	+ paymentID
-																	+ "",
-															"_blank");
+
+											if (isChallan) {
+												window
+														.open(
+																$("#basePath")
+																		.val()
+																		+ "/PrintOrder.do?print=challan&shipID="
+																		+ shipChallanID
+																		+ "&orderID="
+																		+ orderChallanID,
+																"_blank");
+												isChallan = false;
+											} else {
+												window
+														.open(
+																$("#basePath")
+																		.val()
+																		+ "/PrintOrder.do?print=receipt&payID="
+																		+ paymentID
+																		+ "",
+																"_blank");
+											}
+											isFromSideButton = false;
+											// alert("Is From Side Button :
+											// "+isFromSideButton);
 										}
 
 									} else if (data.Response == "Error") {
@@ -381,39 +556,48 @@ function loadFirms() {
 	});
 }
 
-$("#sendReceiptDetails").click(
-		
-	
-		function(){
-			$('#modalMobile').modal('hide');
-			$("#loaderImage").show();
-			$
-			.ajax({
-				url : $("#basePath").val() + "/ajaxServlet.do",
-				data : {
-					mobile : $("#sendMobiles").val(),
-					email : $("#sendEmails").val(),
-					action : "sendReceiptDetails"
-				},
-				method : "post",
-				error : function(data) {
-					$("#loaderImage").hide();
-					alert("Error : " + data);
-				},
-				success : function(data) {
-					// alert("Success : " +
-					// data.customers[0].name);
-					$("#loaderImage").hide();
-					swal(
-							"SMS/Email Sent Successfully !",
-							"Payment Receipt has been sent to the mobile and the email ids.",
-							"success");
-				}
-			});
-		}
-);
+$("#sendReceiptDetails")
+		.click(
 
-
+				function() {
+					$('#modalMobile').modal('hide');
+					$("#loaderImage").show();
+					$
+							.ajax({
+								url : $("#basePath").val() + "/ajaxServlet.do",
+								data : {
+									mobile : $("#sendMobiles").val(),
+									email : $("#sendEmails").val(),
+									action : "sendReceiptDetails"
+								},
+								method : "post",
+								error : function(data) {
+									$("#loaderImage").hide();
+									alert("Error : " + data);
+								},
+								success : function(data) {
+									// alert("Success : " +
+									// data.customers[0].name);
+									$("#loaderImage").hide();
+									
+									if(data.status == "success")
+									{
+									swal(
+											"SMS/Email Sent Successfully !",
+											"Payment Receipt has been sent to the mobile and the email ids.",
+											"success");
+									}
+									else
+									{
+										swal(
+												"SMS Sent, but Email delivery Failed !",
+												"Payment Receipt has been sent to the mobile but the Email delivery failed as it requires to generate a receipt first.",
+												"error");
+									}
+									
+								}
+							});
+				});
 
 $("#sendShipmentDetails")
 		.click(
@@ -438,10 +622,22 @@ $("#sendShipmentDetails")
 									// data.customers[0].name);
 									$("#loaderImage").hide();
 									
-									swal(
-											"SMS/Email Sent Successfully !",
-											"Shipment details has been sent to the mobile and the email ids.",
-											"success");
+									if(data.status == "success")
+									{
+										swal(
+												"SMS/Email Sent Successfully !",
+												"Shipment details has been sent to the mobile and the email ids.",
+												"success");
+									}
+									else
+									{
+										swal(
+												"SMS Sent, but Email Delivery Failed !",
+												"Shipment details has been sent to the mobile but the email need to generate a Challan first.",
+												"error");
+									}
+
+									
 								}
 							});
 				});
@@ -598,6 +794,180 @@ function getPaymentDetails(orderID) {
 
 }
 
+function validateReturn(cbox, Rqty, qty) {
+	var cid = $(cbox).attr("id");
+	cid = cid.replace("returnProd", "");
+	//alert("Function : "+cid+",,,"+$("#returnQty" + cid).val());
+	try {
+		var returnQty = Number($("#returnQty" + cid).val());
+		//alert("Returned Qty : " + returnQty + ", available quantity :" +(qty - Rqty));
+		if (returnQty == 0) {
+			$("#returnDiv > small#error > font").text(
+					"Return Quantity should be greater than zero.");
+			return false;
+		} else if (returnQty > (qty - Rqty)) {
+			$("#returnDiv > small#error > font").text(
+					"Return Quantity is greater than purchased Quantity");
+			return false;
+		} else {
+			var rate = Number($("#prodRate" + cid).text());
+			var amount = Number($("#returnAmount").val());
+			if($(cbox).is(":checked"))
+			{
+				//alert("Unchecked");
+				$("#returnQty" + cid).attr("readonly",true);
+				amount += rate * returnQty;
+			}
+			else
+			{
+				//alert("checked");
+				$("#returnQty" + cid).attr("readonly",false);
+				amount -= rate * returnQty;
+			}
+			
+			
+			//alert(", DIV is : "+"#prodRate"+cid+",,,"+$("#prodRate" + cid).html());
+			
+			//alert("Rate : "+rate+", Amount : "+amount+", ReturnQty : "+returnQty);
+			
+			$("#returnAmount").val(amount);
+			
+			return true;
+		}
+
+	} catch (err) {
+		alert(err.message);
+		return false;
+	}
+
+}
+
+function showCompleteReturn(value) {
+	selectedOrder = null;
+	for (var i = 0; i < orderdetails.length; i++) {
+		if (orderdetails[i].oid == value) {
+			selectedOrder = orderdetails[i];
+			$("#orderID").val(orderdetails[i].oid);
+			break;
+		}
+	}
+
+	$("#selectName").val(selectedOrder.Customer.name);
+	$("#itemJSON").val(JSON.stringify(selectedOrder.items));
+	$("#selectEmail").val(selectedOrder.Customer.email);
+	$("#selectMobile").val(selectedOrder.Customer.mobile);
+	$("#productDetails").html("");
+	for (var j = 0; j < selectedOrder.items.length; j++) {
+		var item = selectedOrder.items[j];
+		// alert("Product id is : "+item.product_id);
+		var app = "<div class=\"form-group\">";
+		app += "<div class=\"col-sm-2 col-sm-offset-1\">";
+		app += "<label class=\"control-label\"><strong>" + item.product_name
+				+ "";
+
+		app += "</div>";
+		app += "<div class=\"col-sm-2 col-sm-offset-1\">";
+		app += "<label class=\"control-label\"><strong>" + item.product_amount
+				+ "";
+		app += "</strong></label>";
+		app += "</div>";
+		app += "<div class=\"col-sm-2 col-sm-offset-1\">";
+		app += "<label class=\"control-label\"><strong>" + item.product_qty
+				+ "</strong></label></div>";
+		app += "<div class=\"col-sm-2 col-sm-offset-1\">";
+		app += "<label class=\"control-label\"><strong>" + item.product_amount
+				* item.product_qty + "";
+		app += "</strong></label>";
+		app += "</div>";
+		app += "</div>";
+		$("#productDetails").append(app);
+	}
+
+	$("#total").text(selectedOrder.amount);
+	$("#loaderImage").show();
+	$
+			.ajax({
+				url : $("#basePath").val() + "/ajaxServlet.do",
+				data : {
+					action : "getReturnDetails",
+					orderID : value
+				},
+				success : function(data) {
+					$("#loaderImage").hide();
+					if (data.status == "success") {
+						$("#returnDetails").html("");
+						$("#returnAmount").val(0);
+						var i = 0;
+						var name = "";
+						for (; i < data.returns.length; i++) {
+							var returnObj = data.returns[i];
+
+							var html = "<div class='form-group'>";
+							if(name != returnObj.productName)
+							{
+								html += "<div class='col-sm-2'>"
+									+ returnObj.productName + "<input type='hidden' name='prodID' value='"+returnObj.productID+"' /></div>";
+							html += "<div class='col-sm-2' id='prodRate"+i+"'>" + returnObj.rate
+									+ "</div>";
+							html += "<div class='col-sm-2'>"
+									+ returnObj.quantity + "</div>";	
+							}
+							else
+							{
+								html += "<div class='col-sm-2'></div><div class='col-sm-2'></div><div class='col-sm-2'></div>";
+							}
+							
+							
+
+							if (returnObj.isReturned) {
+								html += "<div class='col-sm-2'>"
+										+ returnObj.returnTime + " ####  "
+										+ returnObj.returnQuantity + "</div>";
+								
+								if (name != returnObj.productName && returnObj.returnQuantity < returnObj.quantity) {
+									html += "<div class='col-sm-2'><input type='text' placeholder='Enter Qty.' name='returnQty' id='returnQty"
+											+ i
+											+ "' class='form-control' /></div>";
+									html += "<div class='col-sm-2'><input type='checkbox' value='true' id='returnProd"
+											+ i
+											+ "' name='returnProd' onclick='return validateReturn(this,"
+											+ returnObj.returnQuantity
+											+ ","
+											+ returnObj.quantity
+											+ ");' /></div>";
+								} else {
+									html += "<div class='col-sm-2'></div>";
+									html += "<div class='col-sm-2'></div>";
+								}
+							} else {
+								html += "<div class='col-sm-2'></div>";
+								html += "<div class='col-sm-2'><input type='text' placeholder='Enter Qty.' id='returnQty"
+										+ i
+										+ "' name='returnQty' class='form-control' /></div>";
+								html += "<div class='col-sm-2'><input type='checkbox' value='true' id='returnProd"
+										+ i
+										+ "' onclick='return validateReturn(this,0,"
+										+ (returnObj.quantity)
+										+ ");' name='returnProd'  /></div>";
+							}
+							html += "</div>";
+							$("#returnDetails").append(html);
+							
+							name = returnObj.productName;
+						}
+						$("#numProd").val(i);
+					} else {
+						swal("No Returns to show ! Error in fetching details !");
+					}
+
+				},
+				error : function(err) {
+					$("#loaderImage").hide();
+				}
+			});
+
+}
+
 function showProducts(value) {
 	// alert("product : "+value);
 	selectedOrder = null;
@@ -643,7 +1013,7 @@ function showProducts(value) {
 $("#searchOrderBtn")
 		.click(
 				function(e) {
-					
+
 					var s = document.getElementById("fillOrderDetails");
 
 					var ipnm = $("#inputName").val();
@@ -754,19 +1124,20 @@ $("#searchOrderBtn")
 												.createElement('input');
 										input.setAttribute("type", "radio");
 										input.setAttribute("name", "orderID");
-										if($("#page").val() == "viewOrder")
-										{
+										if ($("#page").val() == "viewOrder") {
 											input
-											.setAttribute("onchange",
-													"showCompleteOrder(this.value)");
-										}
-										else
-										{
+													.setAttribute("onchange",
+															"showCompleteOrder(this.value)");
+										} else if ($("#page").val() == "return") {
 											input
-											.setAttribute("onchange",
-													"showProductsDisplay(this.value)");
+													.setAttribute("onchange",
+															"showCompleteReturn(this.value)");
+										} else {
+											input
+													.setAttribute("onchange",
+															"showProductsDisplay(this.value)");
 										}
-										
+
 										input.setAttribute("value",
 												orderdetails[i].oid);
 										var tbbdtd = document

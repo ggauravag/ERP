@@ -12,7 +12,17 @@ public class PaymentForm extends ActionForm {
 	 * 
 	 */
 	int orderID, amount;
-	String mode, paidBy, description;
+	String modeType, paidBy, description, payTime;
+
+	
+	
+	public String getPayTime() {
+		return payTime;
+	}
+
+	public void setPayTime(String payTime) {
+		this.payTime = payTime;
+	}
 
 	public String getDescription() {
 		return description;
@@ -26,8 +36,28 @@ public class PaymentForm extends ActionForm {
 		return amount;
 	}
 
-	public String getMode() {
-		return mode;
+	public String getModeType() {
+		return modeType;
+	}
+
+	public void setModeType(String modeType) {
+		this.modeType = modeType;
+	}
+
+	public void setOrderID(int orderID) {
+		this.orderID = orderID;
+	}
+
+	public void setAmount(int amount) {
+		this.amount = amount;
+	}
+
+	public void setPaidBy(String paidBy) {
+		this.paidBy = paidBy;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
 	public String getPaidBy() {
@@ -45,38 +75,21 @@ public class PaymentForm extends ActionForm {
 			HttpServletRequest request) {
 		// TODO Auto-generated method stub
 		ActionErrors errors = new ActionErrors();
-		String orderID = request.getParameter("orderID");
-		String modeType = request.getParameter("modeType");
-		String amount = request.getParameter("amount");
-		String paidBy = request.getParameter("paidBy");
-		String description = request.getParameter("description");
 
-		if (orderID == null || "".equals(orderID)) {
+		if (orderID == 0) {
 			errors.add("orderError", new ActionMessage("order.blankError"));
-		} else {
-			this.orderID = Integer.parseInt(orderID);
-		}
-
-		if (description != null || !"".equals(description)) {
-			this.description = description;
 		}
 
 		if (paidBy == null || "".equals(paidBy)) {
 			errors.add("paidByError", new ActionMessage("paidBy.blankError"));
-		} else {
-			this.paidBy = paidBy;
 		}
 
 		if (modeType == null || "".equals(modeType)) {
 			errors.add("mediumError", new ActionMessage("mode.blankError"));
-		} else {
-			this.mode = modeType;
 		}
 
-		if (amount == null || "".equals(amount)) {
+		if (amount == 0) {
 			errors.add("amountError", new ActionMessage("amount.blankError"));
-		} else {
-			this.amount = Integer.parseInt(amount);
 		}
 
 		return errors;

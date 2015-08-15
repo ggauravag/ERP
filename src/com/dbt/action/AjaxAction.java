@@ -3,6 +3,7 @@ package com.dbt.action;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Vector;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -17,15 +18,27 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
+import sun.font.EAttribute;
+
+import com.dbt.dao.AttendanceDAO;
 import com.dbt.dao.ComplaintDAO;
 import com.dbt.dao.CustomerDAO;
+import com.dbt.dao.EmployeeDAO;
+import com.dbt.dao.ExpenditureDAO;
 import com.dbt.dao.MerchantDAO;
 import com.dbt.dao.OrderDAO;
 import com.dbt.dao.PaymentDAO;
 import com.dbt.dao.ProductDAO;
+import com.dbt.dao.PurchaseDAO;
+import com.dbt.dao.ReturnDAO;
 import com.dbt.dao.ShipmentDAO;
+import com.dbt.dao.StockDAO;
 import com.dbt.data.Address;
+import com.dbt.data.Capital;
+import com.dbt.data.Complaint;
 import com.dbt.data.Customer;
+import com.dbt.data.Employee;
+import com.dbt.data.Loan;
 import com.dbt.data.Merchant;
 import com.dbt.data.Order;
 import com.dbt.data.Order_item;
@@ -98,7 +111,307 @@ public class AjaxAction extends Action {
 			getShipmentDetails(request, response);
 		}
 
+		if ("getExpenditureDetail".equals(action)) {
+			getExpenditureDetail(request, response);
+		}
+
+		if ("getEmployeeDetails".equals(action)) {
+			getEmployeeDetails(request, response);
+		}
+
+		if ("addCategory".equals(action)) {
+			addCategory(request, response);
+		}
+
+		if ("addNewProduct".equals(action)) {
+			addNewProduct(request, response);
+		}
+
+		if ("addNewMerchant".equals(action)) {
+			addNewMerchant(request, response);
+		}
+		if ("getComplaintByOIDCIDMobile".equals(action)) {
+			getComplaintByOIDCIDMobile(request, response);
+		}
+		if ("getAttendanceDetails".equals(action)) {
+			getAttendanceDetails(request, response);
+		}
+		if ("getEmpDetails".equals(action)) {
+			System.out.println("Ajax called");
+			getEmpDetails(request, response);
+		}
+
+		if ("getCities".equals(action)) {
+			getCities(request, response);
+		}
+
+		if ("getPurchaseData".equals(action)) {
+			getPurchaseData(request, response);
+		}
+
+		if ("getReturnDetails".equals(action)) {
+			getReturnDetails(request, response);
+		}
+
+		if ("getEmployeesDetails".equals(action)) {
+			getEmployeesDetails(request, response);
+		}
+
+		if ("getCustomerByNameMob".equals(action)) {
+			getCustomerByNameMob(request, response);
+		}
+
+		if ("getPurchaseDetail".equals(action)) {
+			getPurchaseDetail(request, response);
+		}
+		
+		if("getPurchaseById".equals(action)){
+			getPurchaseById(request, response);
+		}
+
 		return null;
+	}
+
+	public void getPurchaseById(HttpServletRequest request,
+			HttpServletResponse response) throws IOException {
+		
+	}
+	
+	public void getPurchaseDetail(HttpServletRequest request,
+			HttpServletResponse response) throws IOException {
+		String pid = request.getParameter("pid");
+		String to = request.getParameter("to");
+		String from = request.getParameter("from");
+		String name = request.getParameter("name");
+		int purchaseID = 0;
+		if (pid != null && pid.length() != 0) {
+			purchaseID = Integer.parseInt(pid);
+		}
+
+		JSONArray purchaseJSON = new PurchaseDAO().getPurchaseDetail(name,
+				from, to, purchaseID);
+		JSONObject resp = new JSONObject();
+		resp.put("purchases", purchaseJSON);
+		resp.put("status", true);
+		String responseText = resp.toJSONString();
+		System.out.println(responseText);
+		response.setContentType("text/json");
+		response.getWriter().write(responseText);
+	}
+
+	public void getCustomerByNameMob(HttpServletRequest request,
+			HttpServletResponse response) throws IOException {
+
+		String name = request.getParameter("name");
+		String mobile = request.getParameter("mobile");
+
+		String responseText = "";
+		List<Customer> customers = new CustomerDAO().getCustomersByNameMob(
+				name, mobile);
+		Iterator<Customer> iter = customers.iterator();
+		JSONObject list = new JSONObject();
+		JSONArray customersArray = new JSONArray();
+		while (iter.hasNext()) {
+			Customer p = iter.next();
+			JSONObject c = new JSONObject();
+			c.put("id", p.getId());
+			c.put("name", p.getName());
+			c.put("email", p.getEmail());
+			c.put("mobile", p.getMobile());
+			c.put("tin", p.getTin());
+			c.put("type", p.getType());
+			JSONObject address = new JSONObject();
+			Address add = p.getAddress();
+			address.put("house_no", add.getHouseNo());
+			address.put("line1", add.getLine1());
+			address.put("line2", add.getLine2());
+			address.put("city", add.getCity());
+			address.put("state", add.getState());
+			address.put("zip", add.getZip());
+
+			c.put("address", address);
+
+			customersArray.add(c);
+		}
+		list.put("customers", customersArray);
+		responseText = list.toJSONString();
+		// logger.info("getCustomerDetails() - "+responseText);
+		System.out.println("AjaxActionServlet : Response JSON is : "
+				+ responseText);
+		response.setContentType("text/json");
+		response.getWriter().write(responseText);
+	}
+
+	public void getEmployeesDetails(HttpServletRequest request,
+			HttpServletResponse response) throws IOException {
+		String name = request.getParameter("name");
+		System.out.println("AjaxAction: Name is:" + name);
+		String responseText = "";
+		List<Employee> emp = new EmployeeDAO().getEmployeeDetails(name);
+		Iterator<Employee> iter = emp.iterator();
+		JSONObject list = new JSONObject();
+		JSONArray empArray = new JSONArray();
+		while (iter.hasNext()) {
+			Employee e = iter.next();
+
+			JSONObject empObj = new JSONObject();
+
+			empObj.put("eid", e.getEmployee_id());
+			empObj.put("doj", e.getDate_of_join().toString());
+			empObj.put("salary", e.getSalary());
+			empObj.put("role", e.getRole());
+
+			JSONObject usr = new JSONObject();
+			User user = e.getUser();
+			usr.put("name", user.getFirstName() + " " + user.getLastName());
+			usr.put("mobile", user.getMobile());
+			usr.put("email", user.getEmail());
+
+			JSONObject addr = new JSONObject();
+			Address address = e.getAddress();
+			addr.put("house_no", address.getHouseNo());
+			addr.put("line1", address.getLine1());
+			addr.put("line2", address.getLine2());
+			addr.put("city", address.getCity());
+			addr.put("state", address.getState());
+			addr.put("zip", address.getZip());
+
+			empObj.put("user", usr);
+			empObj.put("address", addr);
+			empArray.add(empObj);
+		}
+
+		list.put("EmpDetails", empArray);
+		responseText = list.toJSONString();
+		System.out.println("AjaxActionServlet : Response JSON is : "
+				+ responseText);
+		response.setContentType("text/json");
+		response.getWriter().write(responseText);
+	}
+
+	public void getReturnDetails(HttpServletRequest request,
+			HttpServletResponse response) throws IOException {
+
+		int orderID = Integer.parseInt(request.getParameter("orderID"));
+		JSONArray purchases = new ReturnDAO().getAllReturn(orderID);
+		JSONObject resp = new JSONObject();
+		if (purchases.size() > 0) {
+			resp.put("status", "success");
+		} else {
+			resp.put("status", "failure");
+		}
+		resp.put("returns", purchases);
+		String respJSON = resp.toJSONString();
+		System.out.println(respJSON);
+		response.setContentType("text/json");
+		response.getWriter().write(respJSON);
+	}
+
+	public void getPurchaseData(HttpServletRequest request,
+			HttpServletResponse response) throws IOException {
+
+		JSONArray purchases = new PurchaseDAO().getAllPurchasesJSON();
+		JSONObject resp = new JSONObject();
+		if (purchases.size() > 0) {
+			resp.put("status", "success");
+		} else {
+			resp.put("status", "failure");
+		}
+		resp.put("purchases", purchases);
+		String respJSON = resp.toJSONString();
+		System.out.println(respJSON);
+		response.setContentType("text/json");
+		response.getWriter().write(respJSON);
+	}
+
+	public void getCities(HttpServletRequest request,
+			HttpServletResponse response) throws IOException {
+
+		String state = request.getParameter("state");
+		List<String> cities = new OrderDAO().getCity(state);
+		JSONArray citiesJSON = new JSONArray();
+		JSONObject resp = new JSONObject();
+
+		for (String city : cities) {
+			citiesJSON.add(city);
+		}
+
+		resp.put("city", citiesJSON);
+		String responseText = resp.toJSONString();
+		System.out.println("AjaxActionServlet : Response JSON is : "
+				+ responseText);
+		response.setContentType("text/json");
+		response.getWriter().write(responseText);
+	}
+
+	public void getAttendanceDetails(HttpServletRequest request,
+			HttpServletResponse response) throws IOException {
+
+		String employee_id = request.getParameter("eid");
+
+		System.out.println("AjaxAction called: Employee ID:" + employee_id);
+		String responseText = "";
+		boolean result = new AttendanceDAO().getAttendanceToday(employee_id);
+
+		JSONObject obj = new JSONObject();
+		obj.put("result", result);
+		responseText = obj.toJSONString();
+		System.out.println("AjaxActionServlet : Response JSON is : "
+				+ responseText);
+		response.setContentType("text/json");
+		response.getWriter().write(responseText);
+
+	}
+
+	public void getComplaintByOIDCIDMobile(HttpServletRequest request,
+			HttpServletResponse response) throws IOException {
+		String oid = request.getParameter("OrderID");
+		String cid = request.getParameter("CompID");
+		String mob = request.getParameter("mobile");
+
+		System.out.println("ORderID:" + oid + ",CompID:" + cid + ",Mobile:"
+				+ mob);
+		String responseText = "";
+
+		List<Complaint> complaint = new ComplaintDAO().getComplaintDetails(oid,
+				cid, mob);
+
+	}
+
+	public void getEmpDetails(HttpServletRequest request,
+			HttpServletResponse response) throws IOException {
+		String name = request.getParameter("name");
+		System.out.println("AjaxAction: Name is:" + name);
+		String responseText = "";
+		List<Employee> emp = new EmployeeDAO().getEmpDetails(name);
+		Iterator<Employee> iter = emp.iterator();
+		JSONObject list = new JSONObject();
+		JSONArray empArray = new JSONArray();
+		while (iter.hasNext()) {
+			Employee e = iter.next();
+
+			JSONObject empObj = new JSONObject();
+
+			empObj.put("eid", e.getEmployee_id());
+			empObj.put("doj", e.getDate_of_join().toString());
+			empObj.put("salary", e.getSalary());
+
+			JSONObject usr = new JSONObject();
+			User user = e.getUser();
+			usr.put("name", user.getFirstName() + " " + user.getLastName());
+			usr.put("mobile", user.getMobile());
+			usr.put("email", user.getEmail());
+
+			empObj.put("user", usr);
+			empArray.add(empObj);
+		}
+
+		list.put("EmpDetails", empArray);
+		responseText = list.toJSONString();
+		System.out.println("AjaxActionServlet : Response JSON is : "
+				+ responseText);
+		response.setContentType("text/json");
+		response.getWriter().write(responseText);
 	}
 
 	public void getShipmentDetails(HttpServletRequest request,
@@ -154,24 +467,40 @@ public class AjaxAction extends Action {
 		String[] email = emails.split(",");
 		String[] mobile = mobiles.split(",");
 
+		Vector<String> emailVector = new Vector<>();
+		Vector<String> mobileVector = new Vector<>();
+
 		for (int i = 0; i < email.length; i++) {
-			if (!EmailValidator.getInstance().isValid(email[i]))
-				email[i] = null;
+			if (EmailValidator.getInstance().isValid(email[i]))
+				emailVector.add(email[i]);
 		}
 
 		for (int i = 0; i < mobile.length; i++) {
-			if (!mobile[i].matches(mobileReg))
-				mobile[i] = null;
+			if (mobile[i].matches(mobileReg))
+				mobileVector.add(mobile[i]);
 		}
+
+		email = toStringArray(emailVector.toArray());
+		mobile = toStringArray(mobileVector.toArray());
 
 		Payment payment = (Payment) request.getSession()
 				.getAttribute("payment");
+		Merchant merchant = (Merchant) request.getSession().getAttribute(
+				"merchant");
 
 		Order order = (Order) request.getSession().getAttribute("order");
-		Email.sendReceiptDetails(email, payment, order);
-		DBTSms.sendReceiptSMS(mobile, payment, order);
+		String responseText = "";
+		if (merchant == null) {
+			responseText = "{ \"status\":\"failure\" }";
+		} else if (email.length != 0) {
+			new Email().sendReceiptDetails(email, payment, merchant);
+			responseText = "{ \"status\":\"success\" }";
+		}
 
-		response.getWriter().write("{ \"status\":\"success\" }");
+		DBTSms.sendReceiptSMS(mobile, payment, order);
+		System.out.println(responseText);
+		response.setContentType("text/json");
+		response.getWriter().write(responseText);
 	}
 
 	private void getPaymentDetails(HttpServletRequest request,
@@ -191,13 +520,13 @@ public class AjaxAction extends Action {
 				paymentJSON.put("type", payment.getType());
 				paymentJSON.put("paidBy", payment.getPaidBy());
 				paymentJSON.put("orderID", payment.getOrderId());
-				paymentJSON
-						.put("datetime", payment.getDatetime().toGMTString());
+				paymentJSON.put("datetime", payment.getDatetime().toString());
 				paymentArray.add(paymentJSON);
 			}
 			JSONObject resp = new JSONObject();
 			resp.put("status", "success");
 			resp.put("payments", paymentArray);
+			resp.put("extraAmount", new PaymentDAO().getExtraAmount(order));
 			String responseText = resp.toJSONString();
 			response.setContentType("text/json");
 			System.out.println(responseText);
@@ -248,6 +577,14 @@ public class AjaxAction extends Action {
 		response.getWriter().write(responseText);
 	}
 
+	public String[] toStringArray(Object[] arr) {
+		String[] returnArray = new String[arr.length];
+		for (int i = 0; i < arr.length; i++) {
+			returnArray[i] = arr[i].toString();
+		}
+		return returnArray;
+	}
+
 	private void sendShipmentDetails(HttpServletRequest request,
 			HttpServletResponse response) throws IOException {
 
@@ -258,25 +595,40 @@ public class AjaxAction extends Action {
 		String[] email = emails.split(",");
 		String[] mobile = mobiles.split(",");
 
+		Vector<String> emailVector = new Vector<>();
+		Vector<String> mobileVector = new Vector<>();
+
 		for (int i = 0; i < email.length; i++) {
-			if (!EmailValidator.getInstance().isValid(email[i]))
-				email[i] = null;
+			if (EmailValidator.getInstance().isValid(email[i]))
+				emailVector.add(email[i]);
 		}
 
 		for (int i = 0; i < mobile.length; i++) {
-			if (!mobile[i].matches(mobileReg))
-				mobile[i] = null;
+			if (mobile[i].matches(mobileReg))
+				mobileVector.add(mobile[i]);
 		}
+
+		email = toStringArray(emailVector.toArray());
+		mobile = toStringArray(mobileVector.toArray());
 
 		Shipment shipment = (Shipment) request.getSession().getAttribute(
 				"shipment");
 		int orderid = Integer.parseInt(request.getSession()
 				.getAttribute("orderID").toString());
 		Order order = new OrderDAO().getOrder(orderid);
-		Email.sendShipment(email, shipment, order);
-		DBTSms.sendShipmentSMS(mobile, shipment, order);
+		Merchant merchant = (Merchant) request.getSession().getAttribute(
+				"merchant");
+		String responseText = "";
+		if (merchant == null) {
+			responseText = "{ \"status\":\"failure\" }";
+		} else if (email.length != 0) {
+			new Email().sendShipment(email, shipment, order, merchant);
+			responseText = "{ \"status\":\"success\" }";
+		}
 
-		response.getWriter().write("{ \"status\":\"success\" }");
+		DBTSms.sendShipmentSMS(mobile, shipment, order);
+		response.setContentType("text/json");
+		response.getWriter().write(responseText);
 
 	}
 
@@ -288,7 +640,7 @@ public class AjaxAction extends Action {
 		String responseText = "";
 		// System.out.println("AjaxActionServlet : "+name+oid+mob);
 
-		List<Order> order = OrderDAO.getOrderDetails(oid, name, mob);
+		List<Order> order = new OrderDAO().getOrderDetails(oid, name, mob);
 		Iterator<Order> iter = order.iterator();
 		JSONObject list = new JSONObject();
 		JSONArray custArray = new JSONArray();
@@ -297,7 +649,8 @@ public class AjaxAction extends Action {
 			JSONObject ord = new JSONObject();
 			ord.put("oid", o.getId());
 			ord.put("amount", o.getAmount());
-			ord.put("date", o.getDatetime().toGMTString());
+			ord.put("date", o.getDatetime().toString());
+
 			JSONArray itemArray = new JSONArray();
 
 			List<Order_item> items = o.getOrderitems();
@@ -354,7 +707,7 @@ public class AjaxAction extends Action {
 			response.getWriter().write("{ \"Response\":\"Success\" }");
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Email.sendExceptionReport(e);
 			response.setContentType("text/json");
 			response.getWriter().write("{ \"Response\":\"Error\" }");
 		}
@@ -403,7 +756,7 @@ public class AjaxAction extends Action {
 		String responseText = "";
 		// System.out.println("AjaxActionServlet : "+name+oid+mob);
 
-		List<Order> order = ComplaintDAO.getOrderDetails(name, oid, mob);
+		List<Order> order = new ComplaintDAO().getOrderDetails(name, oid, mob);
 		Iterator<Order> iter = order.iterator();
 		JSONObject list = new JSONObject();
 		JSONArray custArray = new JSONArray();
@@ -434,9 +787,10 @@ public class AjaxAction extends Action {
 
 	public void getCustomerDetails(HttpServletRequest request,
 			HttpServletResponse response) throws IOException {
+
 		String name = request.getParameter("name");
 		String responseText = "";
-		List<Customer> customers = CustomerDAO.getCustomer(name);
+		List<Customer> customers = new CustomerDAO().getCustomer(name);
 		Iterator<Customer> iter = customers.iterator();
 		JSONObject list = new JSONObject();
 		JSONArray productsArray = new JSONArray();
@@ -464,6 +818,7 @@ public class AjaxAction extends Action {
 		}
 		list.put("customers", productsArray);
 		responseText = list.toJSONString();
+		// logger.info("getCustomerDetails() - "+responseText);
 		System.out.println("AjaxActionServlet : Response JSON is : "
 				+ responseText);
 		response.setContentType("text/json");
@@ -481,21 +836,37 @@ public class AjaxAction extends Action {
 		String[] email = emails.split(",");
 		String[] mobile = mobiles.split(",");
 
+		Vector<String> emailVector = new Vector<>();
+		Vector<String> mobileVector = new Vector<>();
+
 		for (int i = 0; i < email.length; i++) {
-			if (!EmailValidator.getInstance().isValid(email[i]))
-				email[i] = null;
+			if (EmailValidator.getInstance().isValid(email[i]))
+				emailVector.add(email[i]);
 		}
 
 		for (int i = 0; i < mobile.length; i++) {
-			if (!mobile[i].matches(mobileReg))
-				mobile[i] = null;
+			if (mobile[i].matches(mobileReg))
+				mobileVector.add(mobile[i]);
 		}
 
-		Order order = (Order) request.getSession().getAttribute("order");
-		Email.sendOrderDetails(email, order);
-		DBTSms.sendOrderSMS(mobile, order);
+		email = toStringArray(emailVector.toArray());
+		mobile = toStringArray(mobileVector.toArray());
 
-		response.getWriter().write("{ \"status\":\"success\" }");
+		Order order = (Order) request.getSession().getAttribute("order");
+		Order orderSend = new OrderDAO().getOrder(order.getId());
+		Merchant merchant = (Merchant) request.getSession().getAttribute(
+				"merchant");
+		String resposneText = "";
+		if (merchant == null) {
+			resposneText = "{ \"status\":\"failure\" }";
+		} else if (email.length != 0) {
+			new Email().sendOrderDetails(email, orderSend, merchant);
+			resposneText = "{ \"status\":\"success\" }";
+		}
+
+		DBTSms.sendOrderSMS(mobile, order);
+		response.setContentType("text/json");
+		response.getWriter().write(resposneText);
 
 	}
 
@@ -503,7 +874,7 @@ public class AjaxAction extends Action {
 			HttpServletResponse response) throws IOException {
 		String responseText = "";
 		int catgId = Integer.parseInt(request.getParameter("catgId"));
-		List<Product> products = OrderDAO.getProducts(catgId);
+		List<Product> products = new OrderDAO().getProducts(catgId);
 		Iterator<Product> iter = products.iterator();
 		JSONObject list = new JSONObject();
 		JSONArray productsArray = new JSONArray();
@@ -523,6 +894,141 @@ public class AjaxAction extends Action {
 		System.out.println("AjaxAction : Response JSON is : " + responseText);
 		response.setContentType("text/json");
 		response.getWriter().write(responseText);
+	}
+
+	public void getExpenditureDetail(HttpServletRequest request,
+			HttpServletResponse response) throws IOException {
+		String responseString = "";
+		// System.out.println("Inside getExpenditureDetail()");
+		String type = request.getParameter("expType");
+		JSONObject list = new JSONObject();
+		JSONArray detailArray = new JSONArray();
+		// System.out.println(type);
+
+		if (type.equals("loan")) {
+			List<Loan> loanDetails = new ExpenditureDAO().getLoanDetails();
+			Iterator<Loan> itr = loanDetails.iterator();
+			while (itr.hasNext()) {
+				Loan l = itr.next();
+				JSONObject loan = new JSONObject();
+				loan.put("id", l.getId());
+				loan.put("amount", l.getAmount());
+				loan.put("installment", l.getInstallement());
+				detailArray.add(loan);
+				// System.out.println(l.getAmount() + ", " +
+				// l.getInstallement());
+			}
+			list.put("expDetail", detailArray);
+			list.put("type", "loan");
+			responseString = list.toJSONString();
+
+			System.out.println("AjaxAction : Response JSON is : "
+					+ responseString);
+			response.setContentType("text/json");
+			response.getWriter().write(responseString);
+		} else if (type.equals("interest")) {
+			List<Capital> interestDetails = new ExpenditureDAO()
+					.getInterestDetail();
+			Iterator<Capital> itr = interestDetails.iterator();
+			while (itr.hasNext()) {
+				Capital c = itr.next();
+				JSONObject interest = new JSONObject();
+				interest.put("id", c.getId());
+				interest.put("amount", c.getAmount());
+				interest.put("lender", c.getLender());
+				detailArray.add(interest);
+				System.out.println(c.getAmount() + ", " + c.getLender());
+			}
+			list.put("expDetail", detailArray);
+			list.put("type", "interest");
+			responseString = list.toJSONString();
+
+			System.out.println("AjaxAction : Response JSON is : "
+					+ responseString);
+			response.setContentType("text/json");
+			response.getWriter().write(responseString);
+		}
+	}
+
+	public void getEmployeeDetails(HttpServletRequest request,
+			HttpServletResponse response) throws IOException {
+
+		String responseText = "";
+		List<User> employees = new EmployeeDAO().getEmployee();
+		Iterator<User> iter = employees.iterator();
+		JSONObject list = new JSONObject();
+		JSONArray employeeArray = new JSONArray();
+
+		while (iter.hasNext()) {
+			User p = iter.next();
+			JSONObject employee = new JSONObject();
+			employee.put("empId", p.getId());
+			employee.put("name", p.getFirstName() + " " + p.getLastName());
+			employee.put("mobile", p.getMobile());
+
+			employeeArray.add(employee);
+		}
+		list.put("employees", employeeArray);
+		responseText = list.toJSONString();
+		System.out.println("AjaxActionServlet : Response JSON is : "
+				+ responseText);
+		response.setContentType("text/json");
+		response.getWriter().write(responseText);
+	}
+
+	public void addCategory(HttpServletRequest request,
+			HttpServletResponse response) throws IOException {
+		String catName = request.getParameter("catName");
+		System.out.println("At AjaxAction - addCategory(), catname : "
+				+ catName);
+		boolean status = new StockDAO().addNewCategory(catName);
+
+		if (status)
+			System.out.println("New Category added successfully");
+		else
+			System.out.println("Unable to add new category");
+
+	}
+
+	public void addNewProduct(HttpServletRequest request,
+			HttpServletResponse response) throws IOException {
+		int catId = Integer.parseInt(request.getParameter("catId"));
+		String prodName = request.getParameter("prodName");
+		int prodQty = Integer.parseInt(request.getParameter("prodQty"));
+		int prodSp = Integer.parseInt(request.getParameter("prodSp"));
+		int prodCp = Integer.parseInt(request.getParameter("prodCp"));
+
+		System.out.println("At AjaxAction - addProduct(), Product name : "
+				+ prodName + ", Category ID : " + catId);
+
+		boolean status = new StockDAO().addNewProduct(catId, prodName, prodQty,
+				prodSp, prodCp);
+
+		if (status)
+			System.out.println("New Product added successfully");
+		else
+			System.out.println("Unable to add new product");
+
+	}
+
+	public void addNewMerchant(HttpServletRequest request,
+			HttpServletResponse response) throws IOException {
+		String name = request.getParameter("merchantName");
+		String mobile = request.getParameter("mobile");
+		String email = request.getParameter("email");
+		String tin = request.getParameter("tin");
+		String type = request.getParameter("type");
+
+		System.out.println("At AjaxAction - addNewMerchant(), Merchant name : "
+				+ name);
+
+		boolean status = new MerchantDAO().addMerchant(name, mobile, email,
+				tin, type);
+
+		if (status)
+			System.out.println("New Merchant added successfully");
+		else
+			System.out.println("Unable to add new merchant");
 	}
 
 }

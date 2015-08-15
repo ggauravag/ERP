@@ -30,10 +30,10 @@ public class ProductDAO {
 						res.getInt("cost_price"));
 			}
 
-		} catch (NoConnectionException | SQLException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			Email.sendExceptionReport(e);
-			e.printStackTrace();
+			
 		} finally {
 			DBConnection.closeResource(con, stmt, res);
 		}

@@ -17,6 +17,24 @@ public class LoginForm extends ActionForm {
 	private String email;
 	private String password;
 	private String rememberMe;
+	private String action;
+	private String otp;
+	
+	public String getOtp() {
+		return otp;
+	}
+
+	public void setOtp(String otp) {
+		this.otp = otp;
+	}
+
+	public String getAction() {
+		return action;
+	}
+
+	public void setAction(String action) {
+		this.action = action;
+	}
 
 	public String getEmail() {
 		return email;
@@ -46,35 +64,54 @@ public class LoginForm extends ActionForm {
 	public ActionErrors validate(ActionMapping mapping,
 			HttpServletRequest request) {
 		// TODO Auto-generated method stub
-		System.out.println("User email : " + email + ", password : " + password);
+		System.out
+				.println("User email : " + email + ", password : " + password);
 		ActionErrors errors = new ActionErrors();
-		boolean isEmailEmpty = false;
 		
-		boolean isPasswordEmpty = false;
-		if (email == null || email.trim().length() == 0) {
-			isEmailEmpty = true;
-		}
-		if (password == null || password.trim().length() == 0) {
-			isPasswordEmpty = true;
-		}
+		if("login".equals(getAction()))
+		{
+			if (email == null || email.trim().length() == 0) {
+				errors.add("emailError", new ActionMessage("email.blankError"));
+			}
+			if (password == null || password.trim().length() == 0) {
+				errors.add("passwordError",
+						new ActionMessage("password.blankError"));
+			}
 
-		if (rememberMe != null) {
-			System.out.println("User wants to be remebered, and email : "
-					+ email + ", password : " + password);
-		}
+			if (rememberMe != null) {
+				System.out.println("User wants to be remebered, and email : "
+						+ email + ", password : " + password);
+			}
 
-		boolean isEmailValid = EmailValidator.getInstance().isValid(email);
-		if (isEmailEmpty) {
-			errors.add("emailError", new ActionMessage("email.blankError"));
-		} else if (!isEmailValid) {
-			errors.add("emailError", new ActionMessage("email.invalidError"));
+			boolean isEmailValid = EmailValidator.getInstance().isValid(email);
+			if (!isEmailValid) {
+				errors.add("emailError", new ActionMessage("email.invalidError"));
+			}
+			
+			request.setAttribute("login", true);
 		}
-
-		if (isPasswordEmpty) {
-			errors.add("passwordError",
-					new ActionMessage("password.blankError"));
+		else if("forgotPassword".equals(getAction()))
+		{
+			if (email == null || email.trim().length() == 0) {
+				errors.add("forgotEmailError", new ActionMessage("email.blankError"));
+			}
+			if (!EmailValidator.getInstance().isValid(email)) {
+				errors.add("forgotEmailError", new ActionMessage("email.invalidError"));
+			}
+			
+			request.setAttribute("forgetPassword", true);
 		}
-
+		else if("otpVerify".equals(getAction()))
+		{
+			if(otp == null || otp.trim().length() < 6)
+			{
+				errors.add("otpBlank", new ActionMessage("otp.blankError"));
+			}
+			
+			request.setAttribute("login", true);
+		}
+		
+		
 		return errors;
 	}
 }

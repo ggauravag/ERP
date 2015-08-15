@@ -12,8 +12,18 @@ public class OrderForm extends ActionForm {
 
 	String name, email, house, line1, line2, city, state, mobile, zip, numProd;
 	String[] productNames, productPrices, productQtys;
-	String custID,type,tin;
+	String custID,type,tin,orderTime;
 	
+	
+	
+	public String getOrderTime() {
+		return orderTime;
+	}
+
+	public void setOrderTime(String orderTime) {
+		this.orderTime = orderTime;
+	}
+
 	public String getType() {
 		return type;
 	}
@@ -137,7 +147,7 @@ public class OrderForm extends ActionForm {
 			errors.add("productError", new ActionMessage("product.blankError"));
 		if (mobile != null && !mobile.matches(mobileReg))
 			errors.add("mobileError", new ActionMessage("mobile.invalidError"));
-		if (email != null && !EmailValidator.getInstance().isValid(email))
+		if (!"".equals(email) && !EmailValidator.getInstance().isValid(email))
 			errors.add("emailError", new ActionMessage("email.invalidError"));
 
 		return errors;

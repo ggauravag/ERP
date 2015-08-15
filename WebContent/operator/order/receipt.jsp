@@ -4,15 +4,19 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib prefix="jspcore" uri="http://java.sun.com/jsp/jstl/core"%>
-<doctype html>
-
-
-<html lang="en">
+<%
+	String basePath = request.getContextPath();
+    String bPath = request.getScheme() + "://" + request.getServerName () + ":" + request.getServerPort () + basePath + "/";
+%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
 <head>
+<base href="<%=bPath%>">
 <meta charset="UTF-8">
 <title>Payment Receipt</title>
+<link href="img/favicon.ico" rel="icon" />
 <link rel="stylesheet"
-	href="<%=request.getContextPath()%>/css/bootstrap.css">
+	href="css/bootstrap.css">
 <style>
 @import url(http://fonts.googleapis.com/css?family=Bree+Serif);
 
@@ -28,13 +32,23 @@ u {
 p.text {
 	line-height: 125%;
 }
+
 </style>
+
+
+
+<script src="<%=request.getContextPath()%>/js/jquery-2.1.1.min.js"></script>
 
 </head>
 
 <body>
-	
+
 	<div class="container">
+		<div class="row" id="buttonDiv">
+			<br>
+			<button type="button" id="ORIGINAL" onclick="printChallan(this.id)"
+				class="btn btn-primary col-xs-offset-4 col-xs-4">Print</button>
+		</div>
 		<div class="row">
 			<div class="col-xs-2">
 				<h1>
@@ -43,9 +57,10 @@ p.text {
 				</h1>
 			</div>
 			<div class="col-xs-10 text-right">
-				<h2>Payment Receipt</h2>
-				<h1>
-					<small>Receipt No. #${payment.id + 4000} | Date :
+				<h2 style="color : black;">Payment Receipt</h2>
+				<h5 style="color : black;" id="type"></h5>
+				<h1 style="margin-top: 0px">
+					<small style="color : black;">Receipt No. #${payment.receiptId} | Date :
 						${payment.printableTime}</small>
 				</h1>
 			</div>
@@ -55,7 +70,8 @@ p.text {
 				<div class="panel panel-default">
 					<div class="panel-heading">
 						<h4>
-							<strong>${merchant.name} (TIN No. ${merchant.tin})</strong>
+							<strong style="color : black;">${merchant.name} </strong><font style="color : black;" size="2px">&nbsp;TIN No.
+								${merchant.tin}</font>
 						</h4>
 					</div>
 					<jspcore:set var="merAdd" value="${merchant.address}"></jspcore:set>
@@ -63,23 +79,23 @@ p.text {
 						<table>
 							<tr>
 								<td></td>
-								<td><strong> ${merAdd.houseNo}, ${merAdd.line1}<br>
+								<td><strong style="color : black;"> ${merAdd.houseNo}, ${merAdd.line1}<br>
 										${merAdd.line2}, ${merAdd.city} - ${merAdd.zip}
 								</strong></td>
 							</tr>
 							<tr>
 								<td></td>
-								<td>${merchant.mobile}</td>
+								<td style="color : black;">${merchant.mobile}</td>
 							</tr>
 							<tr>
 								<td></td>
-								<td>${merchant.email}</td>
+								<td style="color : black;">${merchant.email}</td>
 							</tr>
 						</table>
 					</div>
 				</div>
 			</div>
-			
+
 		</div>
 		<div class="row">
 			<div class="col-xs-12">
@@ -87,28 +103,28 @@ p.text {
 					<div class="panel-body">
 						<table class="table">
 							<tr>
-								<td><strong>Amount (In Figures) :</strong></td>
-								<td><span class="WebRupee">&#x20B9; </span>${payment.printableAmount}</td>
+								<td><strong style="color : black;">Amount (In Figures) :</strong></td>
+								<td style="color : black;"><span class="WebRupee">&#x20B9; </span>${payment.printableAmount}</td>
 							</tr>
 							<tr>
-								<td><strong>Amount (In Words) :</strong></td>
-								<td>${payment.amountInWords}</td>
+								<td><strong style="color : black;">Amount (In Words) :</strong></td>
+								<td style="color : black;">${payment.amountInWords}</td>
 							</tr>
 							<tr>
-								<td><strong>Paid By :</strong></td>
-								<td>${payment.paidBy}</strong></td>
+								<td><strong style="color : black;">Paid By :</strong></td>
+								<td style="color : black;">${payment.paidBy}</strong></td>
 							</tr>
 							<tr>
-								<td><strong>Order ID :</strong></td>
-								<td>${payment.orderId}</td>
+								<td><strong style="color : black;">Order ID :</strong></td>
+								<td style="color : black;">${payment.orderId}</td>
 							</tr>
 							<tr>
-								<td><strong>Mode :</strong></td>
-								<td>${payment.mode}</td>
+								<td><strong style="color : black;">Mode :</strong></td>
+								<td style="color : black;">${payment.mode}</td>
 							</tr>
 							<tr>
-								<td><strong>Description :</strong></td>
-								<td>${payment.description}</td>
+								<td><strong style="color : black;">Description :</strong></td>
+								<td style="color : black;">${payment.description}</td>
 							</tr>
 
 						</table>
@@ -123,12 +139,13 @@ p.text {
 			<div class="col-xs-7">
 				<div class="panel panel-info">
 					<div class="panel-heading">
-						<h4>Note :</h4>
+						<h4 style="color : black;">Note :</h4>
 					</div>
 					<div class="panel-body">
-						<p>1. This is computer generated receipt and only valid after
+						<p style="color : black;margin-top: -5px">1. This is a computer generated receipt and is only valid after
 							signature of an authorised signatory.</p>
-						<p>2. Receipt is for acknowledgement purpose only.</p>
+						<p style="color : black;margin-top: -5px">2. Receipt is for acknowledgement purpose only.</p>
+						<p style="color : black;margin-top: -5px;margin-bottom: 0px">3. Receipt may represent partial payment for order.</p>
 					</div>
 				</div>
 			</div>
@@ -137,13 +154,13 @@ p.text {
 				<div class="span7">
 					<div class="panel panel-info">
 						<div class="panel-heading">
-							<h4>For ${merchant.name.toUpperCase()}</h4>
+							<h4 style="color : black;">For ${merchant.name.toUpperCase()}</h4>
 						</div>
 						<div class="panel-body">
 							<p>&nbsp;&nbsp;</p>
 							<p>&nbsp;&nbsp;</p>
 							<p>
-								<strong><h5 class="text-right">Authorised
+								<strong style="color : black;"><h5 class="text-right">Authorised
 										Signatory</h5></strong>
 							</p>
 
@@ -153,5 +170,15 @@ p.text {
 			</div>
 		</div>
 	</div>
+	<script>
+		function printChallan(buttonID) {
+			document.getElementById("type").innerText = "ORIGINAL";
+			$("#buttonDiv").hide();
+			window.print();
+			document.getElementById("type").innerText = "";
+			$("#buttonDiv").show();
+
+		}
+	</script>
 </body>
 </html>

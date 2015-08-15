@@ -10,6 +10,7 @@ import org.apache.struts.action.ActionMapping;
 
 import com.dbt.dao.FundDAO;
 import com.dbt.forms.LoanForm;
+import com.dbt.support.Email;
 
 public class LoanAction extends Action{
 	
@@ -23,12 +24,12 @@ public class LoanAction extends Action{
 		LoanForm myform = (LoanForm)form;
 		
 		try{
-			int loanAmount = Integer.parseInt(myform.getLoanAmount());
-			int loanTenure = Integer.parseInt(myform.getLoanTenure());
-			int loanInstallment = Integer.parseInt(myform.getLoanInstallment());
-			int loanInterest = Integer.parseInt(myform.getLoanRate());
+			int loanAmount = myform.getInputAmount();
+			int loanTenure = myform.getInputTenure();
+			int loanInstallment = myform.getInputInstallment();
+			double loanInterest = myform.getInputInterest();
 			
-			boolean state = FundDAO.addLoan(loanAmount, loanTenure, loanInstallment, loanInterest);
+			boolean state = new FundDAO().addLoan(loanAmount, loanTenure, loanInstallment, loanInterest);
 			
 			if(state)
 			{
@@ -41,7 +42,7 @@ public class LoanAction extends Action{
 		}
 		catch(Exception e)
 		{
-			e.printStackTrace();
+			Email.sendExceptionReport(e);
 		}
 		
 		return mapping.findForward(result);

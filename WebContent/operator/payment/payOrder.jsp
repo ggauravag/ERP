@@ -2,10 +2,12 @@
 	pageEncoding="ISO-8859-1"%>
 <%
 	String basePath = request.getContextPath();
+    String bPath = request.getScheme() + "://" + request.getServerName () + ":" + request.getServerPort () + basePath + "/";
 %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
+<base href="<%=bPath%>">
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -26,7 +28,7 @@
 		</div>
 
 		<div class="card">
-			<form class="form-horizontal" action="PayOrder.do" method="post"
+			<form class="form-horizontal" action="operator/payment/PayOrder.do" method="post"
 				id="payForm" role="form">
 
 				<div class="card-header">
@@ -158,7 +160,10 @@
 				</div>
 				<div class="card-body card-padding">
 					<input type="hidden" name="itemJSON" id="itemJSON" />
-
+					
+					
+					
+					
 					<div class="row">
 						<div class="form-group">
 							<label class="control-label col-sm-3 ">Total Payment : <font
@@ -189,8 +194,9 @@
 
 							</tbody>
 						</table>
+						<br><br><br><br>
 					</div>
-					<br>
+					
 					<div class="row">
 						<div id="mediumDiv" class="form-input">
 							<label for="inputMedium" class="col-sm-3 control-label">Payment
@@ -207,6 +213,23 @@
 
 						</div>
 
+					</div>
+					
+					<div class="row">
+						<label for="inputDate" class="col-sm-3 control-label">Payment
+							Date/Time</label>
+						<div class="col-sm-4">
+							<div class="input-group form-group">
+								<span class="input-group-addon"><i class="md md-event"></i></span>
+								<div class="dtp-container dropdown fg-line open">
+									<input type="text" name="payTime"
+										class="form-control date-time-picker" data-toggle="dropdown"
+										aria-expanded="true" id="inputDate"
+										placeholder="Payment Date & Time">
+								</div>
+								
+							</div>
+						</div>
 					</div>
 
 					<div class="row">
@@ -253,23 +276,14 @@
 											property="paidByError" /></font></small>
 							</div>
 						</div>
-
 					</div>
-
-
-				</div>
-
-				<br /> <br /> <br />
+				</div>		
 				<div class="form-group">
-					<div class="col-sm-offset-2 col-sm-10">
-						<button type="submit" class="btn btn-primary btn-lg col-sm-3">Pay
-							For Order</button>
-
+					<div class="row">
+						<button type="submit" class="btn btn-primary btn-lg col-sm-4 col-sm-offset-4">Process Payment</button>
 					</div>
 				</div>
-				<br>
-				
-				
+				<br>				
 				<div class="modal fade" data-modal-color="blue" id="modalFirm"
 					data-backdrop="static" data-keyboard="false" tabindex="-1"
 					role="dialog" aria-hidden="true">
@@ -295,7 +309,15 @@
 
 	<%@include file="../../js/includejs.jsp"%>
 	<script
-		src="<%=basePath%>/vendors/bootstrap-datetimepicker/bootstrap-datetimepicker.min.js"></script>
-	<script type="text/javascript" src="../../js/extra.js"></script>
+		src="vendors/bootstrap-datetimepicker/bootstrap-datetimepicker.min.js"></script>
+	<script src="vendors/moment/moment.min.js"></script>
+	<script src="vendors/noUiSlider/jquery.nouislider.all.min.js"></script>
+	<script src="vendors/input-mask/input-mask.min.js"></script>
+	<script src="vendors/farbtastic/farbtastic.min.js"></script>
+	<script src="vendors/summernote/summernote.min.js"></script>
+	<script
+		src="vendors/bootstrap-datetimepicker/bootstrap-datetimepicker.min.js"></script>
+	<script src="vendors/fileinput/fileinput.min.js"></script>
+	<script type="text/javascript" src="js/extra.js"></script>
 </body>
 </html>

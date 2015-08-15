@@ -1,10 +1,12 @@
 
 <%
 	String basePath = request.getContextPath();
+    String bPath = request.getScheme() + "://" + request.getServerName () + ":" + request.getServerPort () + basePath + "/";
 %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
+<base href="<%=bPath%>">
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -13,7 +15,7 @@
 
 <!-- Vendor CSS -->
 
-<%@include file="/css/includecss.jsp"%>
+<%@include file="../css/includecss.jsp"%>
 
 
 </head>
@@ -33,7 +35,7 @@
 		</div>
 
 		<div class="card">
-			<form action="../ConfirmOrder.do" method="get" id="custForm"
+			<form action="operator/ConfirmOrder.do" method="get" id="custForm"
 				name="custForm" class="form-horizontal" role="form">
 
 				<div class="card-header">
@@ -217,7 +219,7 @@
 
 	<!-- Javascript Libraries -->
 
-	<%@include file="/js/includejs.jsp"%>
+	<%@include file="../js/includejs.jsp"%>
 
 	<script type="text/javascript">
 		$("#printOrder").click(

@@ -2,10 +2,12 @@
 	pageEncoding="ISO-8859-1"%>
 <%
 	String basePath = request.getContextPath();
+    String bPath = request.getScheme() + "://" + request.getServerName () + ":" + request.getServerPort () + basePath + "/";
 %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
+<base href="<%=bPath%>">
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -14,7 +16,7 @@
 <%@include file="../css/includecss.jsp"%>
 </head>
 <body>
-    
+
 	<input type="hidden" id="basePath" value="<%=basePath%>">
 	<%@ include file="../header.jsp"%>
 
@@ -27,7 +29,7 @@
 		</div>
 
 		<div class="card">
-			<form class="form-horizontal" action="../ProcessOrder.do"
+			<form class="form-horizontal" action="operator/ProcessOrder.do"
 				method="post" role="form">
 
 				<div class="card-header">
@@ -133,8 +135,8 @@
 
 						<div class="form-group">
 							<div class="col-sm-2 col-sm-offset-1">
-								<label class="control-label"><strong>To be Shipped
-										? </strong></label>
+								<label class="control-label"><strong>To be
+										Shipped ? </strong></label>
 							</div>
 							<div class="col-sm-2 col-sm-offset-1">
 								<label class="control-label"><strong>Product
@@ -146,6 +148,21 @@
 						</div>
 						<div id="productDetails"></div>
 						<font color="red"><html:errors property="productError" /></font>
+					</div>
+					<div>
+						<h4>Discount Details :</h4>
+
+						<div class="form-group">
+							<div class="col-sm-2 col-sm-offset-1">
+								<label for="discount" class="control-label">Discount Amount (If Any)</label>
+							</div>
+							<div class="col-sm-3">
+								<div class="fg-line">
+									<input type="text" name="discount" id="discount" class="form-control"
+										placeholder="Enter Any Discount (If Applicable)">
+								</div>
+							</div>
+						</div>
 					</div>
 				</div>
 				<!-- card-body card-padding div 2-->
@@ -221,6 +238,23 @@
 							</div>
 						</div>
 					</div>
+					
+					<div class="row">
+						<label for="inputCharge" class="col-sm-2 control-label">Shipping
+							Charges</label>
+						<div class="col-sm-4">
+							<div class="input-group form-group">
+								
+								<div class="dtp-container dropdown fg-line open">
+									<input type="text" name="shippingCharge"
+										class="form-control" id="inputCharge"
+										placeholder="Ex. 1000">
+								</div>
+								<small class="help-block"><font color="red"><html:errors
+											property="dateError" /></font></small>
+							</div>
+						</div>
+					</div>
 
 
 				</div>
@@ -228,7 +262,8 @@
 				<br /> <br /> <br />
 				<div class="form-group">
 					<div class="row">
-						<button type="submit" class="btn btn-primary btn-lg col-sm-6 col-sm-offset-3">Process
+						<button type="submit"
+							class="btn btn-primary btn-lg col-sm-6 col-sm-offset-3">Process
 							Order</button>
 
 					</div>
@@ -243,7 +278,15 @@
 
 	<%@include file="../js/includejs.jsp"%>
 	<script
-		src="<%=request.getContextPath()%>/vendors/bootstrap-datetimepicker/bootstrap-datetimepicker.min.js"></script>
-	<script type="text/javascript" src="../js/extra.js"></script>
+		src="vendors/bootstrap-datetimepicker/bootstrap-datetimepicker.min.js"></script>
+	<script src="vendors/moment/moment.min.js"></script>
+	<script src="vendors/noUiSlider/jquery.nouislider.all.min.js"></script>
+	<script src="vendors/input-mask/input-mask.min.js"></script>
+	<script src="vendors/farbtastic/farbtastic.min.js"></script>
+	<script src="vendors/summernote/summernote.min.js"></script>
+	<script
+		src="vendors/bootstrap-datetimepicker/bootstrap-datetimepicker.min.js"></script>
+	<script src="vendors/fileinput/fileinput.min.js"></script>
+	<script type="text/javascript" src="js/extra.js"></script>
 </body>
 </html>

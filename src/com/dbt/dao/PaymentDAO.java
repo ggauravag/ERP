@@ -5,7 +5,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import com.dbt.data.Payment;
@@ -14,6 +16,43 @@ import com.dbt.exception.NoConnectionException;
 import com.dbt.support.Email;
 
 public class PaymentDAO {
+
+	public int getPayableReturnAmount(int orderID, int returnAmount) {
+		int payableAmount = 0;
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet set = null;
+		try {
+			con = DBConnection.getConnection();
+			stmt = con
+					.prepareStatement("select order.amount as 'amount',sum(transaction.amount) as 'paidamount' from `order`,payment,transaction where order._id = ? and order._id = payment.order_id and payment.transaction_id = transaction._id group by payment.order_id");
+			stmt.setInt(1, orderID);
+			set = stmt.executeQuery();
+			if (set.next()) {
+				int totalAmount = set.getInt("amount");
+				int paidAmount = set.getInt("paidamount");
+				if ((totalAmount - paidAmount) >= returnAmount) {
+					payableAmount = 0;
+				} else {
+					payableAmount = returnAmount - (totalAmount - paidAmount);
+				}
+
+				stmt.close();
+				stmt = con
+						.prepareStatement("update order set amount = amount - ? where _id = ?");
+				stmt.setInt(1, returnAmount);
+				stmt.setInt(2, orderID);
+				stmt.executeUpdate();
+			}
+		} catch (Exception e) {
+
+			Email.sendExceptionReport(e);
+		} finally {
+			DBConnection.closeResource(con, stmt, set);
+		}
+
+		return payableAmount;
+	}
 
 	public Payment getPaymentByID(int payID) {
 		Payment payment = null;
@@ -32,14 +71,39 @@ public class PaymentDAO {
 						set.getTimestamp("timestamp"), set.getInt("amount"),
 						set.getInt("order_id"), set.getString("type"));
 			}
-		} catch (SQLException | NoConnectionException e) {
-			e.printStackTrace();
+		} catch (Exception e) {
+
 			Email.sendExceptionReport(e);
 		} finally {
 			DBConnection.closeResource(con, stmt, set);
 		}
 
 		return payment;
+	}
+
+	public int getExtraAmount(int orderID) {
+		int extraAmount = 0;
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet set = null;
+		try {
+			con = DBConnection.getConnection();
+			stmt = con
+					.prepareStatement("select discount,(select sum(distinct charge) from shipment,order_item where shipment._id = order_item.ship_id and order_item.order_id = `order`._id) as charge from `order` where _id = ?");
+			stmt.setInt(1, orderID);
+			set = stmt.executeQuery();
+			if (set.next()) {
+				int discount = set.getInt("discount");
+				int charge = set.getInt("charge");
+				extraAmount = charge - discount;
+			}
+		} catch (Exception e) {
+			Email.sendExceptionReport(e);
+		} finally {
+			DBConnection.closeResource(con, stmt, set);
+		}
+
+		return extraAmount;
 	}
 
 	public List<Payment> getPayment(int orderid) {
@@ -62,10 +126,10 @@ public class PaymentDAO {
 						res.getInt("order_id"), res.getString("type"));
 				payments.add(payment);
 			}
-		} catch (NoConnectionException | SQLException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			Email.sendExceptionReport(e);
-			e.printStackTrace();
+
 		} finally {
 			DBConnection.closeResource(con, stmt, res);
 		}
@@ -73,18 +137,19 @@ public class PaymentDAO {
 	}
 
 	public Payment makePayment(String paidBy, int amount, int orderID,
-			String mode, String desc) {
+			String mode, String desc, Date payDate) {
 		Payment pay = null;
 		Connection con = null;
 		CallableStatement stmt = null;
 		ResultSet res = null;
 		try {
 			con = DBConnection.getConnection();
-			stmt = con.prepareCall("{Call CreatePayment(?,?,?,?)}");
+			stmt = con.prepareCall("{Call CreatePayment(?,?,?,?,?)}");
 			stmt.setInt(1, orderID);
 			stmt.setInt(2, amount);
 			stmt.setString(3, paidBy);
 			stmt.setString(4, mode + ";" + desc);
+			stmt.setTimestamp(5, new Timestamp(payDate.getTime()));
 			if (stmt.execute()) {
 				res = stmt.getResultSet();
 				if (res.next())
@@ -95,7 +160,7 @@ public class PaymentDAO {
 							res.getString("type"));
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+
 			Email.sendExceptionReport(e);
 		} finally {
 			DBConnection.closeResource(con, stmt, res);

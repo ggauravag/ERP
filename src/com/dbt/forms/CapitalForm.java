@@ -11,28 +11,32 @@ public class CapitalForm extends ActionForm{
 
 	private static final long serialVersionUID = 1L;
 	
-	private String capitalAmount;
-	private String capitalRate;
-	private String capitalLender;
+	public String getInputLender() {
+		return inputLender;
+	}
+	public void setInputLender(String inputLender) {
+		this.inputLender = inputLender;
+	}
+
+	private int inputAmount;
+	private double inputRate;
+	private String inputLender;
 	
-	public String getCapitalAmount() {
-		return capitalAmount;
+	
+	
+	public double getInputRate() {
+		return inputRate;
 	}
-	public void setCapitalAmount(String capitalAmount) {
-		this.capitalAmount = capitalAmount;
+	public void setInputRate(double inputRate) {
+		this.inputRate = inputRate;
 	}
-	public String getCapitalRate() {
-		return capitalRate;
+	public int getInputAmount() {
+		return inputAmount;
 	}
-	public void setCapitalRate(String capitalRate) {
-		this.capitalRate = capitalRate;
+	public void setInputAmount(int inputAmount) {
+		this.inputAmount = inputAmount;
 	}
-	public String getCapitalLender() {
-		return capitalLender;
-	}
-	public void setCapitalLender(String capitalLender) {
-		this.capitalLender = capitalLender;
-	}
+	
 	public static long getSerialversionuid() {
 		return serialVersionUID;
 	}
@@ -42,15 +46,14 @@ public class CapitalForm extends ActionForm{
 			HttpServletRequest request) {
 	
 		ActionErrors errors = new ActionErrors();
-		capitalAmount = request.getParameter("inputAmount");
-		capitalLender = request.getParameter("inputLender");
-		capitalRate = request.getParameter("inputRate");
 		
-		if (capitalAmount == null || capitalAmount == "")
+		System.out.println("Amount is : "+inputAmount+","+inputRate+","+inputLender);
+		
+		if (inputAmount == 0)
 			errors.add("capitalAmountError", new ActionMessage("capitalAmount.blankError"));
-		if (capitalLender == null || capitalLender == "")
+		if (inputLender == null || "".equals(inputLender))
 			errors.add("capitalLenderError", new ActionMessage("capitalLender.blankError"));
-		if (capitalRate == null || capitalRate == "")
+		if (inputRate == 0.0)
 			errors.add("capitalRate", new ActionMessage("capitalRate.blankError"));
 		
 		return errors;

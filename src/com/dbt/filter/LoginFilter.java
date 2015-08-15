@@ -16,6 +16,7 @@ import javax.servlet.http.HttpSession;
 
 import com.dbt.data.User;
 import com.dbt.support.AESCrypto;
+import com.dbt.support.Email;
 
 public class LoginFilter implements Filter {
 
@@ -31,10 +32,11 @@ public class LoginFilter implements Filter {
 
 		HttpServletRequest httpRequest = (HttpServletRequest) request;
 		HttpSession session = httpRequest.getSession(false);
-		HttpServletResponse httpresponse = (HttpServletResponse)response;
-       
+		HttpServletResponse httpresponse = (HttpServletResponse) response;
+
+		//System.out.println("LoginFilter : Called with session : "+session);
 		if (session == null || session.getAttribute("user") == null) {
-			System.out.println("LoginFilter : Session is null or Unauthentic");
+			//System.out.println("LoginFilter : Session is null or Unauthentic");
 			Cookie[] cookies = httpRequest.getCookies();
 			if (cookies != null) {
 				for (Cookie c : cookies) {
@@ -53,29 +55,28 @@ public class LoginFilter implements Filter {
 
 						try {
 							dispatcher.forward(request, response);
-
-						} catch (ServletException e) {
+							return;
+						} catch (Exception e) {
 							// TODO Auto-generated catch block
-							e.printStackTrace();
-						} catch (IOException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
+							Email.sendExceptionReport(e);
 						}
+
+						break;
 					}
 				}
 
 			}
-		} else {
+		} else if (session.getAttribute("otp") == null) {
 			User u = (User) session.getAttribute("user");
-			System.out.println("LoginFilter : User of type & name : " + u.getFirstName()
-					+ "," + u.getType());
+			System.out.println("LoginFilter : User of type & name : "
+					+ u.getFirstName() + "," + u.getType());
 			httpresponse.sendRedirect("dashboard.jsp");
+			return;
 		}
 
-		System.out.println("LoginFilter : Filter Called, resource : "
+		System.out.println("LoginFilter : Session Filter Called, resource : "
 				+ httpRequest.getRequestURI());
 		chain.doFilter(request, response);
-
 	}
 
 	@Override

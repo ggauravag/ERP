@@ -39,7 +39,7 @@ public class AESCrypto {
 		}
 
 		catch (Exception e) {
-			e.printStackTrace();
+			Email.sendExceptionReport(e);
 		}
 		return encryptedValue;
 	}
@@ -57,7 +57,7 @@ public class AESCrypto {
 		}
 
 		catch (Exception e) {
-			e.printStackTrace();
+			Email.sendExceptionReport(e);
 		}
 
 		return decryptedValue;

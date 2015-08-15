@@ -26,7 +26,7 @@ message += "<doctype html>\r\n";
 	      message += "\t\t<tr>\r\n";
 	      message += "\t\t\t<td align=\"center\" colspan=\"3\">\r\n";
 	      message += "\t\t\t\r\n";
-	      message += "\t\t\t\t<img height=\"10%\" src=\"ramfurlogo.jpg\" align=\"left\" style=\"padding-top: 2%;\" />\r\n";
+	      message += "\t\t\t\t<img height=\"10%\" src=\"http://dreambit.co.in/img/logo/ramfurlogo.jpg\" align=\"left\" style=\"padding-top: 2%;\" />\r\n";
 	      message += "\t\t\t\r\n";
 	      message += "\t\t\t\t<b><u><< RETAIL INVOICE >></u></b>  <br>\r\n";
 	      message += "\t\t\t\t<font size=\"5%\"><b>KHUSHI INTERNATIONAL</b></font><br>\r\n";

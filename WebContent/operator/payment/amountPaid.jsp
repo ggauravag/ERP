@@ -2,10 +2,12 @@
 	pageEncoding="ISO-8859-1"%>
 <%
 	String basePath = request.getContextPath();
+    String bPath = request.getScheme() + "://" + request.getServerName () + ":" + request.getServerPort () + basePath + "/";
 %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
+<base href="<%=bPath%>">
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -84,14 +86,14 @@
 				</div>
 
 				<div class="form-group">
-					<div class="col-sm-9 col-sm-offset-1">
+					<div class="row">
 						<button type="button" id="generateReceipt"
-							class="col-sm-offset-1 btn btn-primary waves-effect waves-button waves-float">
-							<i class="md md-receipt"></i> Generate Receipt
+							class="col-sm-offset-2 col-sm-3 btn btn-primary waves-effect waves-button waves-float">
+							<i class="md md-receipt"></i> &nbsp;&nbsp;Generate Receipt
 						</button>
 						<button type="button" id="sendReceipt"
-							class="col-sm-offset-1 btn btn-primary waves-effect waves-button waves-float">
-							<i class="md md-message"></i> SEND SMS/EMAIL RECEIPT
+							class="col-sm-offset-2 col-sm-3 btn btn-primary waves-effect waves-button waves-float">
+							<i class="md md-message"></i> &nbsp;&nbsp;SEND SMS/EMAIL RECEIPT
 						</button>
 					</div>
 				</div>

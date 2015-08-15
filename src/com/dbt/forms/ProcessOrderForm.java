@@ -1,6 +1,7 @@
 package com.dbt.forms;
 
 import javax.servlet.http.HttpServletRequest;
+
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionMapping;
@@ -9,55 +10,63 @@ import org.json.simple.JSONArray;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+import com.dbt.support.Email;
+
 public class ProcessOrderForm extends ActionForm {
-	
+
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 	int orderID;
 	int[] prodID;
-	String mediumType,vehicleNum,mediumName,contactMedium,shipDate;
+	String mediumType, vehicleNum, mediumName, contactMedium, shipDate;
 	JSONArray items;
-	
+	int discount, shippingCharge;
+
 	@Override
 	public ActionErrors validate(ActionMapping mapping,
 			HttpServletRequest request) {
-		// TODO Auto-generated method stub 
+		// TODO Auto-generated method stub
 		ActionErrors errors = new ActionErrors();
-		
-		String orderid = request.getParameter("orderID");
-		String[] prodid = request.getParameterValues("prodID");
-		mediumName = request.getParameter("mediumName");
-		vehicleNum = request.getParameter("vehicleNum");
-		mediumType = request.getParameter("mediumType");
-		contactMedium = request.getParameter("contactMedium");
-		shipDate = request.getParameter("shipDate");
+
 		String json = request.getParameter("itemJSON");
 		try {
-			items = (JSONArray)new JSONParser().parse(json);
+			items = (JSONArray) new JSONParser().parse(json);
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Email.sendExceptionReport(e);
 		}
-		System.out.println("ProcessOrderForm JSON is : "+json);
-		
-		if(orderid == null || "".equals(orderid))
+		System.out.println("ProcessOrderForm JSON is : " + json);
+
+		if (orderID == 0)
 			errors.add("orderError", new ActionMessage("order.blankError"));
-		else
-			orderID = Integer.parseInt(orderid);
-		if(prodid == null || prodid.length == 0)
+
+		if (prodID == null || prodID.length == 0)
 			errors.add("productError", new ActionMessage("product.blankError"));
-		else
-		{
-			for(int i = 0; i < prodid.length; i++)
-				prodID[i] = Integer.parseInt(prodid[i]);
-		}
-		if(mediumName == null || "Select Transport Medium".equals(mediumName))
+
+		if (mediumName == null || "Select Transport Medium".equals(mediumName))
 			errors.add("mediumError", new ActionMessage("medium.blankError"));
-		if(shipDate == null || "".equals(shipDate))
+
+		if (shipDate == null || "".equals(shipDate))
 			errors.add("dateError", new ActionMessage("date.blankError"));
 		return errors;
+	}
+
+	public int getDiscount() {
+		return discount;
+	}
+
+	public int getShippingCharge() {
+		return shippingCharge;
+	}
+
+	public void setShippingCharge(int shippingCharge) {
+		this.shippingCharge = shippingCharge;
+	}
+
+	public void setDiscount(int discount) {
+		this.discount = discount;
 	}
 
 	public JSONArray getItems() {
