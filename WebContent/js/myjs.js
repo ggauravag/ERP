@@ -13,9 +13,8 @@ var customerDetails = new Array();
 
 var firmSelect = new Array();
 
-
-function Customer(id, name, email, mob, tin, house, line1, line2, city, state, pin, type)
-{
+function Customer(id, name, email, mob, tin, house, line1, line2, city, state,
+		pin, type) {
 	this.id = id;
 	this.name = name;
 	this.email = email;
@@ -199,171 +198,201 @@ function attendance(empId) {
 	});
 }
 
-$("#searchEmpDetails").click(function(e) {
+$("#searchEmpDetails")
+		.click(
+				function(e) {
 
-	var ipnm = $("#inputName").val();
-	if (ipnm == null || ipnm == "") {
-		swal("No data found.", "Name can't be blank !", "error");
-		return;
-	}
-	var s = document.getElementById("viewEmpData");
-	s.innerHTML = "";
-	$("#loaderImage").show();
-	$.ajax({
+					var ipnm = $("#inputName").val();
+					if (ipnm == null || ipnm == "") {
+						swal("No data found.", "Name can't be blank !", "error");
+						return;
+					}
+					var s = document.getElementById("viewEmpData");
+					s.innerHTML = "";
+					$("#loaderImage").show();
+					$
+							.ajax({
 
-		url : $("#basePath").val() + "/ajaxServlet.do",
+								url : $("#basePath").val() + "/ajaxServlet.do",
 
-		data : {
-			name : ipnm,
-			action : "getEmpDetails"
-		},
-		method : "post",
-		error : function(data, status, errorThrown) {
-			$("#loaderImage").hide();
-			alert("Error : " + status + "," + errorThrown);
-		},
-		success : function(data) {
-			$("#loaderImage").hide();
-			var heading = document.createElement('div');
-			heading.setAttribute("class", "card-header");
+								data : {
+									name : ipnm,
+									action : "getEmpDetails"
+								},
+								method : "post",
+								error : function(data, status, errorThrown) {
+									$("#loaderImage").hide();
+									alert("Error : " + status + ","
+											+ errorThrown);
+								},
+								success : function(data) {
+									$("#loaderImage").hide();
+									var heading = document.createElement('div');
+									heading
+											.setAttribute("class",
+													"card-header");
 
-			var hd1 = document.createElement('h2');
-			$(hd1).text("Employee Details");
-			var hd2 = document.createElement('small');
-			$(hd2).text("Please select the Employee To Mark Attendance");
+									var hd1 = document.createElement('h2');
+									$(hd1).text("Employee Details");
+									var hd2 = document.createElement('small');
+									$(hd2)
+											.text(
+													"Please select the Employee To Mark Attendance");
 
-			heading.appendChild(hd1);
-			heading.appendChild(hd2);
-			s.appendChild(heading);
+									heading.appendChild(hd1);
+									heading.appendChild(hd2);
+									s.appendChild(heading);
 
-			var dtbl = document.createElement('div');
-			dtbl.setAttribute("class", "table-responsive");
+									var dtbl = document.createElement('div');
+									dtbl.setAttribute("class",
+											"table-responsive");
 
-			var table = document.createElement('table');
-			table.setAttribute("class", "table table-condensed");
+									var table = document.createElement('table');
+									table.setAttribute("class",
+											"table table-condensed");
 
-			var tbhead = document.createElement('thead');
-			var tbhdrow = document.createElement('tr');
+									var tbhead = document
+											.createElement('thead');
+									var tbhdrow = document.createElement('tr');
 
-			var tbhdtd1 = document.createElement('td');
-			$(tbhdtd1).text("Select");
-			tbhdrow.appendChild(tbhdtd1);
+									var tbhdtd1 = document.createElement('td');
+									$(tbhdtd1).text("Select");
+									tbhdrow.appendChild(tbhdtd1);
 
-			var tbhdtd2 = document.createElement('td');
-			$(tbhdtd2).text("Employee ID");
-			tbhdrow.appendChild(tbhdtd2);
+									var tbhdtd2 = document.createElement('td');
+									$(tbhdtd2).text("Employee ID");
+									tbhdrow.appendChild(tbhdtd2);
 
-			var tbhdtd3 = document.createElement('td');
-			$(tbhdtd3).text("Name");
-			tbhdrow.appendChild(tbhdtd3);
+									var tbhdtd3 = document.createElement('td');
+									$(tbhdtd3).text("Name");
+									tbhdrow.appendChild(tbhdtd3);
 
-			var tbhdtd4 = document.createElement('td');
-			$(tbhdtd4).text("Email");
-			tbhdrow.appendChild(tbhdtd4);
+									var tbhdtd4 = document.createElement('td');
+									$(tbhdtd4).text("Email");
+									tbhdrow.appendChild(tbhdtd4);
 
-			var tbhdtd5 = document.createElement('td');
-			$(tbhdtd5).text("Mobile");
-			tbhdrow.appendChild(tbhdtd5);
+									var tbhdtd5 = document.createElement('td');
+									$(tbhdtd5).text("Mobile");
+									tbhdrow.appendChild(tbhdtd5);
 
-			var tbhdtd6 = document.createElement('td');
-			$(tbhdtd6).text("Date of Joining");
-			tbhdrow.appendChild(tbhdtd6);
+									var tbhdtd6 = document.createElement('td');
+									$(tbhdtd6).text("Date of Joining");
+									tbhdrow.appendChild(tbhdtd6);
 
-			var tbhdtd7 = document.createElement('td');
-			$(tbhdtd7).text("Salary");
-			tbhdrow.appendChild(tbhdtd7);
+									var tbhdtd7 = document.createElement('td');
+									$(tbhdtd7).text("Salary");
+									tbhdrow.appendChild(tbhdtd7);
 
-			tbhead.appendChild(tbhdrow);
-			table.appendChild(tbhead); // Header inserted
+									tbhead.appendChild(tbhdrow);
+									table.appendChild(tbhead); // Header
+									// inserted
 
-			var EmpDetails = data.EmpDetails;
+									var EmpDetails = data.EmpDetails;
 
-			var tbbody = document.createElement('tbody');
+									var tbbody = document
+											.createElement('tbody');
+									var html = "";
+									for (var i = 0; i < data.EmpDetails.length; i++) {
 
-			for (var i = 0; i < data.EmpDetails.length; i++) {
+										var tbbdrw = document
+												.createElement('tr');
+										
+										var input = document
+												.createElement('input');
+										input.setAttribute("type", "radio");
+										input.setAttribute("name", "empid");
+										input.setAttribute("value",
+												EmpDetails[i].eid);
+										input.setAttribute("onchange",
+												"attendance(this.value)");
+										var tbbdtd = document
+												.createElement('td');
+										tbbdtd.appendChild(input);
+										tbbdrw.appendChild(tbbdtd);
 
-				var tbbdrw = document.createElement('tr');
+										var tbbdtd1 = document
+												.createElement('td');
+										$(tbbdtd1).text(EmpDetails[i].eid);
+										tbbdrw.appendChild(tbbdtd1);
 
-				var input = document.createElement('input');
-				input.setAttribute("type", "radio");
-				input.setAttribute("name", "empid");
-				input.setAttribute("value", EmpDetails[i].eid);
-				input.setAttribute("onchange", "attendance(this.value)");
-				var tbbdtd = document.createElement('td');
-				tbbdtd.appendChild(input);
-				tbbdrw.appendChild(tbbdtd);
+										var tbbdtd2 = document
+												.createElement('td');
+										$(tbbdtd2)
+												.text(EmpDetails[i].user.name);
+										tbbdrw.appendChild(tbbdtd2);
 
-				var tbbdtd1 = document.createElement('td');
-				$(tbbdtd1).text(EmpDetails[i].eid);
-				tbbdrw.appendChild(tbbdtd1);
+										var tbbdtd3 = document
+												.createElement('td');
+										$(tbbdtd3).text(
+												EmpDetails[i].user.mobile);
+										tbbdrw.appendChild(tbbdtd3);
 
-				var tbbdtd2 = document.createElement('td');
-				$(tbbdtd2).text(EmpDetails[i].user.name);
-				tbbdrw.appendChild(tbbdtd2);
+										var tbbdtd4 = document
+												.createElement('td');
+										$(tbbdtd4).text(
+												EmpDetails[i].user.email);
+										tbbdrw.appendChild(tbbdtd4);
 
-				var tbbdtd3 = document.createElement('td');
-				$(tbbdtd3).text(EmpDetails[i].user.mobile);
-				tbbdrw.appendChild(tbbdtd3);
+										var tbbdtd5 = document
+												.createElement('td');
+										$(tbbdtd5).text(EmpDetails[i].doj);
+										tbbdrw.appendChild(tbbdtd5);
 
-				var tbbdtd4 = document.createElement('td');
-				$(tbbdtd4).text(EmpDetails[i].user.email);
-				tbbdrw.appendChild(tbbdtd4);
+										var tbbdtd6 = document
+												.createElement('td');
+										$(tbbdtd6).text(EmpDetails[i].salary);
+										tbbdrw.appendChild(tbbdtd6);
 
-				var tbbdtd5 = document.createElement('td');
-				$(tbbdtd5).text(EmpDetails[i].doj);
-				tbbdrw.appendChild(tbbdtd5);
+										tbbody.appendChild(tbbdrw);
+									}
 
-				var tbbdtd6 = document.createElement('td');
-				$(tbbdtd6).text(EmpDetails[i].salary);
-				tbbdrw.appendChild(tbbdtd6);
+									table.appendChild(tbbody);
+									dtbl.appendChild(table);
+									s.appendChild(dtbl);
 
-				tbbody.appendChild(tbbdrw);
-			}
+									var n2 = document.createElement('label');
+									n2.setAttribute("class",
+											"col-sm-2 control-label");
+									$(n2).text("Today's Date");
 
-			table.appendChild(tbbody);
-			dtbl.appendChild(table);
-			s.appendChild(dtbl);
+									var n3 = document.createElement('div');
+									n3.setAttribute("class", "col-sm-4");
 
-			var n2 = document.createElement('label');
-			n2.setAttribute("class", "col-sm-2 control-label");
-			$(n2).text("Today's Date");
+									var n4 = document.createElement('div');
+									n4.setAttribute("class", "fg-line");
 
-			var n3 = document.createElement('div');
-			n3.setAttribute("class", "col-sm-4");
+									var n5 = document.createElement('input');
+									n5.setAttribute("type", "text");
+									n5.setAttribute("class", "form-control");
+									n5.setAttribute("name", "curdate");
+									n5.setAttribute("readonly", "true");
+									n5.setAttribute("value", todayDate());
 
-			var n4 = document.createElement('div');
-			n4.setAttribute("class", "fg-line");
+									n4.appendChild(n5);
+									n3.appendChild(n4);
 
-			var n5 = document.createElement('input');
-			n5.setAttribute("type", "text");
-			n5.setAttribute("class", "form-control");
-			n5.setAttribute("name", "curdate");
-			n5.setAttribute("readonly", "true");
-			n5.setAttribute("value", todayDate());
+									$("#todayDate").html(n2);
+									$("#todayDate").html(n3);
 
-			n4.appendChild(n5);
-			n3.appendChild(n4);
+									var n6 = document.createElement('div');
+									n6.setAttribute("class", "col-sm-12");
 
-			$("#todayDate").html(n2);
-			$("#todayDate").html(n3);
+									var n7 = document.createElement('button');
+									n7.setAttribute("type", "submit");
+									n7
+											.setAttribute("class",
+													"btn btn-primary btn-lg col-sm-6 col-sm-offset-3");
+									n7.setAttribute("id", "mkAtten");
+									n7.setAttribute("disabled", "disabled");
+									$(n7).text("Mark Attendance");
 
-			var n6 = document.createElement('div');
-			n6.setAttribute("class", "col-sm-12");
+									n6.appendChild(n7);
+									$("#markAtten").html(n6);
+								}
+							});
+				}
 
-			var n7 = document.createElement('button');
-			n7.setAttribute("type", "submit");
-			n7.setAttribute("class", "btn btn-primary btn-lg col-sm-6 col-sm-offset-3");
-			n7.setAttribute("id", "mkAtten");
-			n7.setAttribute("disabled", "disabled");
-			$(n7).text("Mark Attendance");
-
-			n6.appendChild(n7);
-			$("#markAtten").html(n6);
-		}
-	});
-}
-
-);
+		);
 
 $('#selectFirmDetails').click(
 		function() {
@@ -423,9 +452,22 @@ function loadFirms() {
 			// alert("Success : "+data.firms[0].name);
 			firmSelect = data.firms;
 			$('#firmDiv').html("");
+			var html = "<div class='table-responsive'>";
+			html += "<table style='width:100%;border: 2px solid white;border-spacing: 15px;'>";
 			for (var i = 0; i < data.firms.length; i++) {
 				var firm = data.firms[i];
-				var f = "";
+				
+				html += "<tr style='border: 1px solid white'>";
+				html += "<td width='2%' style='padding: 5px'><div class='radio m-b-15'><label><input type='radio' name='firmID' value='"+firm.id+"' ><i class='input-helper'></i></label></div></td>";
+				html += "<td width='98%' style='padding: 5px'><strong>Name : </strong>" + firm.name + "<br><strong>Mobile : </strong>" + firm.mobile + "<br><strong>TIN : </strong>" + firm.tin + "<br><strong>Address : </strong>" + firm.address.houseNo + ", "
+						+ firm.address.line1 + ", " + firm.address.line2 + ", "
+						+ firm.address.city + " - " + firm.address.zip + ", "
+						+ firm.address.state + "</td>";
+				html += "</tr>";
+				
+				/*
+				 * 
+			
 				f += "<div class='row'>";
 				f += "<label class='radio radio-inline'>";
 				f += "<input type='radio' name='firmID' value='" + firm.id
@@ -441,7 +483,10 @@ function loadFirms() {
 						+ firm.address.state + "</label></label>";
 				f += "<p></p></div>";
 				$('#firmDiv').append(f);
+				*/
 			}
+			html += "</table></div>";
+			$('#firmDiv').html(html);
 			$('#modalPrint').modal('show');
 		},
 
@@ -632,6 +677,7 @@ $('#custForm').submit(function() {
 	var mobile = $('#inputMobile').val();
 	var pin = $('#inputPin').val();
 	var num = $('#numProd').val();
+	var type = $("input[name=\"custType\"]:checked").val();
 
 	var mob = /^[7-9]{1}[0-9]{9}$/;
 
@@ -677,6 +723,12 @@ $('#custForm').submit(function() {
 		success = false;
 	} else
 		clearError(div);
+	
+	if(type == "" || type == null || type == undefined)
+	{
+		success = false;
+		alert("Please select Customer type first !");
+	}
 
 	var div = "#mobileDiv";
 	if (mobile == "") {
@@ -1027,59 +1079,73 @@ $("#sendOrderDetails")
 							});
 				});
 
-$('#selectCustomerBtn').click(function() {
-	var cid = document.forms["custForm"].custID.value;
-	$('#modalCustomer').modal('hide');
-	for (var i = 0; i < customers.length; i++) {
-		if (customers[i].id == cid) {
-			// alert(customers[i].name);
-			$('#inputName').val(customers[i].name + "");
-			$('#inputEmail').val(customers[i].email + "");
-			var address = customers[i].address;
-			$('#inputHouse').val(address.house_no + "");
-			$('#inputAddress1').val(address.line1);
-			$('#inputAddress2').val(address.line2);
-			$('#inputAddress1').val(address.line1);
-			$('#inputState').val(address.state);
-			
-			var selectState = address.state;
-			$("#loaderImage").show();
-			$.ajax({
-				url : $("#basePath").val() + "/ajaxServlet.do",
-				method : "post",
-				data : {
-					action : "getCities",
-					state : selectState
-				},
-				success : function(data) {
-					$("#loaderImage").hide();
-					$("#inputCity").html("");
-					for (var i = 0; i < data.city.length; i++) {
-						$("#inputCity").append(
-								"<option value='" + data.city[i] + "'>"
-										+ data.city[i] + "</option>");
-					}
+$('#selectCustomerBtn').click(
+		function() {
+			var cid = document.forms["custForm"].custID.value;
+			$('#modalCustomer').modal('hide');
+			for (var i = 0; i < customers.length; i++) {
+				if (customers[i].id == cid) {
+					// alert(customers[i].name);
+					$('#inputName').val(customers[i].name + "");
 					
-					$("#inputCity").val(address.city);
-				},
-				error : function(data) {
-					$("#loaderImage").hide();
-					swal('Some Error : ' + data);
+					$('#inputEmail').val(customers[i].email + "");
+					var address = customers[i].address;
+					$('#inputHouse').val(address.house_no + "");
+					$('#inputAddress1').val(address.line1);
+					$('#inputAddress2').val(address.line2);
+					$('#inputAddress1').val(address.line1);
+					$('#inputState').val(address.state);
+
+					if(customers[i].type == "MERCHANT")
+					{
+						$("#typeCustomer").attr("checked",false);
+						$("#typeMerchant").attr("checked",true);
+					}
+					else if(customers[i].type == "CUSTOMER")
+					{
+						$("#typeMerchant").attr("checked",false);
+						$("#typeCustomer").attr("checked",true);
+					}
+					//alert("Type is : "+customers[i].type);
+					
+					var selectState = address.state;
+					$("#loaderImage").show();
+					$.ajax({
+						url : $("#basePath").val() + "/ajaxServlet.do",
+						method : "post",
+						data : {
+							action : "getCities",
+							state : selectState
+						},
+						success : function(data) {
+							$("#loaderImage").hide();
+							$("#inputCity").html("");
+							for (var i = 0; i < data.city.length; i++) {
+								$("#inputCity").append(
+										"<option value='" + data.city[i] + "'>"
+												+ data.city[i] + "</option>");
+							}
+
+							$("#inputCity").val(address.city);
+						},
+						error : function(data) {
+							$("#loaderImage").hide();
+							swal('Some Error : ' + data);
+						}
+
+					});
+
+					$('#tin').val(customers[i].tin);
+					$('#type').val(customers[i].type);
+					$('#inputMobile').val(customers[i].mobile);
+					$('#inputPin').val(address.zip);
+					break;
 				}
 
-			});
-			
-			$('#tin').val(customers[i].tin);
-			$('#type').val(customers[i].type);
-			$('#inputMobile').val(customers[i].mobile);
-			$('#inputPin').val(address.zip);
+			}
 
-		}
-
-	}
-
-	// console.log(cid);
-});
+			// console.log(cid);
+		});
 
 $("#searchCust").click(
 		function(e) {
@@ -1108,8 +1174,39 @@ $("#searchCust").click(
 					// customers = new Array();
 					// alert("Number of customers : "+data.customers.length);
 					customers = data.customers;
-
-					for (var j = 0; j < data.customers.length; j++) {
+					var html = "<table style='width:100%;border: 1px' >";
+					for (var j = 0; j < data.customers.length; j+=2) {
+						
+						html += "<tr>";
+						html += "<td><div class='radio m-b-15'>";
+                        html += "<label>";
+                        html += "<input type='radio' name='custID' id='custID' value='"+customers[j].id+"'>";
+                        html += "<i class='input-helper'></i>";
+                        var radioText = customers[j].name.replace('"', '');
+                        html += radioText;
+                        html += "</label></div></td><td>"+customers[j].mobile+"</td>";
+                        
+                        if((j+1) < data.customers.length)
+                        {
+                        	html += "<td><div class='radio m-b-15'>";
+                            html += "<label>";
+                            html += "<input type='radio' name='custID' id='custID' value='"+customers[j+1].id+"'>";
+                            html += "<i class='input-helper'></i>";
+                            var radioText = customers[j+1].name.replace('"', '');
+                            html += radioText;
+                            html += "</label></div></td><td>"+customers[j+1].mobile+"</td>";
+                        }
+                        else	
+                        {
+                        	html += "<td></td>";
+                        }
+                        
+                        
+                        html += "</tr>";
+					}
+					html += "</table>";
+					$("#custList").html(html);
+					/*for (var j = 0; j < data.customers.length; j++) {
 
 						var label = document.createElement('label');
 						label
@@ -1119,6 +1216,7 @@ $("#searchCust").click(
 						var input = document.createElement('input');
 						input.setAttribute("type", "radio");
 						input.setAttribute("name", "custID");
+						input.setAttribute("id", "custID");
 						input.setAttribute("value", customers[j].id);
 
 						var i = document.createElement('i');
@@ -1134,17 +1232,15 @@ $("#searchCust").click(
 								+ customers[j].mobile);
 						p.appendChild(text);
 						label.appendChild(p);
-
+			
 						div.appendChild(label);
-					}
+					}*/
 
 					$('#modalCustomer').modal('show');
 
 				}
 			});
-		}
-
-);
+		});
 
 $("#productDiv").change(function() {
 	var id = parseInt($("#selectProduct").val());
@@ -1166,7 +1262,7 @@ function showProductByCategory(resp) {
 	var length = resp.products.length;
 
 	var select = document.createElement("select");
-	select.setAttribute("class", "selectpicker form-control");
+	select.setAttribute("class", "form-control");
 	select.setAttribute("id", "selectProduct");
 	select.setAttribute("data-live-search", "true");
 
@@ -1198,7 +1294,7 @@ $('#selectCategory').change(
 			if ($(this).val() == "") {
 				showErrorValidation("#categoryDiv", "Select a Category.");
 				var select = document.createElement("select");
-				select.setAttribute("class", "selectpicker form-control");
+				select.setAttribute("class", "selectpicker");
 				select.setAttribute("id", "selectProduct");
 				select.setAttribute("data-live-search", "true");
 
@@ -1396,7 +1492,7 @@ function showProduct(available, index, name, price, qty, total) {
 	productQty.setAttribute("name", "prodQty");
 
 	var availSpan = document.createElement("span");
-	availSpan.setAttribute("class", "md-shopping-basket form-control-feedback");
+	availSpan.setAttribute("class", "zmdi zmdi-shopping-basket form-control-feedback");
 
 	var smallE = document.createElement("small");
 	smallE.setAttribute("class", "help-block");
@@ -1433,7 +1529,7 @@ function showProduct(available, index, name, price, qty, total) {
 	productQty.setAttribute("name", "prodPrice");
 
 	var availSpan = document.createElement("span");
-	availSpan.setAttribute("class", "md-attach-money form-control-feedback");
+	availSpan.setAttribute("class", "zmdi zmdi-money form-control-feedback");
 
 	var smallE = document.createElement("small");
 	smallE.setAttribute("class", "help-block");
@@ -1469,7 +1565,7 @@ function showProduct(available, index, name, price, qty, total) {
 	closeButton.setAttribute("id", "ms-compose");
 
 	var i = document.createElement("i");
-	i.setAttribute("class", "md md-close");
+	i.setAttribute("class", "zmdi zmdi-close");
 
 	closeButton.appendChild(i);
 	fgline.appendChild(closeButton);
@@ -1551,7 +1647,7 @@ function generate() {
 		input.setAttribute("placeholder", "Enter Employee Name");
 		input.setAttribute("onClick", "showEmployees()");
 
-		span.setAttribute("class", "md md-person form-control-feedback");
+		span.setAttribute("class", "zmdi zmdi-account form-control-feedback");
 
 		var formDiv1 = document.createElement("div");
 		formDiv1.setAttribute("class", "form-input");
@@ -1567,7 +1663,7 @@ function generate() {
 		small1.setAttribute("id", "error");
 
 		var span1 = document.createElement("span");
-		span1.setAttribute("class", "md md-person form-control-feedback");
+		span1.setAttribute("class", "zmdi zmdi-account form-control-feedback");
 
 		var colDiv1 = document.createElement("div");
 		colDiv1.setAttribute("class", "col-sm-3 m-b-25");
@@ -1583,7 +1679,7 @@ function generate() {
 		input1.setAttribute("placeholder", "Received By (person name)");
 
 		var span1 = document.createElement("span");
-		span1.setAttribute("class", "md md-person form-control-feedback");
+		span1.setAttribute("class", "zmdi zmdi-account form-control-feedback");
 
 		formDiv.appendChild(label);
 		lineDiv.appendChild(input);
@@ -1612,7 +1708,7 @@ function generate() {
 		label.innerHTML = "Expenditure Details";
 		colDiv.setAttribute("class", "col-sm-8 m-b-25");
 		input.setAttribute("placeholder", "Enter Details");
-		span.setAttribute("class", "md-description form-control-feedback");
+		span.setAttribute("class", "zmdi zmdi-file-text form-control-feedback");
 
 		formDiv.appendChild(label);
 		lineDiv.appendChild(input);
@@ -1627,7 +1723,7 @@ function generate() {
 		formDiv.setAttribute("class", "form-group");
 
 		var select = document.createElement("select");
-		select.setAttribute("class", "form-control selectpicker");
+		select.setAttribute("class", "form-control");
 		select.setAttribute("name", "dynamic1");
 		select.setAttribute("id", "dynamic1");
 
@@ -1837,9 +1933,34 @@ function showEmployees() {
 			div.innerHTML = "";
 
 			employees = data.employees;
+			var html = "<table style='width:100%'>";
+			for (var j = 0; j < data.employees.length; j+=2) {
 
-			for (var j = 0; j < data.employees.length; j++) {
-
+				html += "<tr>";
+				html += "<td><div class='radio m-b-15'>";
+                html += "<label>";
+                html += "<input type='radio' name='inputName' value='"+employees[j].empId+"'>";
+                html += "<i class='input-helper'></i>";
+                var radioText = employees[j].name.replace('"', '');
+                html += radioText;
+                html += "</label></div></td><td>"+employees[j].mobile+"</td>";
+                
+                if((j+1) < data.employees.length)
+                {
+                	html += "<td><div class='radio m-b-15'>";
+                    html += "<label>";
+                    html += "<input type='radio' name='inputName' value='"+employees[j+1].empId+"'>";
+                    html += "<i class='input-helper'></i>";
+                    var radioText = employees[j+1].name.replace('"', '');
+                    html += radioText;
+                    html += "</label></div></td><td>"+employees[j+1].mobile+"</td>";
+                }
+                else	
+                {
+                	html += "<td></td>";
+                }
+				html += "</tr>";
+				/*
 				var label = document.createElement('label');
 				label.setAttribute("class", "radio radio-inline m-r-20");
 
@@ -1862,9 +1983,10 @@ function showEmployees() {
 				p.appendChild(text);
 				label.appendChild(p);
 
-				div.appendChild(label);
+				div.appendChild(label);*/
 			}
-
+			html += "</table>";
+			div.innerHTML = html;
 			$('#modalEmployee').modal('show');
 		}
 	});
@@ -2177,7 +2299,7 @@ function showStockProduct(prodId, qty, name, cp, sp, index) {
 	closeButton.setAttribute("id", "ms-compose");
 
 	var i = document.createElement("i");
-	i.setAttribute("class", "md md-close");
+	i.setAttribute("class", "zmdi zmdi-close");
 
 	closeButton.appendChild(i);
 	fgline.appendChild(closeButton);
@@ -2194,7 +2316,7 @@ $('#selectCat').change(
 
 			if ($(this).val() == "") {
 				var select = document.createElement("select");
-				select.setAttribute("class", "selectpicker form-control");
+				select.setAttribute("class", "form-control");
 				select.setAttribute("id", "selectProd");
 				select.setAttribute("data-live-search", "true");
 
@@ -2226,7 +2348,7 @@ function showProducts(resp) {
 	var length = resp.products.length;
 
 	var select = document.createElement("select");
-	select.setAttribute("class", "selectpicker form-control");
+	select.setAttribute("class", "form-control");
 	select.setAttribute("id", "selectProd");
 	select.setAttribute("data-live-search", "true");
 	select.setAttribute("onchange", "stockDetails()");
@@ -2481,54 +2603,58 @@ $('#merchantForm').submit(function() {
 	var paid = $('#inputPaid').val();
 	var current = $('#currentPayment').val();
 	var validity = /^[0-9]\d*$/;
-
+	
 	var success = true;
-	var div = "#merchantDiv";
-	if (merchant == "") {
-		showErrorValidation(div, "Please select merchant name !");
-		success = false;
-	} else
-		clearError(div);
+	
+	if($("#addPayment").checked)
+	{
+		var div = "#merchantDiv";
+		if (merchant == "") {
+			showErrorValidation(div, "Please select merchant name !");
+			success = false;
+		} else
+			clearError(div);
 
-	var div = "#amountDiv";
-	if (amount == "") {
-		showErrorValidation(div, "Please enter the amount !");
-		success = false;
-	} else
-		clearError(div);
-	if (!validity.test(amount)) {
-		showErrorValidation(div, "Amount can take integer values only !");
-		success = false;
-	} else
-		clearError(div);
+		var div = "#amountDiv";
+		if (amount == "") {
+			showErrorValidation(div, "Please enter the amount !");
+			success = false;
+		} else
+			clearError(div);
+		if (!validity.test(amount)) {
+			showErrorValidation(div, "Amount can take integer values only !");
+			success = false;
+		} else
+			clearError(div);
 
-	var div = "#currentDiv";
-	if (current == "") {
-		showErrorValidation(div, "Please select the mode !");
-		success = false;
-	} else
-		clearError(div);
+		var div = "#currentDiv";
+		if (current == "") {
+			showErrorValidation(div, "Please select the mode !");
+			success = false;
+		} else
+			clearError(div);
 
-	var div = "#modeDiv";
-	if (selectedMode == "") {
-		showErrorValidation(div, "Please select the mode !");
-		success = false;
-	} else
-		clearError(div);
+		var div = "#modeDiv";
+		if (selectedMode == "") {
+			showErrorValidation(div, "Please select the mode !");
+			success = false;
+		} else
+			clearError(div);
 
-	var div = "#descDiv";
-	if (description == "") {
-		showErrorValidation(div, "Description can't be empty !");
-		success = false;
-	} else
-		clearError(div);
+		var div = "#descDiv";
+		if (description == "") {
+			showErrorValidation(div, "Description can't be empty !");
+			success = false;
+		} else
+			clearError(div);
 
-	var div = "#paidDiv";
-	if (paid == "") {
-		showErrorValidation(div, "Can't left empty. Enter the name please !");
-		success = false;
-	} else
-		clearError(div);
+		var div = "#paidDiv";
+		if (paid == "") {
+			showErrorValidation(div, "Can't left empty. Enter the name please !");
+			success = false;
+		} else
+			clearError(div);
+	}
 
 	return success;
 });
@@ -2727,7 +2853,7 @@ $('#searchCustomerButton')
 
 									tbhead.appendChild(tbhdrow);
 									table.appendChild(tbhead); // Header
-																// inserted
+									// inserted
 
 									var custdetails = data.customers;
 
@@ -2831,9 +2957,39 @@ function editDetails(customerId) {
 			}
 			$('#inputHouse').val(customerDetails[i].house);
 			$('#inputAddress1').val(customerDetails[i].line1);
-			$('#inputAddress2').val(
-					customerDetails[i].line2 + ",   " + customerDetails[i].city
-							+ ",   " + customerDetails[i].state);
+			$('#inputAddress2').val(customerDetails[i].line2);
+
+			$('#inputState').val(customerDetails[i].state);
+
+			var selectState = customerDetails[i].state;
+			var selectCity = customerDetails[i].city;
+			$("#loaderImage").show();
+			$.ajax({
+				url : $("#basePath").val() + "/ajaxServlet.do",
+				method : "post",
+				data : {
+					action : "getCities",
+					state : selectState
+				},
+				success : function(data) {
+					$("#loaderImage").hide();
+					$("#inputCity").html("");
+					for (var i = 0; i < data.city.length; i++) {
+						$("#inputCity").append(
+								"<option value='" + data.city[i] + "'>"
+										+ data.city[i] + "</option>");
+					}
+
+					$("#inputCity").val(selectCity);
+
+				},
+				error : function(data) {
+					$("#loaderImage").hide();
+					swal('Some Error : ' + data);
+				}
+
+			});
+
 			$('#inputPin').val(customerDetails[i].pin);
 			$('#customerId').val(customerId);
 			$('#customerType').val(customerDetails[i].type);
@@ -2896,11 +3052,7 @@ function saveDetails() {
 	} else
 		clearError(div);
 	var div = "#emailDiv";
-	if (email == "") {
-		showErrorValidation(div, "Email can't be blank");
-		success = false;
-	} else
-		clearError(div);
+
 	var div = "#houseDiv";
 	if (house == "") {
 		showErrorValidation(div, "House/Shop No. can't be blank !");
@@ -2977,4 +3129,358 @@ $('#deleteCustDetails')
 								document.getElementById("manageCusForm")
 										.submit();
 							});
+				});
+
+$('#selectCustomerModalBtn').click(function() {
+	$('#modalCustomer').modal('hide');
+
+	var custId = $('#custID').val();
+	console.log(custId);
+
+	$("#loaderImage").show();
+	$.ajax({
+		url : $("#basePath").val() + "/ajaxServlet.do",
+		data : {
+			customerId : custId,
+			action : "getCustomerDetailsById"
+		},
+		error : function(data) {
+			$("#loaderImage").hide();
+			alert("Error : " + data);
+		},
+		success : function(data) {
+			console.log("Success : " + data.customers[0].name);
+			$("#loaderImage").hide();
+
+			$('#inputName').val(data.customers[0].name);
+			$('#inputEmail').val(data.customers[0].email);
+			$('#inputMobile').val(data.customers[0].mobile);
+			$('#inputHouse').val(data.customers[0].address.house_no);
+			$('#inputAddress1').val(data.customers[0].address.line1);
+			$('#inputAddress2').val(data.customers[0].address.line2);
+			$('#city').val(data.customers[0].address.city);
+			$('#state').val(data.customers[0].address.state);
+			$('#inputPin').val(data.customers[0].address.zip);
+			$('#customerId').val(custId);
+		}
+	});
+});
+
+$('#searchOrderButton1')
+		.click(
+				function() {
+					var s = document.getElementById("fillProducts");
+
+					var orderId = $("#orderId").val();
+
+					if ((orderId == "" || orderId == null)) {
+						swal("No data found !",
+								"Please enter order Id and then search order.",
+								"warning");
+						return;
+					}
+
+					s.innerHTML = "";
+
+					$("#loaderImage").show();
+					$
+							.ajax({
+								url : $("#basePath").val() + "/ajaxServlet.do",
+
+								data : {
+									orderId : orderId,
+									action : "getProductsByOrderId"
+								},
+								error : function(data) {
+									$("#loaderImage").hide();
+									alert("Error : " + data);
+								},
+								success : function(data) {
+									$("#loaderImage").hide();
+
+									$('#inputName')
+											.val(
+													data.orderdetails[0].customer.customerName);
+									$('#inputEmail')
+											.val(
+													data.orderdetails[0].customer.email);
+									$('#inputMobile')
+											.val(
+													data.orderdetails[0].customer.mobile);
+									$('#inputHouse')
+											.val(
+													data.orderdetails[0].address.house_no);
+									$('#inputAddress1').val(
+											data.orderdetails[0].address.line1);
+									$('#inputAddress2').val(
+											data.orderdetails[0].address.line2);
+									$('#city').val(
+											data.orderdetails[0].address.city);
+									$('#state').val(
+											data.orderdetails[0].address.state);
+									$('#inputPin').val(
+											data.orderdetails[0].address.zip);
+									$('#customerId')
+											.val(
+													data.orderdetails[0].customer.customerId);
+
+									var heading = document.createElement('div');
+									heading
+											.setAttribute("class",
+													"card-header");
+
+									var hd1 = document.createElement('h2');
+									$(hd1).text("Ordered Products");
+									var hd2 = document.createElement('small');
+									$(hd2)
+											.text(
+													"Here are products which are not yet shipped.");
+
+									heading.appendChild(hd1);
+									heading.appendChild(hd2);
+									s.appendChild(heading);
+
+									var dtbl = document.createElement('div');
+									dtbl.setAttribute("class",
+											"table-responsive");
+
+									var table = document.createElement('table');
+									table.setAttribute("class",
+											"table table-condensed");
+
+									var tbhead = document
+											.createElement('thead');
+									var tbhdrow = document.createElement('tr');
+
+									var tbhdtd1 = document.createElement('td');
+									$(tbhdtd1).text("Order Id");
+									tbhdrow.appendChild(tbhdtd1);
+
+									var tbhdtd2 = document.createElement('td');
+									$(tbhdtd2).text("Product Category");
+									tbhdrow.appendChild(tbhdtd2);
+
+									var tbhdtd3 = document.createElement('td');
+									$(tbhdtd3).text("Product Name");
+									tbhdrow.appendChild(tbhdtd3);
+
+									var tbhdtd4 = document.createElement('td');
+									$(tbhdtd4).text("Quantity");
+									tbhdrow.appendChild(tbhdtd4);
+
+									var tbhdtd5 = document.createElement('td');
+									$(tbhdtd5).text("Amount");
+									tbhdrow.appendChild(tbhdtd5);
+
+									var tbhdtd6 = document.createElement('td');
+									$(tbhdtd6).text("Shipping Status");
+									tbhdrow.appendChild(tbhdtd6);
+
+									var tbhdtd7 = document.createElement('td');
+									$(tbhdtd7).text("Delete Product");
+									tbhdrow.appendChild(tbhdtd7);
+
+									tbhead.appendChild(tbhdrow);
+									table.appendChild(tbhead); // Header
+									// inserted
+
+									var orderdetails = data.orderdetails;
+
+									var tbbody = document
+											.createElement('tbody');
+
+									for (var i = 0; i < orderdetails.length; i++) {
+
+										var tbbdrw = document
+												.createElement('tr');
+
+										var tbbdtd1 = document
+												.createElement('td');
+										$(tbbdtd1)
+												.text(
+														orderdetails[i].orderitem.orderId);
+										tbbdrw.appendChild(tbbdtd1);
+
+										var tbbdtd2 = document
+												.createElement('td');
+										$(tbbdtd2)
+												.text(
+														orderdetails[i].product.categoryName);
+										tbbdrw.appendChild(tbbdtd2);
+
+										var tbbdtd3 = document
+												.createElement('td');
+										$(tbbdtd3)
+												.text(
+														orderdetails[i].product.productName);
+										tbbdrw.appendChild(tbbdtd3);
+
+										var tbbdtd4 = document
+												.createElement('td');
+										$(tbbdtd4)
+												.text(
+														orderdetails[i].orderitem.quantity);
+										tbbdrw.appendChild(tbbdtd4);
+
+										var tbbdtd5 = document
+												.createElement('td');
+										$(tbbdtd5)
+												.text(
+														orderdetails[i].orderitem.amount);
+										tbbdrw.appendChild(tbbdtd5);
+										
+										if (orderdetails[i].orderitem.shipId == null || orderdetails[i].orderitem.shipId == 0) {
+											var tbbdtd6 = document
+													.createElement('td');
+											$(tbbdtd6).text("Not Shipped");
+											tbbdrw.appendChild(tbbdtd6);
+											$('#shipId').val("0");
+
+											var tbbdtd7 = document
+													.createElement('td');
+											var vdiv = document
+													.createElement('div');
+											vdiv.setAttribute("class",
+													"row dialog col-sm-2");
+											var vdetail = document
+													.createElement('button');
+											vdetail
+													.setAttribute(
+															"id",
+															"deleteButton"
+																	+ orderdetails[i].product.productId);
+											vdetail.setAttribute("class",
+													"btn btn-info");
+											vdetail.setAttribute("type",
+													"button");
+											vdetail
+													.setAttribute(
+															"value",
+															orderdetails[i].product.productId);
+											vdetail
+													.setAttribute(
+															"onclick",
+															"deleteOrderedProduct(this.value,"
+																	+ orderdetails[i].orderitem.quantity
+																	+ ","
+																	+ orderdetails[i].orderitem.amount
+																	+ ")");
+											$(vdetail).text("Delete Product");
+											vdiv.appendChild(vdetail);
+											tbbdtd7.appendChild(vdiv);
+											tbbdrw.appendChild(tbbdtd7);
+										} else {
+											var tbbdtd6 = document
+													.createElement('td');
+											$(tbbdtd6).text("Shipped");
+											tbbdrw.appendChild(tbbdtd6);
+											$('#shipId').val(orderdetails[i].orderitem.shipId);
+										}
+
+										tbbody.appendChild(tbbdrw);
+									}
+
+									table.appendChild(tbbody);
+									dtbl.appendChild(table);
+									s.appendChild(dtbl);
+								}
+							});
+				});
+
+
+function deleteOrderedProduct(productId, quantity, amount) {
+	var orderId = $('#orderId').val();
+
+	swal({
+		title : "Delete Product ?",
+		text : "Are you sure you want to delete this product.",
+		type : "warning",
+		showCancelButton : true,
+		confirmButtonColor : "#DD6B55",
+		confirmButtonText : "Yes, delete it!",
+		closeOnConfirm : true
+	}, function() {
+
+		$("#loaderImage").show();
+		$.ajax({
+			url : $("#basePath").val() + "/ajaxServlet.do",
+			data : {
+				action : "deleteOrderedProductById",
+				productId : productId,
+				orderId : orderId,
+				prodAmount : amount,
+				prodQuantity : quantity
+			},
+			error : function(data) {
+				$("#loaderImage").hide();
+				alert("Error : " + data);
+			},
+			success : function(data) {
+				$("#loaderImage").hide();
+
+				swal("Product Deleted !", "Product deleted successfully",
+						"success");
+
+				$('#deleteButton' + productId).text("Product Deleted");
+				document.getElementById("deleteButton" + productId)
+						.setAttribute("disabled", "");
+
+			}
+		});
+	});
+}
+
+$('#editOrder').click(function() {
+	var order = $('#orderId').val();
+	var name = $('#inputName').val();
+	var num = $("#numProd").val();
+	num = parseInt(num);
+
+	var success = true;
+	var div = "#nameDiv";
+	if (name == "") {
+		showErrorValidation(div, "Customer Details can't be blank");
+		success = false;
+	} else
+		clearError(div);
+	var div = "#orderDiv";
+	if (order == "") {
+		showErrorValidation(div, "Please enter a order Id");
+		success = false;
+	} else
+		clearError(div);
+
+	if (!success) {
+		console.log("Error in validation of form");
+		return;
+	}
+
+	document.getElementById("editOrderForm").submit();
+
+});
+
+$('#delOrder')
+		.click(
+				function() {
+					var name = $('#inputName').val();
+					var shipId = $('#shipId').val();
+					console.log(shipId);
+					if (name == "") {
+						swal(
+								"Search order first !",
+								"Either this order id does not exists OR The products corresponding to this id is already shipped OR You had not searched for order.",
+								"warning");
+						return;
+					}
+					if (shipId != "0") {
+						swal(
+								"Order already shipped !",
+								"The product/products corresponding to this particular Order Id is already shipped.",
+								"warning");
+						$('#shipId').val("0");
+						return;
+					}
+
+					$('#deleteOrder').val('delete');
+					document.getElementById("editOrderForm").submit();
 				});

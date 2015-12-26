@@ -8,8 +8,26 @@ import java.util.List;
 public class Order
 {
 	private Customer customer;
+	private Order_item orderitem;
+	public Order_item getOrderitem() {
+		return orderitem;
+	}
+
+	public void setOrderitem(Order_item orderitem) {
+		this.orderitem = orderitem;
+	}
+
+	public Product getProduct() {
+		return product;
+	}
+
+	public void setProduct(Product product) {
+		this.product = product;
+	}
+	private Product product;
 	private List<Product> products;
 	private List<Order_item> orderitems;
+	
 	
 	
 	private int id;
@@ -17,7 +35,7 @@ public class Order
 	private int amount;
 	private int discount;
 	
-	
+	String status;
 	int cust_id;
 	
 	String date;
@@ -61,6 +79,14 @@ public class Order
 	
 	
 	
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
 	public int getDiscount() {
 		return discount;
 	}
@@ -112,6 +138,12 @@ public class Order
 		this.time = time;
 	}
 
+	public Order(Customer customer, Product product, Order_item orderitem) {
+		super();
+		this.customer = customer;
+		this.product = product;
+		this.orderitem = orderitem;
+	}
 	
 	public Order(Customer customer, List<Product> products, int id,
 			Date datetime, int amount) {

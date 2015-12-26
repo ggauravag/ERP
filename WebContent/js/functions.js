@@ -16,7 +16,6 @@
             setTimeout(function(){
                 $('body').addClass('toggled sw-toggled');
                 localStorage.setItem('ma-layout-status', 1);
-                animateMainmenu(0, 100);
             }, 250);
         }
         else {
@@ -46,6 +45,7 @@ $(document).ready(function(){
             e.preventDefault();
             
             $('#header').addClass('search-toggled');
+            $('#top-search-wrap input').focus();
         });
         
         $('body').on('click', '#top-search-close', function(e){
@@ -243,29 +243,29 @@ $(document).ready(function(){
                         id: 999,
                         title: 'Repeat',
                         start: '2014-06-16',
-                        className: 'bgm-blue'
+                        className: 'bgm-lightblue'
                     },
                     {
                         title: 'Meet',
                         start: '2014-06-12',
                         end: '2014-06-12',
-                        className: 'bgm-teal'
+                        className: 'bgm-green'
                     },
                     {
                         title: 'Lunch',
                         start: '2014-06-12',
-                        className: 'bgm-gray'
+                        className: 'bgm-cyan'
                     },
                     {
                         title: 'Birthday',
                         start: '2014-06-13',
-                        className: 'bgm-pink'
+                        className: 'bgm-amber'
                     },
                     {
                         title: 'Google',
                         url: 'http://google.com/',
                         start: '2014-06-28',
-                        className: 'bgm-bluegray'
+                        className: 'bgm-amber'
                     }
                 ]
             });
@@ -330,7 +330,7 @@ $(document).ready(function(){
      * Auto Hight Textarea
      */
     if ($('.auto-size')[0]) {
-	   $('.auto-size').autosize();
+	   autosize($('.auto-size'));
     }
     
     /*
@@ -343,7 +343,8 @@ $(document).ready(function(){
             cursorborderradius: 0,
             cursorwidth: cursorWidth,
             bouncescroll: true,
-            mousescrollstep: 100
+            mousescrollstep: 100,
+            //autohidemode: false
         });
     }
 
@@ -434,13 +435,6 @@ $(document).ready(function(){
     }
     
     /*
-     * Custom Select
-     */
-    if ($('.selectpickers')[0]) {
-        $('.selectpickers').selectpicker();
-    }
-    
-    /*
      * Tag Select
      */
     if($('.tag-select')[0]) {
@@ -520,7 +514,7 @@ $(document).ready(function(){
      * HTML Editor
      */
     if ($('.html-editor')[0]) {
-	$('.html-editor').summernote({
+	   $('.html-editor').summernote({
             height: 150
         });
     }
@@ -580,6 +574,8 @@ $(document).ready(function(){
     if ($('.form-wizard-basic')[0]) {
     	$('.form-wizard-basic').bootstrapWizard({
     	    tabClass: 'fw-nav',
+            'nextSelector': '.next', 
+            'previousSelector': '.previous'
     	});
     }
     
@@ -614,7 +610,8 @@ $(document).ready(function(){
      * Waves Animation
      */
     (function(){
-        Waves.attach('.btn', ['waves-button', 'waves-float']);
+         Waves.attach('.btn:not(.btn-icon):not(.btn-float)');
+         Waves.attach('.btn-icon, .btn-float', ['waves-circle', 'waves-float']);
         Waves.init();
     })();
     
@@ -798,4 +795,109 @@ $(document).ready(function(){
         });
     }
     
+    /*
+     * IE 9 Placeholder
+     */
+    if($('html').hasClass('ie9')) {
+        $('input, textarea').placeholder({
+            customClass: 'ie9-placeholder'
+        });
+    }
+    
+    
+    /*
+     * Listview Search
+     */ 
+    if ($('.lvh-search-trigger')[0]) {
+         
+        
+        $('body').on('click', '.lvh-search-trigger', function(e){
+            e.preventDefault();
+            x = $(this).closest('.lv-header-alt').find('.lvh-search');
+            
+            x.fadeIn(300);
+            x.find('.lvhs-input').focus();
+        });
+        
+        //Close Search
+        $('body').on('click', '.lvh-search-close', function(){
+            x.fadeOut(300);
+            setTimeout(function(){
+                x.find('.lvhs-input').val('');
+            }, 350);
+        })
+    }
+    
+    
+    /*
+     * Print
+     */
+    if ($('[data-action="print"]')[0]) {
+        $('body').on('click', '[data-action="print"]', function(e){
+            e.preventDefault();
+            
+            window.print();
+        })
+    }
+    
+    /*
+     * Typeahead Auto Complete
+     */
+     if($('.typeahead')[0]) {
+          
+          var statesArray = ['Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California',
+            'Colorado', 'Connecticut', 'Delaware', 'Florida', 'Georgia', 'Hawaii',
+            'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky', 'Louisiana',
+            'Maine', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota',
+            'Mississippi', 'Missouri', 'Montana', 'Nebraska', 'Nevada', 'New Hampshire',
+            'New Jersey', 'New Mexico', 'New York', 'North Carolina', 'North Dakota',
+            'Ohio', 'Oklahoma', 'Oregon', 'Pennsylvania', 'Rhode Island',
+            'South Carolina', 'South Dakota', 'Tennessee', 'Texas', 'Utah', 'Vermont',
+            'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming'
+          ];
+        var states = new Bloodhound({
+            datumTokenizer: Bloodhound.tokenizers.whitespace,
+            queryTokenizer: Bloodhound.tokenizers.whitespace,
+            local: statesArray
+        });  
+        
+        $('.typeahead').typeahead({
+            hint: true,
+            highlight: true,
+            minLength: 1
+        },
+        {
+          name: 'states',
+          source: states
+        });
+    }
+     
+     
+    /*
+     * Wall
+     */
+    if ($('.wcc-toggle')[0]) {
+        var z = '<div class="wcc-inner">' +
+                    '<textarea class="wcci-text auto-size" placeholder="Write Something..."></textarea>' +
+                '</div>' +
+                '<div class="m-t-15">' +
+                    '<button class="btn btn-sm btn-primary">Post</button>' +
+                    '<button class="btn btn-sm btn-link wcc-cencel">Cancel</button>' +
+                '</div>'
+                
+        
+        $('body').on('click', '.wcc-toggle', function() {
+            $(this).parent().html(z);
+            autosize($('.auto-size')); //Reload Auto size textarea
+        });
+        
+        //Cancel
+        $('body').on('click', '.wcc-cencel', function(e) {
+            e.preventDefault();
+            
+            $(this).closest('.wc-comment').find('.wcc-inner').addClass('wcc-toggle').html('Write Something...')
+        });
+        
+    }
+     
 });

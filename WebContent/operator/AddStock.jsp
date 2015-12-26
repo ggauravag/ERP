@@ -16,32 +16,37 @@
 </head>
 
 <body>
+	
 	<%@ include file="../header.jsp"%>
-
+<jspcore:remove var="newStockDetails" scope="session" />
 	<section id="main"> <%@ include file="../panel/leftpanel.jsp"%>
 
 	<section id="content">
 	<div class="container">
 		<div class="block-header">
-			<h1>Add Stock</h1>
+			<h1>
+				<bean:message key="operator.addstock.label" />
+			</h1>
 		</div>
 
 		<div class="card">
-			<form action="AddStock.do" method="post" id="stockForm" name="stockForm"
-				class="form-horizontal" role="form">
+			<form action="AddStock.do" method="post" id="stockForm"
+				name="stockForm" class="form-horizontal" role="form">
 
 				<div class="card-header">
-					<h2>Add Product Details</h2>
+					<h2>
+						<bean:message key="operator.addstock.head1" />
+					</h2>
 				</div>
 
 				<div class="card-body card-padding">
 
 					<div id="catDiv" class="row form-group">
-						<label for="selectCat" class="col-sm-2 control-label">Product
-							Category</label>
+						<label for="selectCat" class="col-sm-2 control-label"><bean:message
+								key="operator.addstock.category" /></label>
 						<div class="col-sm-6">
 							<jsp:useBean id="list" class="com.dbt.dao.StockDAO" scope="page"></jsp:useBean>
-							<select class="form-control selectpicker" id="selectCat"
+							<select class="selectpicker" id="selectCat"
 								name="selectCat" data-live-search="true">
 								<option value="">Select Category</option>
 
@@ -51,9 +56,9 @@
 							</select> <small id="error" class="help-block"></small>
 						</div>
 
-						<button class="btn btn-gray waves-effect waves-button waves-float" type="button"
-							id="addCatButton">
-							<i class="md md-add"></i> Add New Category
+						<button class="btn bgm-gray"
+							type="button" id="addCatButton">
+							<i class="zmdi zmdi-add"></i> Add New Category
 						</button>
 					</div>
 
@@ -88,19 +93,19 @@
 
 					<div id="prodForm">
 						<div class="form-group row" id="prodOuterDiv">
-							<label for="selectProd" class="col-sm-2 control-label">Product
-								Name</label>
+							<label for="selectProd" class="col-sm-2 control-label"><bean:message
+									key="operator.addstock.productname" /></label>
 							<div class="col-sm-6" id="prodDiv">
-								<select class="form-control selectpicker" id="selectProd"
+								<select class="selectpicker" id="selectProd"
 									name="selectProd" data-live-search="true">
 									<option value="">Select Product</option>
 								</select> <small id="error" class="help-block"></small>
 							</div>
 
 							<button
-								class="btn btn-gray waves-effect waves-button waves-float" type="button"
-								id="addProdButton">
-								<i class="md md-add"></i> Add New Product
+								class="btn bgm-gray"
+								type="button" id="addProdButton">
+								<i class="zmdi zmdi-add"></i> Add New Product
 							</button>
 						</div>
 
@@ -125,8 +130,9 @@
 											<small id="error" class="help-block"> </small>
 										</div>
 										<div class="form-input" id="addQtyDiv">
-											<input type="text" class="form-control" name="prodQty" value="0"
-												id="prodQty" placeholder="Enter Quantity of new product" readonly="true">
+											<input type="text" class="form-control" name="prodQty"
+												value="0" id="prodQty"
+												placeholder="Enter Quantity of new product" readonly="true">
 											<small id="error" class="help-block"> </small>
 										</div>
 										<div class="form-input" id="addSpDiv">
@@ -151,13 +157,14 @@
 						</div>
 
 						<div class="form-group" id="qtyDiv">
-							<label for="inputQuantity" class="col-sm-2 control-label">Quantity</label>
+							<label for="inputQuantity" class="col-sm-2 control-label"><bean:message
+									key="operator.addstock.qty" /></label>
 							<div class="col-sm-6">
 								<div class="fg-line">
-									<input type="text" id="quantity" name="quantity" class="form-control"
-										placeholder="Enter Quantity">
+									<input type="text" id="quantity" name="quantity"
+										class="form-control" placeholder="Enter Quantity">
 								</div>
-								<span class="md-shopping-basket form-control-feedback"></span> <small
+								<span class="zmdi zmdi-shopping-basket form-control-feedback"></span> <small
 									id="error" class="help-block"></small> <small
 									class="help-block">Quantity available : <label
 									id="avail"></label></small>
@@ -166,27 +173,27 @@
 
 						<div class="row">
 							<div id="cpDiv" class="form-input">
-								<label for="cp" class="col-sm-2 control-label">Cost
-									Price</label>
+								<label for="cp" class="col-sm-2 control-label"><bean:message
+										key="operator.addstock.cp" /></label>
 								<div class="col-sm-3 m-b-25">
 									<div class="fg-line">
 										<input type="text" id="cp" name="cp" class="form-control"
 											placeholder="Enter Cost Price">
 									</div>
-									<span class="md-attach-money form-control-feedback"></span> <small
+									<span class="zmdi zmdi-money form-control-feedback"></span> <small
 										id="error" class="help-block"></small>
 								</div>
 							</div>
 
 							<div id="spDiv" class="form-input">
-								<label for="sp" class="col-sm-2 control-label">Selling
-									Price</label>
+								<label for="sp" class="col-sm-2 control-label"><bean:message
+										key="operator.addstock.sp" /></label>
 								<div class="col-sm-3 m-b-25">
 									<div class="fg-line">
 										<input type="text" id="sp" name="sp" class="form-control"
 											placeholder="Enter Selling Price">
 									</div>
-									<span class="md-attach-money form-control-feedback"></span> <small
+									<span class="zmdi zmdi-money form-control-feedback"></span> <small
 										id="error" class="help-block"></small>
 								</div>
 							</div>
@@ -199,12 +206,13 @@
 
 					<a onClick="addMoreStock()" class="btn bgm-blue btn-float"
 						data-toggle="tooltip" data-placement="top" title="Add stock"
-						id="ms-compose"> <i class="md md-add"></i>
+						id="ms-compose"> <i class="zmdi zmdi-plus"></i>
 					</a> <br /> <br /> <br />
 					<div class="form-group">
 						<div class="col-sm-offset-2 col-sm-10">
-							<button type="submit" class="btn btn-primary btn-lg col-sm-4" id="contButton">Continue</button>
-							<button type="reset" class="btn btn-warning btn-lg col-sm-4"
+							<button type="submit" class="btn btn-primary btn-lg col-sm-4"
+								id="contButton">Continue</button>
+							<button type="reset"  class="btn btn-warning btn-lg col-sm-4"
 								style="margin-left: 10%">Reset</button>
 						</div>
 					</div>
@@ -221,22 +229,24 @@
 
 	<%@include file="../js/includejs.jsp"%>
 	
-		<jspcore:set var="stockStatus" value="${sessionScope.stockStatus}"></jspcore:set>
-			<jspcore:choose>
-				<jspcore:when test="${stockStatus == 'Success'}">
-					<script>
-						swal("Stock Added !", "New Stock details has been added successfully", "success");
-					</script>
-				</jspcore:when>
-				<jspcore:otherwise>
-					<jspcore:if test="${stockStatus == 'Failure'}">
-						<script>
-							swal("Error Occurred !", "Unable to add new Stock details, try again.", "failure");
-						</script>
-					</jspcore:if>	
-				</jspcore:otherwise>	
-			</jspcore:choose>
-			<%session.removeAttribute("stockStatus");
-				session.removeAttribute("newStockDetails");%>
+	<jspcore:set var="stockStatus" value="${sessionScope.stockStatus}"></jspcore:set>
+	
+	<jspcore:if test="${stockStatus == 'Success'}">
+		<script>
+			setTimeout(function(){swal("Stock Added !",
+					"New Stock details has been added successfully", "success")},0);
+		</script>
+		<jspcore:remove var="stockStatus" scope="session" />
+	</jspcore:if>
+
+	<jspcore:if test="${stockStatus == 'Failure'}">
+		<script>
+		setTimeout(function(){swal("Error Occurred !",
+					"Unable to add new Stock details, try again.", "failure")},0);
+		</script>
+		<jspcore:remove var="stockStatus" scope="session" />
+	</jspcore:if>
+
+
 </body>
 </html>

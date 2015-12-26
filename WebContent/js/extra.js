@@ -526,8 +526,20 @@ function loadFirms() {
 			// alert("Success : "+data.firms[0].name);
 			firmSelect = data.firms;
 			$('#firmDiv').html("");
+			var html = "<div class='table-responsive'>";
+			html += "<table style='width:100%;border: 2px solid white;border-spacing: 15px;'>";
 			for (var i = 0; i < data.firms.length; i++) {
 				var firm = data.firms[i];
+				
+				html += "<tr style='border: 1px solid white'>";
+				html += "<td width='2%' style='padding: 5px'><div class='radio m-b-15'><label><input type='radio' name='firmID' value='"+firm.id+"' ><i class='input-helper'></i></label></div></td>";
+				html += "<td width='98%' style='padding: 5px'><strong>Name : </strong>" + firm.name + "<br><strong>Mobile : </strong>" + firm.mobile + "<br><strong>TIN : </strong>" + firm.tin + "<br><strong>Address : </strong>" + firm.address.houseNo + ", "
+						+ firm.address.line1 + ", " + firm.address.line2 + ", "
+						+ firm.address.city + " - " + firm.address.zip + ", "
+						+ firm.address.state + "</td>";
+				html += "</tr>";
+				
+				/*
 				var f = "";
 				f += "<div class='row'>";
 				f += "<label class='radio radio-inline'>";
@@ -544,7 +556,10 @@ function loadFirms() {
 						+ firm.address.state + "</label></label>";
 				f += "<p></p></div>";
 				$('#firmDiv').append(f);
+				*/
 			}
+			html += "</table></div>";
+			$('#firmDiv').html(html);
 			$('#modalFirm').modal('show');
 		},
 
@@ -1019,10 +1034,13 @@ $("#searchOrderBtn")
 					var ipnm = $("#inputName").val();
 					var ipmob = $("#inputMobile").val();
 					var ipoid = $("#inputOrderID").val();
-
+					var toDate = $("#inputToDate").val();
+					var fromDate = $("#inputFromDate").val();
+					
+					
 					if ((ipnm == "" || ipnm == null)
 							&& (ipmob == "" || ipmob == null)
-							&& (ipoid == "" || ipoid == null)) {
+							&& (ipoid == "" || ipoid == null) && (toDate == "" && fromDate == "")) {
 						alert("No data Found. Please Fill At Least One Category");
 						return;
 					}
@@ -1038,6 +1056,8 @@ $("#searchOrderBtn")
 									name : ipnm,
 									order : ipoid,
 									mobile : ipmob,
+									to : toDate,
+									from : fromDate,
 									action : "getOrder"
 								},
 								error : function(data) {
@@ -1101,6 +1121,10 @@ $("#searchOrderBtn")
 									var tbhdtd7 = document.createElement('td');
 									$(tbhdtd7).text("Date");
 									tbhdrow.appendChild(tbhdtd7);
+									
+									var tbhdtd8 = document.createElement('td');
+									$(tbhdtd8).text("Status");
+									tbhdrow.appendChild(tbhdtd8);
 
 									var tbhdtd9 = document.createElement('td');
 									$(tbhdtd9).text("View Details");
@@ -1178,6 +1202,17 @@ $("#searchOrderBtn")
 												.createElement('td');
 										$(tbbdtd6).text(orderdetails[i].date);
 										tbbdrw.appendChild(tbbdtd6);
+										
+										var tbbdtd7 = document
+										.createElement('td');
+										if(orderdetails[i].status == "Shipped")
+										{
+											$(tbbdtd7).html("<b style='color:green'>"+orderdetails[i].status+"</b>");
+										}
+										else
+											$(tbbdtd7).html("<b style='color:blue'>"+orderdetails[i].status+"</b>");
+										
+										tbbdrw.appendChild(tbbdtd7);
 
 										var tbbdtd8 = document
 												.createElement('td');
@@ -1226,10 +1261,13 @@ $("#searchOrderButton")
 					var ipnm = $("#inputName").val();
 					var ipmob = $("#inputMobile").val();
 					var ipoid = $("#inputOrderID").val();
-
+					var toDate = $("#inputToDate").val();
+					var fromDate = $("#inputFromDate").val();
+					
+					
 					if ((ipnm == "" || ipnm == null)
 							&& (ipmob == "" || ipmob == null)
-							&& (ipoid == "" || ipoid == null)) {
+							&& (ipoid == "" || ipoid == null) && (toDate == "" && fromDate == "")) {
 						alert("No data Found. Please Fill At Least One Category");
 						return;
 					}
@@ -1245,6 +1283,8 @@ $("#searchOrderButton")
 									name : ipnm,
 									order : ipoid,
 									mobile : ipmob,
+									to : toDate,
+									from : fromDate,
 									action : "getOrder"
 								},
 								error : function(data) {

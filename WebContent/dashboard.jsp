@@ -1,55 +1,207 @@
-<%@page import="com.dbt.dao.LoginDAO"%>
-<%@page import="com.dbt.data.Privilege"%>
-<%@page import="java.util.Iterator"%>
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-	pageEncoding="ISO-8859-1"%>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<!DOCTYPE html>
+<!--[if IE 9 ]><html class="ie9"><![endif]-->
 <%
 	String basePath = request.getContextPath();
     String bPath = request.getScheme() + "://" + request.getServerName () + ":" + request.getServerPort () + basePath + "/";
 %>
-<%@ page import="com.dbt.data.User"%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib prefix="jspcore" uri="http://java.sun.com/jsp/jstl/core"%>
-<!DOCTYPE html>
-<!--[if IE 9 ]><html class="ie9"><![endif]-->
-
-<!-- Mirrored from byrushan.com/projects/ma/v1-3-1/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 21 May 2015 12:08:46 GMT -->
+<!-- Mirrored from 192.185.228.226/projects/ma/1-5-1/jquery/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 30 Oct 2015 19:30:30 GMT -->
 <head>
-<base href="<%=bPath%>">
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title><bean:message key="operator.dashboard.label" /></title>
 
 <!-- Vendor CSS -->
-<link href="vendors/fullcalendar/fullcalendar.css" rel="stylesheet">
-<%@include file="css/includecss.jsp"%>
+<link
+	href="vendors/bower_components/fullcalendar/dist/fullcalendar.min.css"
+	rel="stylesheet">
+<link href="vendors/bower_components/animate.css/animate.min.css"
+	rel="stylesheet">
+<link
+	href="vendors/bower_components/bootstrap-sweetalert/lib/sweet-alert.css"
+	rel="stylesheet">
+<link
+	href="vendors/bower_components/material-design-iconic-font/dist/css/material-design-iconic-font.min.css"
+	rel="stylesheet">
+<link href="vendors/bower_components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css" rel="stylesheet">
+
+<link href="img/favicon.ico" rel="icon" />
+
 <!-- CSS -->
 <link href="css/app.min.1.css" rel="stylesheet">
 <link href="css/app.min.2.css" rel="stylesheet">
 
 </head>
 <body>
+
 	<input type="hidden" id="basePath" value="<%=basePath%>">
 	<%@ include file="header.jsp"%>
 
 	<section id="main">
-
 		<%@include file="panel/leftpanel.jsp"%>
+
+		<aside id="chat">
+			<ul class="tab-nav tn-justified" role="tablist">
+				<li role="presentation" class="active"><a href="#friends"
+					aria-controls="friends" role="tab" data-toggle="tab">Friends</a></li>
+				<li role="presentation"><a href="#online"
+					aria-controls="online" role="tab" data-toggle="tab">Online Now</a></li>
+			</ul>
+
+			<div class="chat-search">
+				<div class="fg-line">
+					<input type="text" class="form-control" placeholder="Search People">
+				</div>
+			</div>
+
+			<div class="tab-content">
+				<div role="tabpanel" class="tab-pane fade in active" id="friends">
+					<div class="listview">
+						<a class="lv-item" href="#">
+							<div class="media">
+								<div class="pull-left p-relative">
+									<img class="lv-img-sm" src="img/profile-pics/2.jpg" alt="">
+									<i class="chat-status-busy"></i>
+								</div>
+								<div class="media-body">
+									<div class="lv-title">Jonathan Morris</div>
+									<small class="lv-small">Available</small>
+								</div>
+							</div>
+						</a> <a class="lv-item" href="#">
+							<div class="media">
+								<div class="pull-left">
+									<img class="lv-img-sm" src="img/profile-pics/1.jpg" alt="">
+								</div>
+								<div class="media-body">
+									<div class="lv-title">David Belle</div>
+									<small class="lv-small">Last seen 3 hours ago</small>
+								</div>
+							</div>
+						</a> <a class="lv-item" href="#">
+							<div class="media">
+								<div class="pull-left p-relative">
+									<img class="lv-img-sm" src="img/profile-pics/3.jpg" alt="">
+									<i class="chat-status-online"></i>
+								</div>
+								<div class="media-body">
+									<div class="lv-title">Fredric Mitchell Jr.</div>
+									<small class="lv-small">Availble</small>
+								</div>
+							</div>
+						</a> <a class="lv-item" href="#">
+							<div class="media">
+								<div class="pull-left p-relative">
+									<img class="lv-img-sm" src="img/profile-pics/4.jpg" alt="">
+									<i class="chat-status-online"></i>
+								</div>
+								<div class="media-body">
+									<div class="lv-title">Glenn Jecobs</div>
+									<small class="lv-small">Availble</small>
+								</div>
+							</div>
+						</a> <a class="lv-item" href="#">
+							<div class="media">
+								<div class="pull-left">
+									<img class="lv-img-sm" src="img/profile-pics/5.jpg" alt="">
+								</div>
+								<div class="media-body">
+									<div class="lv-title">Bill Phillips</div>
+									<small class="lv-small">Last seen 3 days ago</small>
+								</div>
+							</div>
+						</a> <a class="lv-item" href="#">
+							<div class="media">
+								<div class="pull-left">
+									<img class="lv-img-sm" src="img/profile-pics/6.jpg" alt="">
+								</div>
+								<div class="media-body">
+									<div class="lv-title">Wendy Mitchell</div>
+									<small class="lv-small">Last seen 2 minutes ago</small>
+								</div>
+							</div>
+						</a> <a class="lv-item" href="#">
+							<div class="media">
+								<div class="pull-left p-relative">
+									<img class="lv-img-sm" src="img/profile-pics/7.jpg" alt="">
+									<i class="chat-status-busy"></i>
+								</div>
+								<div class="media-body">
+									<div class="lv-title">Teena Bell Ann</div>
+									<small class="lv-small">Busy</small>
+								</div>
+							</div>
+						</a>
+					</div>
+				</div>
+				<div role="tabpanel" class="tab-pane fade" id="online">
+					<div class="listview">
+						<a class="lv-item" href="#">
+							<div class="media">
+								<div class="pull-left p-relative">
+									<img class="lv-img-sm" src="img/profile-pics/2.jpg" alt="">
+									<i class="chat-status-busy"></i>
+								</div>
+								<div class="media-body">
+									<div class="lv-title">Jonathan Morris</div>
+									<small class="lv-small">Available</small>
+								</div>
+							</div>
+						</a> <a class="lv-item" href="#">
+							<div class="media">
+								<div class="pull-left p-relative">
+									<img class="lv-img-sm" src="img/profile-pics/3.jpg" alt="">
+									<i class="chat-status-online"></i>
+								</div>
+								<div class="media-body">
+									<div class="lv-title">Fredric Mitchell Jr.</div>
+									<small class="lv-small">Availble</small>
+								</div>
+							</div>
+						</a> <a class="lv-item" href="#">
+							<div class="media">
+								<div class="pull-left p-relative">
+									<img class="lv-img-sm" src="img/profile-pics/4.jpg" alt="">
+									<i class="chat-status-online"></i>
+								</div>
+								<div class="media-body">
+									<div class="lv-title">Glenn Jecobs</div>
+									<small class="lv-small">Availble</small>
+								</div>
+							</div>
+						</a> <a class="lv-item" href="#">
+							<div class="media">
+								<div class="pull-left p-relative">
+									<img class="lv-img-sm" src="img/profile-pics/7.jpg" alt="">
+									<i class="chat-status-busy"></i>
+								</div>
+								<div class="media-body">
+									<div class="lv-title">Teena Bell Ann</div>
+									<small class="lv-small">Busy</small>
+								</div>
+							</div>
+						</a>
+					</div>
+				</div>
+			</div>
+		</aside>
 
 
 		<section id="content">
 			<div class="container">
 				<div class="block-header">
 					<h2>Dashboard</h2>
+
 					<ul class="actions">
-						<li><a href="#"> <i class="md md-trending-up"></i>
+						<li><a href="#"> <i class="zmdi zmdi-trending-up"></i>
 						</a></li>
-						<li><a href="#"> <i class="md md-done-all"></i>
+						<li><a href="#"> <i class="zmdi zmdi-check-all"></i>
 						</a></li>
 						<li class="dropdown"><a href="#" data-toggle="dropdown">
-								<i class="md md-more-vert"></i>
+								<i class="zmdi zmdi-more-vert"></i>
 						</a>
 
 							<ul class="dropdown-menu dropdown-menu-right">
@@ -58,6 +210,7 @@
 								<li><a href="#">Widgets Settings</a></li>
 							</ul></li>
 					</ul>
+
 				</div>
 
 				<div class="card">
@@ -68,12 +221,12 @@
 						</h2>
 
 						<ul class="actions">
-							<li><a href="#"> <i class="md md-cached"></i>
+							<li><a href="#"> <i class="zmdi zmdi-refresh-alt"></i>
 							</a></li>
-							<li><a href="#"> <i class="md md-file-download"></i>
+							<li><a href="#"> <i class="zmdi zmdi-download"></i>
 							</a></li>
 							<li class="dropdown"><a href="#" data-toggle="dropdown">
-									<i class="md md-more-vert"></i>
+									<i class="zmdi zmdi-more-vert"></i>
 							</a>
 
 								<ul class="dropdown-menu dropdown-menu-right">
@@ -157,7 +310,7 @@
 
 									<ul class="actions actions-alt">
 										<li class="dropdown"><a href="#" data-toggle="dropdown">
-												<i class="md md-more-vert"></i>
+												<i class="zmdi zmdi-more-vert"></i>
 										</a>
 
 											<ul class="dropdown-menu dropdown-menu-right">
@@ -269,139 +422,253 @@
 				</div>
 
 				<div class="row">
-					<div class="col-sm-6">
-						<!-- Calendar -->
-						<div id="calendar-widget"></div>
-					</div>
-
-					<div class="col-sm-6">
-						<!-- Recent Items -->
-						<div class="card">
-							<div class="card-header">
+					<div class="card col-sm-6">
+						<div class="card-header">
 								<h2>
-									Recent Items <small>Phasellus condimentum ipsum id
-										auctor imperdie</small>
+									Manage Reminders <small>Set, Remove or View Reminders
+										here</small>
 								</h2>
 								<ul class="actions">
-									<li class="dropdown"><a href="#" data-toggle="dropdown">
-											<i class="md md-more-vert"></i>
+									<li class="dropdown">
+									<a href="#" data-toggle="dropdown">
+											<i class="zmdi zmdi-more-vert"></i>
 									</a>
 
 										<ul class="dropdown-menu dropdown-menu-right">
-											<li><a href="#">Refresh</a></li>
-											<li><a href="#">Settings</a></li>
-											<li><a href="#">Other Settings</a></li>
-										</ul></li>
+											<li><a href="" onclick="javascript:showReminders();return false;">View
+													Reminder</a></li>
+
+										</ul>
+									</li>
 								</ul>
-							</div>
-
-							<div class="card-body m-t-0">
-								<table class="table table-inner table-vmiddle">
-									<thead>
-										<tr>
-											<th>ID</th>
-											<th>Name</th>
-											<th style="width: 60px">Price</th>
-										</tr>
-									</thead>
-									<tbody>
-										<tr>
-											<td class="f-500 c-cyan">2569</td>
-											<td>Samsung Galaxy Mega</td>
-											<td class="f-500 c-cyan">$521</td>
-										</tr>
-										<tr>
-											<td class="f-500 c-cyan">9658</td>
-											<td>Huawei Ascend P6</td>
-											<td class="f-500 c-cyan">$440</td>
-										</tr>
-										<tr>
-											<td class="f-500 c-cyan">1101</td>
-											<td>HTC One M8</td>
-											<td class="f-500 c-cyan">$680</td>
-										</tr>
-										<tr>
-											<td class="f-500 c-cyan">6598</td>
-											<td>Samsung Galaxy Alpha</td>
-											<td class="f-500 c-cyan">$870</td>
-										</tr>
-										<tr>
-											<td class="f-500 c-cyan">4562</td>
-											<td>LG G3</td>
-											<td class="f-500 c-cyan">$690</td>
-										</tr>
-									</tbody>
-								</table>
-							</div>
-							<div id="recent-items-chart" class="flot-chart"></div>
 						</div>
+							
+						<div class="card-body">
+								<small style="color: red" id="errorMessage"></small>
+								 <div class="form-group fg-float">
+									<div class="fg-line">
+										<input type="text" id="reminderTitle" class="form-control">
+									</div>
+									<label class="fg-label"><b>Title for Reminder</b></label>
+								</div>
+						
+								<div class="form-group fg-float">
+									<div class="fg-line">
+										<input type="text" id="inputMobile" class="form-control">
+									</div>
+									<label class="fg-label"><b>Mobile Number to receive
+											SMS</b></label>
+								</div>
+	
+								<label class="control-label"><b>Message Template : </b></label>
+								<div class="radio m-b-20">
+									<label class="radio radio-inline m-r-20"> <input
+										type="radio" name="messTemplate" value="cheque"> <i
+										class="input-helper"></i> Cheque/Payment
+									</label> <label class="radio radio-inline m-r-20"> <input
+										type="radio" name="messTemplate" value="order"> <i
+										class="input-helper"></i> Order Delivery
+									</label>
 
+								</div>
+
+								<label class="control-label"><b>Message : </b></label>
+								<div class="form-group">
+									<div class="fg-line">
+										<textarea class="form-control"
+											placeholder="Enter your message here for reminder..."
+											name="message" id="message"
+											></textarea>
+									</div>
+								</div>
+
+								<label class="control-label"><b>Frequency : </b></label>
+								<div class="radio m-b-20">
+									<label class="radio radio-inline m-r-20"> <input
+										type="radio" name="frequency" value="DAILY" checked> <i
+										class="input-helper"></i> Daily
+									</label> <label class="radio radio-inline m-r-20"> <input
+										type="radio" name="frequency" value="WEEKLY"> <i
+										class="input-helper"></i> Weekly
+									</label> <label class="radio radio-inline m-r-20"> <input
+										type="radio" name="frequency" value="MONTHLY"> <i
+										class="input-helper"></i> Monthly
+									</label> <label class="radio radio-inline m-r-20"> <input
+										type="radio" name="frequency" value="YEARLY"> <i
+										class="input-helper"></i> Yearly
+									</label>
+								</div> 
+
+								<div class="row form-group">
+									<div class="input-group">
+										
+										<div class="dtp-container dropdown fg-line col-sm-2">
+											<input type="text" id="startDate"
+												class="form-control date-time-picker" data-toggle="dropdown"
+												placeholder="Select Start Date..." aria-expanded="false">
+											
+										</div>
+										<span class="input-group-addon"><i class="zmdi zmdi-calendar"></i></span>
+									</div>
+									<div class="input-group">
+										
+										<div class="dtp-container dropdown fg-line col-sm-2">
+											<input type="text" id="endDate"
+												class="form-control date-time-picker" data-toggle="dropdown"
+												placeholder="Select End Date..." aria-expanded="false">
+
+										</div>
+										<span class="input-group-addon"><i class="zmdi zmdi-calendar"></i></span>
+									</div>
+								</div> 
+
+								<button
+									class="btn btn-info"
+									id="setReminder">Set Reminder</button>
+								<button type="reset"
+									class="btn btn-link">Reset</button>		
+						</div>
+						<br>
+						<div class="modal fade" id="modalReminder" tabindex="-1" role="dialog"
+				aria-hidden="true">
+				<div class="modal-dialog modal-lg">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h4 class="modal-title">Reminders</h4>
+						</div>
+						<div class="modal-body">
+							<table class="table table-hover">
+								<thead>
+								<tr>
+									<th>Title</th>
+									<th>Message</th>
+									<th>Start Date</th>
+									<th>End Date</th>
+									<th>Frequency</th>
+								</tr>
+								</thead>
+								<tbody id="reminders">
+								
+								</tbody>
+							
+							</table>
+						</div>
+						<div class="modal-footer">
+							
+							<button type="button" class="btn btn-link" data-dismiss="modal">Close</button>
+						</div>
 					</div>
 				</div>
 			</div>
-
+					</div>
+					
+					<div class="card">
+						<div class="col-sm-6">
+							<!-- Recent Items -->
+							<div class="card">
+								<div id="calendar-widget"></div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
 		</section>
 	</section>
+
+	<footer id="footer">
+		Copyright &copy; 2015 Material Admin
+
+		<ul class="f-menu">
+			<li><a href="#">Home</a></li>
+			<li><a href="#">Dashboard</a></li>
+			<li><a href="#">Reports</a></li>
+			<li><a href="#">Support</a></li>
+			<li><a href="#">Contact</a></li>
+		</ul>
+	</footer>
 
 	<!-- Older IE warning message -->
 	<!--[if lt IE 9]>
             <div class="ie-warning">
-                <h1 class="c-white">IE SUCKS!</h1>
-                <p>You are using an outdated version of Internet Explorer, upgrade to any of the following web browser <br/>in order to access the maximum functionality of this website. </p>
-                <ul class="iew-download">
-                    <li>
-                        <a href="http://www.google.com/chrome/">
-                            <img src="img/browsers/chrome.png" alt="">
-                            <div>Chrome</div>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="https://www.mozilla.org/en-US/firefox/new/">
-                            <img src="img/browsers/firefox.png" alt="">
-                            <div>Firefox</div>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="http://www.opera.com">
-                            <img src="img/browsers/opera.png" alt="">
-                            <div>Opera</div>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="https://www.apple.com/safari/">
-                            <img src="img/browsers/safari.png" alt="">
-                            <div>Safari</div>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="http://windows.microsoft.com/en-us/internet-explorer/download-ie">
-                            <img src="img/browsers/ie.png" alt="">
-                            <div>IE (New)</div>
-                        </a>
-                    </li>
-                </ul>
-                <p>Upgrade your browser for a Safer and Faster web experience. <br/>Thank you for your patience...</p>
+                <h1 class="c-white">Warning!!</h1>
+                <p>You are using an outdated version of Internet Explorer, please upgrade <br/>to any of the following web browsers to access this website.</p>
+                <div class="iew-container">
+                    <ul class="iew-download">
+                        <li>
+                            <a href="http://www.google.com/chrome/">
+                                <img src="img/browsers/chrome.png" alt="">
+                                <div>Chrome</div>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://www.mozilla.org/en-US/firefox/new/">
+                                <img src="img/browsers/firefox.png" alt="">
+                                <div>Firefox</div>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="http://www.opera.com">
+                                <img src="img/browsers/opera.png" alt="">
+                                <div>Opera</div>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://www.apple.com/safari/">
+                                <img src="img/browsers/safari.png" alt="">
+                                <div>Safari</div>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="http://windows.microsoft.com/en-us/internet-explorer/download-ie">
+                                <img src="img/browsers/ie.png" alt="">
+                                <div>IE (New)</div>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <p>Sorry for the inconvenience!</p>
             </div>   
         <![endif]-->
 
 	<!-- Javascript Libraries -->
-		<%@include file="js/includejs.jsp"%>
+	<script src="vendors/bower_components/jquery/dist/jquery.min.js"></script>
+	<script
+		src="vendors/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
 
-        <script src="vendors/flot/jquery.flot.min.js"></script>
-        <script src="vendors/flot/jquery.flot.resize.min.js"></script>
-        <script src="vendors/flot/plugins/curvedLines.js"></script>
-        <script src="vendors/sparklines/jquery.sparkline.min.js"></script>
-        <script src="vendors/easypiechart/jquery.easypiechart.min.js"></script>
-        
-        <script src="vendors/fullcalendar/lib/moment.min.js"></script>
-        <script src="vendors/fullcalendar/fullcalendar.min.js"></script>
-        <script src="vendors/simpleWeather/jquery.simpleWeather.min.js"></script>
-        
-        <script src="js/flot-charts/curved-line-chart.js"></script>
-        <script src="js/flot-charts/line-chart.js"></script>
-        <script src="js/charts.js"></script>
-        
-       
-        
-		</html>
+	<script src="vendors/bower_components/flot/jquery.flot.js"></script>
+	<script src="vendors/bower_components/flot/jquery.flot.resize.js"></script>
+	<script src="vendors/bower_components/flot.curvedlines/curvedLines.js"></script>
+	<script src="vendors/sparklines/jquery.sparkline.min.js"></script>
+	<script
+		src="vendors/bower_components/jquery.easy-pie-chart/dist/jquery.easypiechart.min.js"></script>
+
+	<script src="vendors/bower_components/moment/min/moment.min.js"></script>
+	<script
+		src="vendors/bower_components/fullcalendar/dist/fullcalendar.min.js"></script>
+	<script
+		src="vendors/bower_components/simpleWeather/jquery.simpleWeather.min.js"></script>
+	<script
+		src="vendors/bower_components/jquery.nicescroll/jquery.nicescroll.min.js"></script>
+	<script src="vendors/bower_components/Waves/dist/waves.min.js"></script>
+	<script src="vendors/bootstrap-growl/bootstrap-growl.min.js"></script>
+	<script
+		src="vendors/bower_components/bootstrap-sweetalert/lib/sweet-alert.min.js"></script>
+	<script src="vendors/bower_components/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js"></script>
 	
+	<!-- Placeholder for IE9 -->
+	<!--[if IE 9 ]>
+            <script src="vendors/bower_components/jquery-placeholder/jquery.placeholder.min.js"></script>
+        <![endif]-->
+
+	<script src="js/flot-charts/curved-line-chart.js"></script>
+	<script src="js/flot-charts/line-chart.js"></script>
+	<script src="js/charts.js"></script>
+
+	<script src="js/charts.js"></script>
+	<script src="js/functions.js"></script>
+	<script src="js/demo.js"></script>
+
+	<script src="js/dashboard.js"></script>
+</body>
+
+</html>

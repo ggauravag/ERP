@@ -52,7 +52,7 @@
 
 			<div id="passwordDiv" class="">
 				<div class="form-group fg-float">
-					<span class="input-group-addon"><i class="md md-security"></i></span>
+					<span class="input-group-addon"><i class="zmdi zmdi-shield-security"></i></span>
 
 					<div class="fg-line">
 						<input type="password" id="newPassword" name="newPassword"
@@ -69,7 +69,7 @@
 			</div>
 			<div id="confirmPassDiv" class="">
 				<div class="fg-float form-group">
-					<span class="input-group-addon"><i class="md md-security"></i></span>
+					<span class="input-group-addon"><i class="zmdi zmdi-shield-security"></i></span>
 
 					<div class="fg-line">
 						<input type="password" id="confirmPassword" name="confirmPassword"

@@ -21,15 +21,19 @@
 </head>
 
 <body>
+	
 	<input type="hidden" id="basePath" value="<%=basePath%>">
 	<%@ include file="../header.jsp"%>
-
+	<jspcore:remove var="order" scope="session" />
+	<jspcore:remove var="order" scope="request" />
 	<section id="main"> <%@ include file="../panel/leftpanel.jsp"%>
 
 	<section id="content">
 	<div class="container">
 		<div class="block-header">
-			<h1>Take Order</h1>
+			<h1>
+				<bean:message key="operator.takeorder.label" />
+			</h1>
 		</div>
 
 		<div class="card">
@@ -37,12 +41,14 @@
 				name="custForm" class="form-horizontal" role="form">
 
 				<div class="card-header">
-					<h2>Customer Details</h2>
+					<h2>
+						<bean:message key="operator.takeorder.head1" />
+					</h2>
 				</div>
 				<div class="card-body card-padding">
 					<div id="nameDiv" class="form-group">
-						<label for="inputName" class="col-sm-2 control-label">Customer
-							Name</label>
+						<label for="inputName" class="col-sm-2 control-label"><bean:message
+								key="operator.ordertaken.custname" /></label>
 						<div class="col-sm-8">
 							<div class="fg-line">
 								<input type="text" class="form-control" name="custName"
@@ -50,7 +56,7 @@
 									placeholder="Enter Full Name">
 							</div>
 
-							<span class="md md-person form-control-feedback"></span> <small
+							<span class="zmdi zmdi-account form-control-feedback"></span> <small
 								id="error" class="help-block"> <html:errors
 									property="nameError" />
 							</small>
@@ -58,12 +64,12 @@
 						<button type="button" class="btn btn-info" data-toggle="tooltip"
 							data-placement="top" title data-original-title="Search Customers"
 							id="searchCust">
-							<i class="md md-search"></i>
+							<i class="zmdi zmdi-search"></i>
 						</button>
 						<div class="modal fade" data-modal-color="amber"
 							id="modalCustomer" data-backdrop="static" data-keyboard="false"
 							tabindex="-1" role="dialog" aria-hidden="true">
-							<div class="modal-dialog">
+							<div class="modal-dialog modal-lg">
 								<div class="modal-content">
 									<div class="modal-header">
 										<h4 class="modal-title">Customer Search</h4>
@@ -85,7 +91,8 @@
 						</div>
 					</div>
 					<div id="emailDiv" class="form-group">
-						<label for="inputEmail" class="col-sm-2 control-label">Email</label>
+						<label for="inputEmail" class="col-sm-2 control-label"><bean:message
+								key="operator.ordertaken.email" /></label>
 						<div class="col-sm-8">
 							<div class="fg-line">
 								<input type="email" class="form-control" name="custEmail"
@@ -93,7 +100,7 @@
 									placeholder="Email">
 
 							</div>
-							<span class="md md-email form-control-feedback"></span> <small
+							<span class="zmdi zmdi-email form-control-feedback"></span> <small
 								id="error" class="help-block"><html:errors
 									property="emailError" /></small>
 						</div>
@@ -103,7 +110,8 @@
 					<jspcore:set value="${order.customer.address}" var="add" />
 					<div class="row">
 						<div id="houseDiv" class="form-input">
-							<label for="inputHouse" class="col-sm-2 control-label">Address</label>
+							<label for="inputHouse" class="col-sm-2 control-label"><bean:message
+									key="operator.ordertaken.address" /></label>
 							<div class="col-sm-2 m-b-25">
 								<div class="fg-line">
 									<input type="text" class="form-control" id="inputHouse"
@@ -123,8 +131,8 @@
 										placeholder="Address line 1">
 
 								</div>
-								<span class="md md-location-on form-control-feedback"></span> <small
-									id="error" class="help-block"><html:errors
+								<span class="zmdi zmdi-my-location form-control-feedback"></span>
+								<small id="error" class="help-block"><html:errors
 										property="line1Error" /></small>
 							</div>
 						</div>
@@ -181,7 +189,7 @@
 										placeholder="Enter PinCode" value="${add.zip}"
 										name="custPinCode">
 								</div>
-								<span class="md md-my-location form-control-feedback"></span> <small
+								<span class="zmdi zmdi-pin form-control-feedback"></span> <small
 									id="error" class="help-block"><html:errors
 										property="pinError" /></small>
 							</div>
@@ -190,8 +198,8 @@
 					</div>
 
 					<div id="mobileDiv" class="form-group">
-						<label for="inputMobile" class="col-sm-2 control-label">Mobile
-							Number</label>
+						<label for="inputMobile" class="col-sm-2 control-label"><bean:message
+								key="operator.takeorder.mobile" /></label>
 						<div class="col-sm-8">
 							<div class="fg-line">
 								<input type="text" class="form-control" id="inputMobile"
@@ -199,44 +207,66 @@
 									placeholder="Enter Mobile Number">
 
 							</div>
-							<span class="md-phone-android form-control-feedback"></span> <small
-								id="error" class="help-block"><html:errors
+							<span class="zmdi zmdi-smartphone-android form-control-feedback"></span>
+							<small id="error" class="help-block"><html:errors
 									property="mobileError" /></small>
 						</div>
 					</div>
-					<div class="row">
-						<label for="inputDate" class="col-sm-2 control-label">Order
-							Date/Time</label>
-						<div class="col-sm-4">
-							<div class="input-group form-group">
-								<span class="input-group-addon"><i class="md md-event"></i></span>
-								<div class="dtp-container dropdown fg-line open">
-									<input type="text" name="orderTime"
-										class="form-control date-time-picker" data-toggle="dropdown"
-										aria-expanded="true" id="inputDate"
-										placeholder="Order Date & Time">
-								</div>
-								<small class="help-block"><font color="red"><html:errors
-											property="dateError" /></font></small>
-							</div>
+					<div id="mobileDiv" class="form-group">
+						<label for="inputMobile" class="col-sm-2 control-label" style="margin-top: -10px"><bean:message
+								key="operator.takeorder.customerType" /></label>
+						<div class="col-sm-8">
+
+							<label class="radio radio-inline m-r-20"> <input
+								type="radio" name="custType" id="typeCustomer" value="CUSTOMER"> <i
+								class="input-helper"></i>
+							</label> <label style="margin-left: -20px;margin-right: 25px">Customer</label>
+							
+							 <label class="radio radio-inline m-r-20"> <input
+								type="radio" name="custType" id="typeMerchant" value="MERCHANT"> <i
+								class="input-helper"></i>
+							</label> <label style="margin-left: -20px">Merchant </label>
+							
+							<span class="zmdi-phone-android form-control-feedback"></span> <small
+								id="error" class="help-block"><html:errors
+									property="typeError" /></small>
 						</div>
 					</div>
+					<div id="timeDiv" class="form-group">
+						<label for="inputDate" class="col-sm-2 control-label"><bean:message
+								key="operator.takeorder.datetime" /></label>
+						<div class="col-sm-3">
+							<div class="fg-line">
+								<input type="text" name="orderTime"
+									class="form-control date-time-picker" data-toggle="dropdown"
+									aria-expanded="true" id="inputDate"
+									placeholder="Order Date & Time">
+
+							</div>
+							<span class="zmdi zmdi-calendar form-control-feedback"></span> <small
+								class="help-block"><font color="red"><html:errors
+										property="dateError" /></font></small>
+						</div>
+					</div>
+					
 				</div>
 				<!-- card-body card-padding div 1-->
 
 				<div class="card-header">
-					<h2>Product Details</h2>
+					<h2>
+						<bean:message key="operator.takeorder.head2" />
+					</h2>
 				</div>
 				<div class="card-body card-padding">
 					<div id="productForm">
 						<div id="categoryDiv" class="row">
-							<label for="selectProduct" class="col-sm-2 control-label">Product
-								Category</label>
+							<label for="selectProduct" class="col-sm-2 control-label"><bean:message
+									key="operator.takeorder.prodcat" /></label>
 							<div class="col-sm-8">
 								<div class="form-group">
 									<jsp:useBean id="list" class="com.dbt.dao.OrderDAO"
 										scope="page"></jsp:useBean>
-									<select class="selectpicker form-control" id="selectCategory"
+									<select class="selectpicker" id="selectCategory"
 										data-live-search="true">
 										<option value="">Select Category</option>
 
@@ -250,10 +280,10 @@
 							</div>
 						</div>
 						<div class="row">
-							<label for="selectProduct" class="col-sm-2 control-label">Product
-								Name</label>
+							<label for="selectProduct" class="col-sm-2 control-label"><bean:message
+									key="operator.confirmorder.product" /></label>
 							<div class="col-sm-8">
-								<div id="productDiv" class="form-group">
+								<div id="productDiv" class="form-group fg-line select">
 									<select class="selectpicker" id="selectProduct"
 										data-live-search="true">
 										<option value="">Select Product</option>
@@ -266,7 +296,8 @@
 						</div>
 
 						<div class="row">
-							<label for="inputProduct" class="col-sm-2 control-label">Quantity</label>
+							<label for="inputProduct" class="col-sm-2 control-label"><bean:message
+									key="operator.confirmorder.qty" /></label>
 							<div id="quantityDiv" class="col-sm-3">
 								<div class="form-group">
 									<div class="fg-line">
@@ -274,14 +305,15 @@
 											placeholder="Enter Quantity">
 
 									</div>
-									<span class="md-shopping-basket form-control-feedback"></span>
+									<span class="zmdi zmdi-shopping-basket form-control-feedback"></span>
 									<small id="error" class="help-block"></small> <small
 										class="help-block">Quantity available : <label
 										id="avail"></label></small>
 								</div>
 							</div>
 
-							<label for="inputProduct" class="col-sm-2 control-label">Price</label>
+							<label for="inputProduct" class="col-sm-2 control-label"><bean:message
+									key="operator.confirmorder.price" /></label>
 							<div class="col-sm-3">
 								<div id="priceDiv" class="form-group">
 									<div class="fg-line">
@@ -289,7 +321,7 @@
 											placeholder="Enter Price">
 
 									</div>
-									<span class="md-attach-money form-control-feedback"></span> <small
+									<span class="zmdi zmdi-money-box form-control-feedback"></span> <small
 										id="error" class="help-block"></small> <small
 										class="help-block">Selling Price : Rs <label
 										id="sellPrice"></label></small>
@@ -304,7 +336,8 @@
 
 					<a onClick="addProduct()" class="btn bgm-blue btn-float"
 						data-toggle="tooltip" data-placement="top"
-						title="Add more product" id="ms-compose"> <i class="md md-add"></i>
+						title="Add more product" id="ms-compose"> <i
+						class="zmdi zmdi-plus"></i>
 					</a> <br /> <br /> <br />
 					<div class="form-group">
 						<div class="row">
@@ -331,26 +364,20 @@
 	<%@include file="/js/includejs.jsp"%>
 	<jspcore:if test="${status == false}">
 		<script>
-			swal("Try Again", "Either Email entered is duplicate or Some exception occurred ! Please try again !",
+			swal(
+					"Try Again",
+					"Either Email entered is duplicate or Some exception occurred ! Please try again !",
 					"error");
 		</script>
+		<jspcore:remove var="status" scope="session"/>
+		<jspcore:remove var="status" scope="request"/>
 	</jspcore:if>
 	<script>
 		function load(id) {
 			console.log("Selected : " + id);
 		}
 	</script>
-	<jspcore:remove var="order" scope="session"/>
-	<jspcore:remove var="order" scope="request"/>
-	<script
-		src="vendors/bootstrap-datetimepicker/bootstrap-datetimepicker.min.js"></script>
-	<script src="vendors/moment/moment.min.js"></script>
-	<script src="vendors/noUiSlider/jquery.nouislider.all.min.js"></script>
-	<script src="vendors/input-mask/input-mask.min.js"></script>
-	<script src="vendors/farbtastic/farbtastic.min.js"></script>
-	<script src="vendors/summernote/summernote.min.js"></script>
-	<script
-		src="vendors/bootstrap-datetimepicker/bootstrap-datetimepicker.min.js"></script>
+	
 	<script src="vendors/fileinput/fileinput.min.js"></script>
 	<script type="text/javascript" src="js/extra.js"></script>
 

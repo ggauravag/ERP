@@ -4,7 +4,6 @@ import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Types;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -14,7 +13,6 @@ import com.dbt.data.Address;
 import com.dbt.data.Employee;
 import com.dbt.data.User;
 import com.dbt.database.DBConnection;
-import com.dbt.exception.NoConnectionException;
 import com.dbt.support.Email;
 
 public class EmployeeDAO {
@@ -64,7 +62,6 @@ public class EmployeeDAO {
 			stmt2.close();
 			System.out.println("Rs is:" + rs);
 
-			con.close();
 			if (result == 1 && res == 1 && rs == 1) {
 				sendResult = 1;
 			} else {
@@ -116,7 +113,6 @@ public class EmployeeDAO {
 			result = stmt.getInt(7);
 
 			stmt.close();
-			con.close();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			Email.sendExceptionReport(e);
@@ -140,7 +136,6 @@ public class EmployeeDAO {
 			ps.setString(1, path);
 			ps.setInt(2, id);
 			result = ps.executeUpdate();
-			con.close();
 			ps.close();
 		} catch (Exception e) {
 
@@ -191,8 +186,7 @@ public class EmployeeDAO {
 
 			stmt.execute();
 			result = stmt.getInt(18);
-			stmt.close();
-			con.close();
+
 		} catch (Exception e) {
 
 			Email.sendExceptionReport(e);
@@ -287,11 +281,9 @@ public class EmployeeDAO {
 		try {
 			System.out.println("In EmployeeDAO");
 			con = DBConnection.getConnection();
-			String query = "select _id, first_name, last_name, mobile from user where type = ?";
+			String query = "select u._id,u.first_name,u.last_name,u.mobile from `user` u join employee e on u._id = e.employee_id where e.status = 'ACTIVE' and e.role in ('OPERATOR','OTHER') order by u.first_name;";
 			// System.out.println("CustomerDAO : Query - "+query);
 			ps = con.prepareStatement(query);
-			ps.setString(1, "EMPLOYEE");
-
 			rst = ps.executeQuery();
 
 			while (rst.next()) {
@@ -310,6 +302,44 @@ public class EmployeeDAO {
 		}
 
 		return employees;
+	}
+
+	public List<Employee> getEmployeeDetails() {
+		List<Employee> employee = new ArrayList<Employee>();
+		Connection con = null;
+		PreparedStatement ps = null;
+		ResultSet rst = null;
+
+		try {
+			System.out.println("In Employee DAO, getEmployeeDetails()");
+			con = DBConnection.getConnection();
+
+			String query = "select employee_id, first_name, last_name, email, "
+					+ "mobile, date_of_join, salary, employee.status from employee join `user` "
+					+ "where employee.employee_id = user._id";
+
+			ps = con.prepareStatement(query);
+			rst = ps.executeQuery();
+
+			while (rst.next()) {
+				User user = new User(rst.getString("first_name"),
+						rst.getString("last_name"), rst.getString("email"),
+						rst.getString("mobile"));
+
+				Employee emp = new Employee(rst.getInt("employee_id"),
+						rst.getDate("date_of_join"), rst.getInt("salary"), user);
+				emp.setStatus(rst.getString("status"));
+
+				employee.add(emp);
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			Email.sendExceptionReport(e);
+		} finally {
+			DBConnection.closeResource(con, ps, rst);
+		}
+		return employee;
 	}
 
 }

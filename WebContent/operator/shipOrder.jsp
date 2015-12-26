@@ -25,7 +25,7 @@
 	<section id="content">
 	<div class="container">
 		<div class="block-header">
-			<h1>Process Order</h1>
+			<h1><bean:message key="operator.shiporder.label" /></h1>
 		</div>
 
 		<div class="card">
@@ -36,19 +36,17 @@
 				<!-- card-body card-padding div 1-->
 
 				<div class="card-header">
-					<h2>Shipment Details</h2>
+					<h2><bean:message key="operator.shiporder.head1" /></h2>
 				</div>
 				<div class="card-body card-padding">
 					<div class="form-group row">
-						<label for="inputName" class="col-sm-2 control-label">Shipping
-							Medium : </label>
+						<label for="inputName" class="col-sm-2 control-label"><bean:message key="operator.shiporder.shippingmedium" /> </label>
 						<div class="col-sm-8">
 							<label class="control-label"><strong>${shipment.medium}</strong></label>
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="inputEmail" class="col-sm-2 control-label">Medium
-							Name : </label>
+						<label for="inputEmail" class="col-sm-2 control-label"><bean:message key="operator.shiporder.mediumname" /> </label>
 						<div class="col-sm-8">
 							<div class="fg-line">
 								<label class="control-label"><strong>${shipment.mediumName}</strong></label>
@@ -57,8 +55,7 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="inputMobile" class="col-sm-2 control-label">Medium
-							Number : </label>
+						<label for="inputMobile" class="col-sm-2 control-label"><bean:message key="operator.shiporder.mediumno" /> </label>
 						<div class="col-sm-8">
 							<div class="fg-line">
 								<label class="control-label"><strong>${shipment.mediumNumber}</strong></label>
@@ -67,8 +64,7 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="inputMobile" class="col-sm-2 control-label">Contact
-							Number : </label>
+						<label for="inputMobile" class="col-sm-2 control-label"><bean:message key="operator.shiporder.contactno" /> </label>
 						<div class="col-sm-8">
 							<div class="fg-line">
 								<label class="control-label"><strong>${shipment.contact}</strong></label>
@@ -77,8 +73,7 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="inputMobile" class="col-sm-2 control-label">Shipping
-							Time : </label>
+						<label for="inputMobile" class="col-sm-2 control-label"><bean:message key="operator.shiporder.shippingtime" /> </label>
 						<div class="col-sm-8">
 							<div class="fg-line">
 								<label class="control-label"><strong>${shipment.time}</strong></label>
@@ -92,15 +87,13 @@
 
 						<div class="form-group">
 							<div class="col-sm-2 col-sm-offset-1">
-								<label class="control-label"><strong>Is Shipped
-										? (Checked)</strong></label>
+								<label class="control-label"><strong><bean:message key="operator.shiporder.isshipped" /></strong></label>
 							</div>
 							<div class="col-sm-2 col-sm-offset-1">
-								<label class="control-label"><strong>Product
-										Name</strong></label>
+								<label class="control-label"><strong><bean:message key="operator.processorder.prodname" /></strong></label>
 							</div>
 							<div class="col-sm-2 col-sm-offset-1">
-								<label class="control-label"><strong>Quantity</strong></label>
+								<label class="control-label"><strong><bean:message key="operator.processorder.qty" /></strong></label>
 							</div>
 						</div>
 
@@ -147,16 +140,16 @@
 				<div class="form-group row">
 
 					<button type="button" id="processPayment"
-						class="col-sm-offset-1 col-sm-3 btn btn-primary waves-effect waves-button waves-float">
-						<i class="md md-account-balance-wallet"></i> Process Payment
+						class="col-sm-offset-1 col-sm-2 btn btn-primary">
+						<i class="zmdi zmdi-balance-wallet" style="padding-right: 10px"></i> Process Payment
 					</button>
 					<button type="button" id="generateChallan"
-						class="col-sm-offset-1 col-sm-2 btn btn-primary waves-effect waves-button waves-float">
-						<i class="md md-local-shipping"></i> Generate Challan
+						class="col-sm-offset-1 col-sm-3 btn btn-primary">
+						<i class="zmdi zmdi-local-shipping" style="padding-right: 10px"></i> Generate Challan
 					</button>
 					<button type="button" id="sendShipment"
-						class="col-sm-offset-1 col-sm-3 btn btn-primary waves-effect waves-button waves-float">
-						<i class="md md-message"></i> SEND SMS/EMAIL CONFIRMATION
+						class="col-sm-offset-1 col-sm-3 btn btn-primary">
+						<i class="zmdi zmdi-phone-msg" style="padding-right: 10px"></i> SEND SMS/EMAIL CONFIRMATION
 					</button>
 
 				</div>
@@ -172,8 +165,7 @@
 							<div class="modal-body">
 								<div class="row">
 									<div class="form-group">
-										<label for="inputName" class="col-sm-6 control-label">Customer
-											Mobile (if Multiple,then CSV) :</label>
+										<label for="inputName" class="col-sm-6 control-label"><bean:message key="operator.shiporder.modal.mobile" /></label>
 										<div class="col-sm-12">
 											<div class="fg-line">
 												<input class="form-control" type="text" id="sendMobiles"
@@ -184,8 +176,7 @@
 								</div>
 								<div class="row">
 									<div class="form-group">
-										<label for="inputName" class="col-sm-6 control-label">Customer
-											Email (if Multiple,then CSV) :</label>
+										<label for="inputName" class="col-sm-6 control-label"><bean:message key="operator.shiporder.modal.email" /></label>
 										<div class="col-sm-12">
 											<div class="fg-line">
 												<input type="text" class="form-control" id="sendEmails"

@@ -31,7 +31,7 @@
 	<section id="content">
 	<div class="container">
 		<div class="block-header">
-			<h1>Order Confirmation</h1>
+			<h1><bean:message key="operator.ordertaken.label" /></h1>
 		</div>
 
 		<div class="card">
@@ -39,13 +39,13 @@
 				name="custForm" class="form-horizontal" role="form">
 
 				<div class="card-header">
-					<h2>Order Details</h2>
+					<h2><bean:message key="operator.ordertaken.head1" /></h2>
 				</div>
 
 				<div class="card-body card-padding">
 					<div class="form-group">
 						<label for="inputName" class="col-sm-2 control-label">
-							Order Number : </label>
+							<bean:message key="operator.ordertaken.orderno" /> </label>
 						<div class="col-sm-8">
 							<div class="fg-line disabled">
 								<label class="control-label"><strong>${orderS.id}</strong></label>
@@ -55,8 +55,7 @@
 					</div>
 
 					<div class="form-group">
-						<label for="inputName" class="col-sm-2 control-label">Customer
-							Name :</label>
+						<label for="inputName" class="col-sm-2 control-label"><bean:message key="operator.ordertaken.custname" /></label>
 						<div class="col-sm-8">
 							<div class="fg-line disabled">
 								<label class="control-label"><strong>${orderS.customer.name}</strong></label>
@@ -65,8 +64,7 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="inputEmail" class="col-sm-2 control-label">Email
-							:</label>
+						<label for="inputEmail" class="col-sm-2 control-label"><bean:message key="operator.ordertaken.email" /></label>
 						<div class="col-sm-8">
 							<div class="fg-line">
 								<label class="control-label"><strong>${orderS.customer.email}</strong></label>
@@ -79,8 +77,7 @@
 
 					<div class="row">
 						<div class="form-group">
-							<label for="inputHouse" class="col-sm-2 control-label">Address
-								:</label>
+							<label for="inputHouse" class="col-sm-2 control-label"><bean:message key="operator.ordertaken.address" /></label>
 							<div class="col-sm-8">
 								<div class="fg-line">
 									<label class="control-label"><strong>${add.houseNo},
@@ -95,22 +92,19 @@
 					<jspcore:forEach items="${orderS.products}" var="product">
 						<div class="row">
 							<div class="form-group">
-								<label for="inputHouse" class="col-sm-2 control-label">Product
-									Name :</label>
+								<label for="inputHouse" class="col-sm-2 control-label"><bean:message key="operator.ordertaken.prodname" /></label>
 								<div class="col-sm-2">
 									<div class="fg-line">
 										<label class="control-label"><strong>${product.name}</strong></label>
 									</div>
 								</div>
-								<label for="inputHouse" class="col-sm-1 control-label">Quantity
-									:</label>
+								<label for="inputHouse" class="col-sm-1 control-label"><bean:message key="operator.ordertaken.qty" /></label>
 								<div class="col-sm-2">
 									<div class="fg-line">
 										<label class="control-label"><strong>${product.quantity}</strong></label>
 									</div>
 								</div>
-								<label for="inputHouse" class="col-sm-1 control-label">Price
-									:</label>
+								<label for="inputHouse" class="col-sm-1 control-label"><bean:message key="operator.ordertaken.price" /></label>
 								<div class="col-sm-2">
 									<div class="fg-line">
 										<label class="control-label"><strong>${product.sellPrice}</strong></label>
@@ -122,8 +116,7 @@
 
 					<div class="row">
 						<div class="form-group">
-							<label for="inputHouse" class="col-sm-3 control-label">Total
-								Order Amount (VAT Exclusive) :</label>
+							<label for="inputHouse" class="col-sm-3 control-label"><bean:message key="operator.ordertaken.totalorderamount" /></label>
 							<div class="col-sm-4">
 								<div class="fg-line">
 									<label class="control-label"><strong>${orderS.amount}</strong></label>
@@ -136,12 +129,12 @@
 						<div class="form-group">
 							<div class="col-sm-6 col-sm-offset-3">
 								<button type="button" id="printOrder"
-									class="btn btn-primary waves-effect waves-button waves-float">
-									<i class="md md-print"></i> PRINT DETAILS
+									class="btn btn-primary">
+									<i class="zmdi zmdi-print" style="padding-right: 10px"></i> PRINT DETAILS
 								</button>
 								<button type="button" id="sendOrder"
-									class="col-sm-offset-2 btn btn-primary waves-effect waves-button waves-float">
-									<i class="md md-message"></i> SEND SMS/EMAIL CONFIRMATION
+									class="col-sm-offset-2 btn btn-primary">
+									<i class="zmdi zmdi-phone-msg" style="padding-right: 10px"></i> SEND SMS/EMAIL CONFIRMATION
 								</button>
 							</div>
 						</div>
@@ -165,8 +158,7 @@
 					<div class="modal-body">
 						<div class="row">
 							<div class="form-group">
-								<label for="inputName" class="col-sm-6 control-label">Customer
-									Mobile (if Multiple,then CSV) :</label>
+								<label for="inputName" class="col-sm-6 control-label"><bean:message key="operator.ordertaken.modal.mobile" /></label>
 								<div class="col-sm-12">
 									<div class="fg-line">
 										<input class="form-control" type="text" id="sendMobiles"
@@ -177,8 +169,7 @@
 						</div>
 						<div class="row">
 							<div class="form-group">
-								<label for="inputName" class="col-sm-6 control-label">Customer
-									Email (if Multiple,then CSV) :</label>
+								<label for="inputName" class="col-sm-6 control-label"><bean:message key="operator.ordertaken.modal.email" /></label>
 								<div class="col-sm-12">
 									<div class="fg-line">
 										<input type="text" class="form-control" id="sendEmails"
@@ -242,7 +233,7 @@
 
 	<jspcore:if test="${order != null}">
 		<script type="text/javascript">
-		swal("Order Successful !", "Order has been successfully placed with Order ID : "+${order.id}+".", "success");
+		setTimeout(function(){swal("Order Successful !", "Order has been successfully placed with Order ID : "+${order.id}+".", "success")},0);
 		</script>
 	</jspcore:if>
 

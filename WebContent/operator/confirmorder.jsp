@@ -28,42 +28,48 @@
 	<section id="content">
 	<div class="container">
 		<div class="block-header">
-			<h1>Confirm Order</h1>
+			<h1>
+				<bean:message key="operator.confirmorder.label" />
+			</h1>
 		</div>
 
 		<div class="card">
-			<form class="form-horizontal" action="operator/ConfirmOrder.do" method="post"
-				role="form">
+			<form class="form-horizontal" action="operator/ConfirmOrder.do"
+				method="post" role="form">
 
 				<div class="card-header">
-					<h2>Customer Details</h2>
+					<h2>
+						<bean:message key="operator.confirmorder.head1" />
+					</h2>
 				</div>
 				<div class="card-body card-padding">
 					<div class="form-group">
-						<label for="inputName" class="col-sm-2 control-label">Customer
-							Name</label>
+						<label for="inputName" class="col-sm-2 control-label"><bean:message
+								key="operator.confirmorder.cusname" /></label>
 						<div class="col-sm-8">
 							<div class="fg-line disabled">
 								<input type="text" class="form-control" id="inputName"
 									value="${param.custName}" disabled>
 							</div>
-							<span class="md md-person form-control-feedback"></span>
+							<span class="zmdi zmdi-account form-control-feedback"></span>
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="inputEmail" class="col-sm-2 control-label">Email</label>
+						<label for="inputEmail" class="col-sm-2 control-label"><bean:message
+								key="operator.confirmorder.email" /></label>
 						<div class="col-sm-8">
 							<div class="fg-line">
 								<input type="email" class="form-control" id="inputEmail"
 									value="${param.custEmail}" disabled>
 							</div>
-							<span class="md md-email form-control-feedback"></span>
+							<span class="zmdi zmdi-email form-control-feedback"></span>
 						</div>
 					</div>
 
 					<div class="row">
 						<div class="form-input">
-							<label for="inputHouse" class="col-sm-2 control-label">Address</label>
+							<label for="inputHouse" class="col-sm-2 control-label"><bean:message
+									key="operator.confirmorder.address" /></label>
 							<div class="col-sm-2 m-b-25">
 								<div class="fg-line">
 									<input type="text" class="form-control" id="inputHouse"
@@ -77,7 +83,7 @@
 									<input type="text" class="form-control" id="inputAddress1"
 										value="${param.custAdd1}" disabled>
 								</div>
-								<span class="md md-location-on form-control-feedback"></span>
+								<span class="zmdi zmdi-my-location form-control-feedback"></span>
 							</div>
 						</div>
 					</div>
@@ -118,38 +124,49 @@
 									<input type="text" class="form-control"
 										value="${param.custPinCode}" disabled>
 								</div>
-								<span class="md md-my-location form-control-feedback"></span>
+								<span class="zmdi zmdi-pin form-control-feedback"></span>
 							</div>
 						</div>
 
 					</div>
 
 					<div class="form-group">
-						<label for="inputMobile" class="col-sm-2 control-label">Mobile
-							Number</label>
+						<label for="inputMobile" class="col-sm-2 control-label"><bean:message
+								key="operator.confirmorder.mobile" /></label>
 						<div class="col-sm-8">
 							<div class="fg-line">
 								<input type="text" class="form-control" id="inputMobile"
 									value="${param.custMobile}" disabled>
 							</div>
-							<span class="md-phone-android form-control-feedback"></span>
+							<span class="zmdi zmdi-smartphone-android form-control-feedback"></span>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="inputMobile" class="col-sm-2 control-label"><bean:message
+								key="operator.confirmorder.amount" /></label>
+						<div class="col-sm-8">
+							<div class="fg-line">
+								<input type="text" class="form-control" id="inputMobile"
+									value="${orderAmount}" disabled>
+							</div>
+							<span class="zmdi zmdi-money form-control-feedback"></span>
 						</div>
 					</div>
 				</div>
 				<!-- card-body card-padding div 1-->
 
 				<div class="card-header">
-					<h2>Product Details</h2>
+					<h2>
+						<bean:message key="operator.confirmorder.head2" />
+					</h2>
 				</div>
 				<div class="card-body card-padding">
 					<div id="productForm">
 
 						<jspcore:forEach var="i" begin="0" end="${param.numProd - 1}">
-
-
 							<div class="row">
-								<label for="selectProduct" class="col-sm-2 control-label">Product
-									Name</label>
+								<label for="selectProduct" class="col-sm-2 control-label"><bean:message
+										key="operator.confirmorder.product" /></label>
 								<div class="col-sm-8">
 									<div class="form-group">
 										<div class="fg-line">
@@ -161,7 +178,8 @@
 							</div>
 
 							<div class="row">
-								<label for="inputProduct" class="col-sm-2 control-label">Quantity</label>
+								<label for="inputProduct" class="col-sm-2 control-label"><bean:message
+										key="operator.confirmorder.qty" /></label>
 
 								<div class="col-sm-3">
 									<div class="form-group">
@@ -169,12 +187,13 @@
 											<input type="text" id="quantity" class="form-control"
 												value='${paramValues.prodQty[i]}' disabled>
 										</div>
-										<span class="md-shopping-basket form-control-feedback"></span>
+										<span class="zmdi zmdi-shopping-basket form-control-feedback"></span>
 										<small class="help-block"></small>
 									</div>
 								</div>
 
-								<label for="inputProduct" class="col-sm-2 control-label">Price</label>
+								<label for="inputProduct" class="col-sm-2 control-label"><bean:message
+										key="operator.confirmorder.price" /></label>
 								<div class="col-sm-3">
 									<jspcore:set var="index">${"prodPrice"}${i}</jspcore:set>
 									<div class="form-group">
@@ -183,8 +202,8 @@
 												value='${paramValues.prodPrice[i]}' disabled>
 										</div>
 
-										<span class="md-attach-money form-control-feedback"></span> <small
-											class="help-block">Total Price : Rs <label>${param[index]}</label>
+										<span class="zmdi zmdi-money form-control-feedback"></span> <small
+											class="help-block">Total Price : Rs <label>${paramValues.prodPrice[i]*paramValues.prodQty[i]}</label>
 										</small>
 									</div>
 									<input type="hidden" id="buttonValue" name="confirm" value="">
@@ -208,7 +227,7 @@
 										<div class="form-group fg-float">
 											<div class="fg-line">
 												<input type="text" name="tinNumber" id="tinNumber"
-													class="form-control fg-input">
+													class="form-control fg-input" value="${param.tin}">
 											</div>
 											<label class="fg-label">Merchant's TIN Number</label>
 										</div>
@@ -227,12 +246,12 @@
 							</div>
 						</div>
 					</jspcore:if>
-					<br /> <br /> <br />
+					<br />
 					<div class="form-group">
 						<div class="col-sm-offset-2 col-sm-10">
 							<button type="submit" id="submitBTN"
 								class="btn btn-primary btn-lg col-sm-3">Confirm Order</button>
-							<button type="reset" id="resetBTN"
+							<button type="submit" id="resetBTN" name="confirm" value="reset"
 								class="btn btn-default btn-lg col-sm-3" style="margin-left: 10%">Modify
 								Order</button>
 						</div>

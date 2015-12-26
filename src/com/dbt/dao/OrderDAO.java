@@ -4,11 +4,12 @@ import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+
+import org.json.simple.JSONObject;
 
 import com.dbt.data.Address;
 import com.dbt.data.Category;
@@ -17,11 +18,16 @@ import com.dbt.data.Order;
 import com.dbt.data.Order_item;
 import com.dbt.data.Product;
 import com.dbt.database.DBConnection;
-import com.dbt.exception.NoConnectionException;
 import com.dbt.support.Email;
 
 public class OrderDAO {
 
+	public static void main(String[] args)
+	{
+		OrderDAO dao = new OrderDAO();
+		//dao.getOrderAndPurchaseDetail(0, "Gaurav", new Date(), new Date(), "");
+	}
+	
 	public static boolean takeOrder(Order order) {
 		boolean success = false;
 
@@ -29,12 +35,13 @@ public class OrderDAO {
 		CallableStatement stmt = null;
 		try {
 			con = DBConnection.getConnection();
-			String query = "{Call CreateOrder(?,?)}";
+			String query = "{Call CreateOrder(?,?,?)}";
 			stmt = con.prepareCall(query);
 			stmt.setInt(1, order.getCustomer().getId());
-			stmt.registerOutParameter(2, java.sql.Types.INTEGER);
+			stmt.setTimestamp(2, new java.sql.Timestamp(order.getDatetime().getTime()));
+			stmt.registerOutParameter(3, java.sql.Types.INTEGER);
 			stmt.execute();
-			int orderId = stmt.getInt(2);
+			int orderId = stmt.getInt(3);
 			order.setId(orderId);
 			stmt.close();
 			Iterator<Product> products = order.getProducts().iterator();
@@ -83,6 +90,64 @@ public class OrderDAO {
 		return success;
 	}
 
+	public List<JSONObject> getOrderAndPurchaseDetail(int id,String name,Date from,Date to, String mobile)
+	{
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet set = null;
+		List<JSONObject> details = new ArrayList<>();
+		if(name == "" || name == null)
+		{
+			name = "-null-";
+		}
+		
+		try {
+			con = DBConnection.getConnection();
+			stmt = con.prepareStatement("SELECT o._id, o.amount, o.discount, concat(u.first_name,' ',u.last_name) AS \"name\", o.time, u.mobile, \"SELL\" AS \"type\" "
+								+" FROM `order` o JOIN `user` u ON o.cust_id = u._id"
+								+" WHERE concat(u.first_name,' ',u.last_name) LIKE '%"+name+"%' OR u.mobile = ? OR o._id = ? OR (DATE(`time`) >= ? AND DATE(`time`) <= ?)"
+								+" UNION"
+								+" SELECT p._id, p.amount, 0, m.merchant_name, p.date, m.mobile, \"PURCHASE\" AS \"type\""
+								+" FROM `purchase` p JOIN merchant m ON p.merchant_id = m._id"
+								+" WHERE m.merchant_name LIKE '%"+name+"%' OR m.mobile = ? OR p._id = ? OR (p.date >= ? AND p.date <= ?)"
+								+" ORDER BY 5,1");
+			stmt.setInt(2, id);
+			stmt.setInt(6, id);
+			stmt.setString(1, mobile);
+			stmt.setString(5, mobile);
+			stmt.setDate(3, new java.sql.Date(from.getTime()));
+			stmt.setDate(7, new java.sql.Date(from.getTime()));
+			stmt.setDate(4, new java.sql.Date(to.getTime()));
+			stmt.setDate(8, new java.sql.Date(to.getTime()));
+			System.out.println("Query : "+stmt.toString());
+			set = stmt.executeQuery();
+			JSONObject object = null;
+			while(set.next())
+			{
+				object = new JSONObject();
+				object.put("id", set.getInt("_id"));
+				object.put("type", set.getString("type"));
+				object.put("amount", set.getInt("amount"));
+				object.put("name", set.getString("name"));
+				object.put("discount", set.getString("discount"));
+				object.put("mobile",set.getString("mobile"));
+				object.put("date", set.getString("time"));
+				details.add(object);
+				//System.out.println(set.getString("name")+","+set.getInt("_id"));
+			}
+			
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			Email.sendExceptionReport(e);
+		}
+		finally
+		{
+			DBConnection.closeResource(con, stmt, set);
+		}
+		return details;
+	}
+	
+	
 	public List<String> getCity(String state) {
 		List<String> cities = new ArrayList<String>();
 		Connection con = null;
@@ -197,7 +262,7 @@ public class OrderDAO {
 					.prepareStatement("update `order` set discount = ? where _id = ?");
 			stmt.setInt(1, discount);
 			stmt.setInt(2, orderID);
-			int i = stmt.executeUpdate();
+			stmt.executeUpdate();
 		} catch (Exception e) {
 			Email.sendExceptionReport(e);
 		} finally {
@@ -240,7 +305,7 @@ public class OrderDAO {
 					products.add(item);
 				}
 				order.setOrderitems(products);
-				DBConnection.closeResource(null, ps, set);
+				DBConnection.closeResource(con, ps, set);
 
 			}
 		} catch (Exception e) {
@@ -252,7 +317,8 @@ public class OrderDAO {
 		return order;
 	}
 
-	public List<Order> getOrderDetails(String id, String name, String mobile) {
+	public List<Order> getOrderDetails(String id, String name, String mobile,
+			Date to, Date from) {
 		List<Order> orders = new ArrayList<Order>();
 		if (name != null && !"".equals(name))
 			name = "%" + name + "%";
@@ -266,15 +332,16 @@ public class OrderDAO {
 
 		try {
 			con = DBConnection.getConnection();
-			String sql = "select * from `order` join `user` on order.cust_id = user._id where order._id = "
-					+ id
-					+ " or concat(user.first_name,' ',last_name) like '"
+			String sql = "select * from `order` join `user` on order.cust_id = user._id where order._id = ? or concat(user.first_name,' ',last_name) like '" 
 					+ name
-					+ "' or user.mobile = '"
-					+ mobile
-					+ "' order by order._id";
+					+ "' or user.mobile = ? or (DATE(`time`) >= ? and DATE(`time`) <= ?)"
+					+ " order by order._id";
 			System.out.println("Query : " + sql);
 			stmt = con.prepareStatement(sql);
+			stmt.setInt(1, Integer.parseInt(id));
+			stmt.setString(2, mobile);
+			stmt.setDate(3, new java.sql.Date(from.getTime()));
+			stmt.setDate(4, new java.sql.Date(to.getTime()));
 			res = stmt.executeQuery();
 			Order order = null;
 			while (res.next()) {
@@ -286,6 +353,12 @@ public class OrderDAO {
 								res.getString("email"), null,
 								res.getString("type")), new Date(res
 								.getTimestamp("time").getTime()));
+				if(res.getString("discount") == null)
+				{
+					order.setStatus("Not Shipped");
+				}
+				else
+					order.setStatus("Shipped");
 				// System.out.println("Order Datetime is : "+res.getTimestamp("time")+",  ID is : "+res.getInt("_id"));
 				String s = "select order_id,product_id,order_item.quantity,order_item.amount,category,name,ship_id from order_item,product where order_id = "
 						+ res.getInt("_id") + " and product_id = product._id";
@@ -309,6 +382,7 @@ public class OrderDAO {
 			}
 
 		} catch (Exception e) {
+			System.out.println("Exception Stmt : "+stmt);
 			Email.sendExceptionReport(e);
 
 		} finally {
@@ -317,5 +391,251 @@ public class OrderDAO {
 
 		return orders;
 	}
+	
+	public List<Order> getProductsByOrderId(int orderId)
+	{
+		List<Order> order = new ArrayList<Order>();
+		Customer customer = null;
+		Connection con = null;
+		PreparedStatement ps = null;
+		ResultSet res = null;
+		
+		try {
+			con = DBConnection.getConnection();
+			String sql = "select user._id, concat(first_name,' ',last_name) as name, mobile, " +
+						 "email, house_no, line_1, line_2, city, state, zip from user join address " +
+						 "on user._id = address.user_id and user_id=(select cust_id from `order` " +
+						 "where _id=?);";
+			ps = con.prepareStatement(sql);
+			ps.setInt(1, orderId);
+			res = ps.executeQuery();
+			if (res.next()) {
+				customer = new Customer(res.getInt("_id"), res.getString("name"),
+							res.getString("mobile"), res.getString("email"), new Address(
+							res.getString("house_no"), res.getString("line_1"),
+							res.getString("line_2"), res.getString("city"),
+							res.getString("state"), res.getString("zip")));
+			}
+			
+			String query = "select order_id,product_id,order_item.quantity,order_item.amount," +
+							"product.name as product_name,ship_id,category.name as category_name from " +
+							"order_item,product,category where order_id = ? and product_id = product._id " +
+							"and category._id=product.category";
+			ps.close();
+			res.close();
+			ps = con.prepareStatement(query);
+			ps.setInt(1, orderId);
+			
+			res = ps.executeQuery();
+			while (res.next()) {
+				
+				Product p = new Product(res.getInt("product_id"), res.getString("category_name"),
+							res.getString("product_name"));
+				Order_item oi = new Order_item(orderId, res.getInt("product_id"), 
+							res.getInt("quantity"), res.getInt("amount"), res.getInt("ship_id"));
+				
+				Order or = new Order(customer, p, oi);
+				
+				order.add(or);
+			}
 
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			DBConnection.closeResource(con, ps, res);
+		}
+
+		System.out.println("Number of ordered products : " + order.size());
+
+		return order;
+	}
+	
+	public boolean deleteProductById(int productId, int orderId, int amount, int quantity)
+	{
+		Connection con = null;
+		PreparedStatement ps = null;
+		ResultSet res = null;
+		
+		boolean result = false;
+		try 
+		{
+			con = DBConnection.getConnection();
+			
+			String query = "delete from order_item where order_id=? and product_id=?";
+			String query1 = "update `order` set amount=amount-? where _id=?;";
+			
+			ps = con.prepareStatement(query);
+			ps.setInt(1, orderId);
+			ps.setInt(2, productId);
+			
+			int r = ps.executeUpdate();
+			ps.close();
+			ps = con.prepareStatement(query1);
+			ps.setInt(1, amount*quantity);
+			ps.setInt(2, orderId);
+			
+			int r1 = ps.executeUpdate();
+			
+			if(r != 0 && r1 != 0)
+			{
+				System.out.println("At OrderDAO, product deleted");
+				result = true;
+			}
+		
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			DBConnection.closeResource(con, ps, res);
+		}
+		
+		return result;
+	}
+	
+	public boolean editOrder(int orderId, int custId, int[] prodIds, int[] prodQtys, int[] prodPrices, int numProd)
+	{
+		Connection con = null;
+		PreparedStatement ps = null;
+		ResultSet res = null;
+		int queryResult[];
+		int i, totalAmount=0;
+		String query;
+		
+		boolean result = false;
+		try 
+		{
+			con = DBConnection.getConnection();
+			//queryResult = new int[numProd];
+			
+			query = "update order_item set quantity=quantity+?, amount=amount+? " +
+					"where order_id=? and product_id=?";
+			
+			ps = con.prepareStatement(query);
+			
+			for(i = 0; i < numProd; i++)
+			{
+				ps.setInt(1, prodQtys[i]);
+				ps.setInt(2, prodPrices[i]);
+				ps.setInt(3, orderId);
+				ps.setInt(4, prodIds[i]);
+				
+				ps.addBatch();
+			}
+			queryResult = ps.executeBatch();
+			
+			for(i = 0; i < numProd; i++)
+			{
+				if(queryResult[i] == 0)
+				{
+					query = "insert into order_item(order_id, product_id, quantity, amount) " +
+							"values(?, ?, ?, ?)";
+					
+					ps = con.prepareStatement(query);
+					ps.setInt(1, orderId);
+					ps.setInt(2, prodIds[i]);
+					ps.setInt(3, prodQtys[i]);
+					ps.setInt(4, prodPrices[i]);
+					
+					ps.executeUpdate();
+					
+					totalAmount += prodQtys[i] * prodPrices[i];
+				}
+				else
+				{
+					totalAmount += prodQtys[i] * prodPrices[i];
+				}
+			}
+			
+			query = "update `order` set cust_id=?, amount=amount+? where _id=?";
+			ps.close();
+			ps = con.prepareStatement(query);
+			ps.setInt(1, custId);
+			ps.setInt(2, totalAmount);
+			ps.setInt(3, orderId);
+			
+			int r = ps.executeUpdate();
+			
+			if(r != 0)
+			{
+				System.out.println("OrderDAO - Order Edited, Order Id : " + orderId);
+				result = true;
+			}
+		
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			DBConnection.closeResource(con, ps, res);
+		}
+		
+		return result;
+	}
+	
+	public boolean editOrderCustomer(int orderId, int custId)
+	{
+		Connection con = null;
+		PreparedStatement ps = null;
+		ResultSet res = null;
+		
+		boolean result = false;
+		try 
+		{
+			con = DBConnection.getConnection();
+			
+			String query = "update `order` set cust_id=? where _id=?";
+			
+			ps = con.prepareStatement(query);
+			ps.setInt(1, custId);
+			ps.setInt(2, orderId);
+			
+			int r = ps.executeUpdate();
+			
+			if(r != 0)
+			{
+				System.out.print("OrderDAO - Order Customer Edited, Order Id : " + orderId);
+				System.out.println(", New Customer Id : " + custId);
+				result = true;
+			}
+		
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			DBConnection.closeResource(con, ps, res);
+		}
+		
+		return result;
+	}
+	
+	public boolean deleteOrder(int orderId)
+	{
+		Connection con = null;
+		PreparedStatement ps = null;
+		ResultSet res = null;
+		
+		boolean result = false;
+		try 
+		{
+			con = DBConnection.getConnection();
+			
+			String query = "delete `order`,order_item from `order` join order_item where " +
+						   "order_item.order_id = `order`._id and `order`._id = ?";
+			
+			ps = con.prepareStatement(query);
+			ps.setInt(1, orderId);
+			
+			int r = ps.executeUpdate();
+			
+			if(r != 0)
+			{
+				System.out.println("OrderDAO, Order deleted, Order Id : " + orderId);
+				result = true;
+			}
+		
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			DBConnection.closeResource(con, ps, res);
+		}
+		
+		return result;
+	}
 }
+

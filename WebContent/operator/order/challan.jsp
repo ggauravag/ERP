@@ -178,7 +178,7 @@ body,h1,h2,h3,h4,h5,h6 {
 											None</td>
 									</tr>
 								</jspcore:when>
-								<jspcore:when test="${shipment.medium == 'Transport Company'}">
+								<jspcore:when test="${shipment.medium == 'Transport/Courier Company'}">
 									<tr>
 										<td style="padding-right: 30px;"><strong
 											style="color: black;">Shipping Medium</strong></td>
@@ -187,7 +187,7 @@ body,h1,h2,h3,h4,h5,h6 {
 									</tr>
 									<tr>
 										<td style="padding-right: 30px;"><strong
-											style="color: black;">GR/B Number</strong></td>
+											style="color: black;">GR/B/Vehicle Number</strong></td>
 										<td class="text-left" style="color: black;">:&nbsp;&nbsp;
 											${shipment.mediumNumber}</td>
 									</tr>

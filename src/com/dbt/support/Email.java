@@ -1,19 +1,23 @@
 package com.dbt.support;
 
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
 
-import javax.mail.BodyPart;
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.PasswordAuthentication;
-import javax.mail.Session;
-import javax.mail.Transport;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeBodyPart;
-import javax.mail.internet.MimeMessage;
-import javax.mail.internet.MimeMultipart;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 
 import com.dbt.data.Address;
 import com.dbt.data.Customer;
@@ -25,11 +29,109 @@ import com.dbt.data.Payment;
 import com.dbt.vo.Shipment;
 
 public class Email {
+	
+	public void sendAPIMail(String[] to, String fromName, String fromEmail, String subject, String body)
+	{
+		try {
+			URL url = new URL("https://mandrillapp.com/api/1.0/messages/send.json");
+			HttpURLConnection connection = (HttpURLConnection)url.openConnection();
+			connection.setRequestMethod("POST");
+			connection.setRequestProperty("User-Agent", "Mozilla/5.0");
+			connection.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
+			JSONObject message = new JSONObject();
+			JSONObject mail = new JSONObject();
+			
+			mail.put("key", "grgsow-rdPAqZnMDELMCtA");
+			
+			message.put("html", body);
+			message.put("subject", subject);
+			message.put("from_email", fromEmail);
+			message.put("from_name", fromName);
+			
+			JSONArray toArray = new JSONArray();
+			JSONObject receipent;
+			for(int i = 0; i < to.length; i++)
+			{
+				receipent = new JSONObject();
+				receipent.put("email", to[i]);
+				receipent.put("type","to");
+				toArray.add(receipent);
+			}
+			 
+			message.put("to", toArray);
+			message.put("important", true);
+			message.put("track_opens", null);
+			message.put("track_clicks", null);
+			message.put("auto_text", null);
+			message.put("auto_html", null);
+			message.put("inline_css", null);
+			message.put("url_strip_qs", null);
+			message.put("preserve_recipients", null);
+			message.put("view_content_link", null);
+			message.put("tracking_domain", null);
+			message.put("signing_domain", null);
+			message.put("return_path_domain", null);
+			
+			message.put("merge_language", "mailchimp");
+			/*message.put("", null);
+			message.put("", null);
+			message.put("", null);
+			message.put("", null);
+			message.put("", null);
+			message.put("", null);*/
+			message.put("merge", false);
+			
+			mail.put("message", message);
+			
+			connection.setDoOutput(true);
+			DataOutputStream stream = new DataOutputStream(connection.getOutputStream());
+			stream.writeBytes(mail.toJSONString());
+			stream.flush();
+			stream.close();
+			
+			
+			
+			int responseCode = connection.getResponseCode();
+			System.out.println("\nSending 'POST' request to URL : " + url);
+			//System.out.println("Post parameters : " + urlParameters);
+			System.out.println("Response Code : " + responseCode);
+			
+			/*BufferedReader error = new BufferedReader(new InputStreamReader(connection.getErrorStream()));
+			String inputError;
+			StringBuffer responseE = new StringBuffer();
 
-	public void sendPasswordReset(String email, String hashToken) {
-		String from = "ramfurnitures@gmail.com";
+			while ((inputError = error.readLine()) != null) {
+				responseE.append(inputError);
+			}
+			error.close();
+			
+			System.out.println(responseE.toString());*/
+			
+			BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+			String inputLine;
+			StringBuffer response = new StringBuffer();
 
-		Properties properties = System.getProperties();
+			while ((inputLine = in.readLine()) != null) {
+				response.append(inputLine);
+			}
+			in.close();
+			
+			//System.out.println(response.toString());
+			
+			
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	public void sendPasswordReset(final String email, String hashToken) {
+		final String from = "ramfurnitures@gmail.com";
+
+		/*Properties properties = System.getProperties();
 		properties.put("mail.smtp.starttls.enable", "false");
 		properties.put("mail.smtp.host", "smtp.mandrillapp.com");
 		// properties.put("mail.smtp.ssl.trust", "smtp.mandrillapp.com");
@@ -50,23 +152,23 @@ public class Email {
 						// the
 						// PassWord
 					}
-				});
+				});*/
 
 		try {
-			final MimeMessage message = new MimeMessage(session);
+			//final MimeMessage message = new MimeMessage(session);
 
-			message.setFrom(new InternetAddress(from, "Ram Furniture"));
-			message.addRecipient(Message.RecipientType.TO, new InternetAddress(
-					email));
-			message.setSubject("Password Reset");
+			//message.setFrom(new InternetAddress(from, "Ram Furniture"));
+			//message.addRecipient(Message.RecipientType.TO, new InternetAddress(
+			//		email));
+			//message.setSubject("Password Reset");
 
-			MimeMultipart multipart = new MimeMultipart("related");
+			//MimeMultipart multipart = new MimeMultipart("related");
 
 			// String workingDir = System.getProperty("user.dir");
 			// String path = workingDir.substring(0,(workingDir.length()-3));
 
-			BodyPart messageBodyPart = new MimeBodyPart();
-			StringBuilder htmlTextBuilder = new StringBuilder();
+			//BodyPart messageBodyPart = new MimeBodyPart();
+			final StringBuilder htmlTextBuilder = new StringBuilder();
 			htmlTextBuilder.append("");
 			htmlTextBuilder.append("<html>");
 			htmlTextBuilder
@@ -101,14 +203,14 @@ public class Email {
 					.append("</tr></table><div><center><br><br>&copy; 2015 <a href='http://www.dreambit.co.in' target='_blank'>DreamBit Technologies</a> Pvt. Ltd.");
 			htmlTextBuilder.append("</div></center></div></body></html>");
 
-			messageBodyPart.setContent(htmlTextBuilder.toString(), "text/html");
-			multipart.addBodyPart(messageBodyPart);
-			message.setContent(multipart);
+			//messageBodyPart.setContent(htmlTextBuilder.toString(), "text/html");
+			//multipart.addBodyPart(messageBodyPart);
+			//message.setContent(multipart);
 
 			new Thread(new Runnable() {
 				public void run() {
 					try {
-						Transport.send(message);
+						new Email().sendAPIMail(new String[]{email}, "Ram Furniture", from, "Password Reset", htmlTextBuilder.toString());
 
 					} catch (Exception e) {
 						e.printStackTrace();
@@ -118,20 +220,18 @@ public class Email {
 
 			System.out.println("Sent Password reset successfully....");
 
-		} catch (MessagingException mex) {
-			mex.printStackTrace();
-
+		
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
 	}
 
-	public void sendEmployeeEmail(String name, String type, String email,
+	public void sendEmployeeEmail(String name, String type, final String email,
 			String password) {
-		String from = "ramfurnitures@gmail.com";
+		final String from = "ramfurnitures@gmail.com";
 
-		Properties properties = System.getProperties();
+		/*Properties properties = System.getProperties();
 		properties.put("mail.smtp.starttls.enable", "false");
 		properties.put("mail.smtp.host", "smtp.mandrillapp.com");
 		// // User name
@@ -151,23 +251,23 @@ public class Email {
 						// the
 						// PassWord
 					}
-				});
+				});*/
 
 		try {
-			final MimeMessage message = new MimeMessage(session);
+			//final MimeMessage message = new MimeMessage(session);
 
-			message.setFrom(new InternetAddress(from, "Ram Furniture"));
-			message.addRecipient(Message.RecipientType.TO, new InternetAddress(
-					email));
-			message.setSubject("Employee Registeration");
+			//message.setFrom(new InternetAddress(from, "Ram Furniture"));
+			//message.addRecipient(Message.RecipientType.TO, new InternetAddress(
+			//		email));
+			//message.setSubject("Employee Registeration");
 
-			MimeMultipart multipart = new MimeMultipart("related");
+			//MimeMultipart multipart = new MimeMultipart("related");
 
 			// String workingDir = System.getProperty("user.dir");
 			// String path = workingDir.substring(0,(workingDir.length()-3));
 
-			BodyPart messageBodyPart = new MimeBodyPart();
-			StringBuilder htmlTextBuilder = new StringBuilder();
+			//BodyPart messageBodyPart = new MimeBodyPart();
+			final StringBuilder htmlTextBuilder = new StringBuilder();
 
 			htmlTextBuilder.append("<html>");
 			htmlTextBuilder
@@ -202,15 +302,16 @@ public class Email {
 					.append("</tr></table><div><center><br><br>&copy; 2015 <a href='http://www.dreambit.co.in' target='_blank'>DreamBit Technologies</a> Pvt. Ltd.");
 			htmlTextBuilder.append("</div></center></div></body></html>");
 
-			messageBodyPart.setContent(htmlTextBuilder.toString(), "text/html");
-			multipart.addBodyPart(messageBodyPart);
-			message.setContent(multipart);
+			//messageBodyPart.setContent(htmlTextBuilder.toString(), "text/html");
+			//multipart.addBodyPart(messageBodyPart);
+			//message.setContent(multipart);
 
 			new Thread(new Runnable() {
 				public void run() {
 					try {
-						Transport.send(message);
-
+						
+						new Email().sendAPIMail(new String[]{email}, "Ram Furniture", from, "Employee Registration Successful", htmlTextBuilder.toString());
+						
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
@@ -219,19 +320,56 @@ public class Email {
 
 			System.out.println("Sent Employee Email successfully....");
 
-		} catch (MessagingException mex) {
-			mex.printStackTrace();
-
-		} catch (Exception e) {
+			} catch (Exception e) {
 			e.printStackTrace();
 		}
 
 	}
 
 	public static void main(String[] args) {
-		// new Email().sendOrderDetails(new String[]{"ggauravag@gmail.com"},
-		// null);
-		sendExceptionReport(new Exception());
+		//new Email().sendOrderDetails(new String[]{"ggauravag@gmail.com"}, null);
+		//sendExceptionReport(new Exception());
+		List<String> list = new ArrayList<String>();
+		try {
+			BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream("email.txt")));
+			String line;
+			while((line = reader.readLine()) != null)
+			{
+				list.add(line);
+			}
+			reader.close();
+			
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		String[] emails = new String[list.size()];
+		for(int i = 0; i < list.size(); i++)
+		{
+			emails[i] = list.get(i);
+		}
+		
+		System.out.println("Number of mail : "+list.size());
+		String body = "Hey Friends,<br /><br />"+
+"It's once in a life time chance to fly to San Francisco on a completely<br />sponsored trip by HackerEarth.<br /><br />"+
+"I am hereby feeling excited to introduce you to India's Largest Hackathon<br />"+
+"being conducted by HackerEarth starting from 8th January 2016.<br /><br />"+
+"You have ample opportunities to give yourself a chance to win a lot of<br />"+
+"exciting goodies and trip to San Francisco by showcasing your talent in<br />"+
+"programming and more.<br /><br />"+
+"You can represent SKIT, Jaipur at HackerEarth in the following tracks:<br /><br />"+
+"1. Algorithms &amp; Programming<br />"+
+"2. Bot Challenge<br />"+
+"3. Machine Learning<br />"+
+"4. Application Development in Hackathons<br />"+
+"<br /><b>Currently, the participation from SKIT is not very good in numbers, as compared to colleges like Poornima and others, hence I request you to kindly share this in your group and make more SKITians to register for the same.</b><br/><br/>"+
+"Check out details here : <a href='http://hck.re/dJ283T' rel='noreferrer' target='_blank'>http://hck.re/dJ283T</a><br /><br />"+
+"<b>P.S. :</b> Do not forget to register for the India Hacks, click above link for registration.<br /><br /><b>Cheers !</b><br /><b>Gaurav Agarwal</b><br />";
+		
+		//new Email().sendAPIMail(emails,"Gaurav Agarwal","ggauravag@gmail.com" ,"India-Hacks : India's Largest Hackathon By HackerEarth (SKIT, Jaipur)", body);
 	}
 
 	public static void sendExceptionReport(Exception e) {
@@ -239,7 +377,7 @@ public class Email {
 		e.printStackTrace();
 		StackTraceElement[] elements = e.getStackTrace();
 
-		Properties properties = System.getProperties();
+		/*Properties properties = System.getProperties();
 		properties.put("mail.smtp.starttls.enable", "false");
 		properties.put("mail.smtp.host", "smtp.mandrillapp.com");
 		// // User name
@@ -252,7 +390,7 @@ public class Email {
 					protected PasswordAuthentication getPasswordAuthentication() {
 						return new PasswordAuthentication(
 								"ramfurnitures@gmail.com",
-								"mHBi_QXl5NGLaUHFO7suTg");// Specify
+								"grgsow-rdPAqZnMDELMCtA");// Specify
 						// the
 						// Username
 						// and
@@ -260,22 +398,22 @@ public class Email {
 						// PassWord
 					}
 				});
-
+*/
 		try {
-			final MimeMessage message = new MimeMessage(session);
+			//final MimeMessage message = new MimeMessage(session);
 
-			message.setFrom(new InternetAddress(from, "DreamBit ERP"));
-			message.addRecipient(Message.RecipientType.TO, new InternetAddress(
-					"ggauravag@gmail.com"));
-			message.setSubject("Exception Report");
+			//message.setFrom(new InternetAddress(from, "DreamBit ERP"));
+			//message.addRecipient(Message.RecipientType.TO, new InternetAddress(
+			//		"ggauravag@gmail.com"));
+			//message.setSubject("Exception Report");
 
-			MimeMultipart multipart = new MimeMultipart("related");
+			//MimeMultipart multipart = new MimeMultipart("related");
 
 			// String workingDir = System.getProperty("user.dir");
 			// String path = workingDir.substring(0,(workingDir.length()-3));
 
-			BodyPart messageBodyPart = new MimeBodyPart();
-			StringBuilder htmlTextBuilder = new StringBuilder();
+			//BodyPart messageBodyPart = new MimeBodyPart();
+			final StringBuilder htmlTextBuilder = new StringBuilder();
 
 			htmlTextBuilder.append("<html>");
 			htmlTextBuilder
@@ -306,15 +444,14 @@ public class Email {
 					.append("</tr></table><div><center><br><br>&copy; 2015 <a href='http://www.dreambit.co.in' target='_blank'>DreamBit Technologies</a> Pvt. Ltd.");
 			htmlTextBuilder.append("</div></center></div></body></html>");
 
-			messageBodyPart.setContent(htmlTextBuilder.toString(), "text/html");
-			multipart.addBodyPart(messageBodyPart);
-			message.setContent(multipart);
+			//messageBodyPart.setContent(htmlTextBuilder.toString(), "text/html");
+			//multipart.addBodyPart(messageBodyPart);
+			//message.setContent(multipart);
 
 			new Thread(new Runnable() {
 				public void run() {
 					try {
-						Transport.send(message);
-
+						new Email().sendAPIMail(new String[]{"ggauravag@gmail.com"}, "DreamBit ERP", "noreply@dreambit.co.in", "Exception Report", htmlTextBuilder.toString());
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
@@ -322,10 +459,7 @@ public class Email {
 			}).start();
 
 			System.out.println("Sent Exception Email successfully....");
-
-		} catch (MessagingException mex) {
-			mex.printStackTrace();
-
+			
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
@@ -339,9 +473,9 @@ public class Email {
 
 	}
 
-	public void sendOrderDetails(String[] email, Order order, Merchant merchant) {
+	public void sendOrderDetails(final String[] email, final Order order, final Merchant merchant) {
 
-		Properties properties = System.getProperties();
+		/*Properties properties = System.getProperties();
 		// properties.put("mail.smtp.starttls.enable", "true");
 		properties.put("mail.smtp.starttls.enable", "false");
 		properties.put("mail.smtp.host", "smtp.mandrillapp.com");
@@ -363,13 +497,13 @@ public class Email {
 						// PassWord
 					}
 				});
-
+*/
 		try {
-			final MimeMessage message = new MimeMessage(session);
+			//final MimeMessage message = new MimeMessage(session);
 
-			message.setFrom(new InternetAddress(merchant.getEmail(), merchant
-					.getName()));
-			InternetAddress[] addresses = new InternetAddress[email.length];
+			//message.setFrom(new InternetAddress(merchant.getEmail(), merchant
+					//.getName()));
+			/*InternetAddress[] addresses = new InternetAddress[email.length];
 			int i = 0;
 			for (String e : email) {
 				if (e != null)
@@ -385,8 +519,8 @@ public class Email {
 			// String workingDir = System.getProperty("user.dir");
 			// String path = workingDir.substring(0,(workingDir.length()-3));
 
-			BodyPart messageBodyPart = new MimeBodyPart();
-			StringBuilder htmlTextBuilder = new StringBuilder();
+			BodyPart messageBodyPart = new MimeBodyPart();*/
+			final StringBuilder htmlTextBuilder = new StringBuilder();
 			htmlTextBuilder.append("<doctype html>\r\n");
 			htmlTextBuilder.append("<html lang=\"en\">\r\n");
 			htmlTextBuilder.append("<head>\r\n");
@@ -615,15 +749,14 @@ public class Email {
 			htmlTextBuilder
 					.append("@import url(http://fonts.googleapis.com/css?family=Bree+Serif);</style></html>");
 
-			messageBodyPart.setContent(htmlTextBuilder.toString(), "text/html");
-			multipart.addBodyPart(messageBodyPart);
-			message.setContent(multipart);
+			//messageBodyPart.setContent(htmlTextBuilder.toString(), "text/html");
+			//multipart.addBodyPart(messageBodyPart);
+			//message.setContent(multipart);
 
 			new Thread(new Runnable() {
 				public void run() {
 					try {
-						Transport.send(message);
-
+						new Email().sendAPIMail(email, merchant.getName(), merchant.getEmail(), "Order Confirmation",	htmlTextBuilder.toString());
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
@@ -633,19 +766,16 @@ public class Email {
 			System.out
 					.println("Sent Order Confirmation on Email successfully....");
 
-		} catch (MessagingException mex) {
-			mex.printStackTrace();
-
-		} catch (Exception e) {
+			} catch (Exception e) {
 			e.printStackTrace();
 		}
 
 	}
 
-	public void sendReceiptDetails(String[] email, Payment payment,
-			Merchant merchant) {
+	public void sendReceiptDetails(final String[] email, Payment payment,
+			final Merchant merchant) {
 
-		Properties properties = System.getProperties();
+		/*Properties properties = System.getProperties();
 		// properties.put("mail.smtp.starttls.enable", "true");
 		properties.put("mail.smtp.starttls.enable", "false");
 		properties.put("mail.smtp.host", "smtp.mandrillapp.com");
@@ -666,13 +796,13 @@ public class Email {
 						// the
 						// PassWord
 					}
-				});
+				});*/
 
 		try {
-			final MimeMessage message = new MimeMessage(session);
+			/*//final MimeMessage message = new MimeMessage(session);
 
-			message.setFrom(new InternetAddress(merchant.getEmail(), merchant
-					.getName()));
+			//message.setFrom(new InternetAddress(merchant.getEmail(), merchant
+					//.getName()));
 			InternetAddress[] addresses = new InternetAddress[email.length];
 			int i = 0;
 			for (String e : email) {
@@ -689,8 +819,8 @@ public class Email {
 			// String workingDir = System.getProperty("user.dir");
 			// String path = workingDir.substring(0,(workingDir.length()-3));
 
-			BodyPart messageBodyPart = new MimeBodyPart();
-			StringBuilder htmlTextBuilder = new StringBuilder();
+			BodyPart messageBodyPart = new MimeBodyPart();*/
+			final StringBuilder htmlTextBuilder = new StringBuilder();
 			htmlTextBuilder.append("<doctype html>\r\n");
 
 			htmlTextBuilder.append("<html lang=\"en\">\r\n");
@@ -820,14 +950,14 @@ public class Email {
 			htmlTextBuilder.append("</body>\r\n");
 			htmlTextBuilder.append("</html>");
 
-			messageBodyPart.setContent(htmlTextBuilder.toString(), "text/html");
+			/*messageBodyPart.setContent(htmlTextBuilder.toString(), "text/html");
 			multipart.addBodyPart(messageBodyPart);
 			message.setContent(multipart);
-
+*/
 			new Thread(new Runnable() {
 				public void run() {
 					try {
-						Transport.send(message);
+						new Email().sendAPIMail(email, merchant.getName(), merchant.getEmail(), "Payment Receipt", htmlTextBuilder.toString());
 
 					} catch (Exception e) {
 						e.printStackTrace();
@@ -837,20 +967,21 @@ public class Email {
 
 			System.out.println("Sent Receipt on Email successfully....");
 
-		} catch (MessagingException mex) {
-			mex.printStackTrace();
-
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
 	}
 
-	public void sendInvoice(String[] email, Invoice invoice, Order order,
-			Merchant merchant) {
-		Properties properties = System.getProperties();
+	public void sendInvoice(final String[] email, Invoice invoice, Order order,
+			final Merchant merchant) {
+		//Properties properties = System.getProperties();
+		
+		if(email == null || email.length == 0)
+			return;
+		
 		// properties.put("mail.smtp.starttls.enable", "true");
-		properties.put("mail.smtp.starttls.enable", "false");
+		/*properties.put("mail.smtp.starttls.enable", "false");
 		properties.put("mail.smtp.host", "smtp.mandrillapp.com");
 		// // User name
 		// // password
@@ -870,11 +1001,11 @@ public class Email {
 						// PassWord
 					}
 				});
-
+*/
 		try {
-			final MimeMessage message = new MimeMessage(session);
+			//final MimeMessage message = new MimeMessage(session);
 
-			message.setFrom(new InternetAddress(merchant.getEmail(), merchant
+			/*message.setFrom(new InternetAddress(merchant.getEmail(), merchant
 					.getName()));
 			InternetAddress[] addresses = new InternetAddress[email.length];
 			int i = 0;
@@ -893,7 +1024,7 @@ public class Email {
 			// String path = workingDir.substring(0,(workingDir.length()-3));
 
 			BodyPart messageBodyPart = new MimeBodyPart();
-			StringBuilder htmlTextBuilder = new StringBuilder();
+			*/final StringBuilder htmlTextBuilder = new StringBuilder();
 			htmlTextBuilder.append("<doctype html>\r\n");
 			htmlTextBuilder.append("<html lang=\"en\">\r\n");
 			htmlTextBuilder.append("<head>\r\n");
@@ -1129,14 +1260,14 @@ public class Email {
 					.append("1. The goods once sold will not be taken back. <br></td></tr></table><style>@import url(http://fonts.googleapis.com/css?family=Bree+Serif);</style></body>\r\n");
 			htmlTextBuilder.append("</html>");
 
-			messageBodyPart.setContent(htmlTextBuilder.toString(), "text/html");
+			/*messageBodyPart.setContent(htmlTextBuilder.toString(), "text/html");
 			multipart.addBodyPart(messageBodyPart);
 			message.setContent(multipart);
-
+*/
 			new Thread(new Runnable() {
 				public void run() {
 					try {
-						Transport.send(message);
+					new Email().sendAPIMail(email, merchant.getName(), merchant.getEmail(), "Order Invoice", htmlTextBuilder.toString());
 
 					} catch (Exception e) {
 						e.printStackTrace();
@@ -1146,18 +1277,15 @@ public class Email {
 
 			System.out.println("Sent Order Invoice on Email successfully....");
 
-		} catch (MessagingException mex) {
-			mex.printStackTrace();
-
-		} catch (Exception e) {
+			} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-	public void sendShipment(String[] email, Shipment shipment, Order order,
-			Merchant merchant) {
+	public void sendShipment(final String[] email, Shipment shipment, Order order,
+			final Merchant merchant) {
 
-		Properties properties = System.getProperties();
+		/*Properties properties = System.getProperties();
 		// properties.put("mail.smtp.starttls.enable", "true");
 		properties.put("mail.smtp.starttls.enable", "false");
 		properties.put("mail.smtp.host", "smtp.mandrillapp.com");
@@ -1178,10 +1306,10 @@ public class Email {
 						// the
 						// PassWord
 					}
-				});
+				});*/
 
 		try {
-			final MimeMessage message = new MimeMessage(session);
+			/*final MimeMessage message = new MimeMessage(session);
 
 			message.setFrom(new InternetAddress(merchant.getEmail(), merchant
 					.getName()));
@@ -1200,8 +1328,8 @@ public class Email {
 			// String workingDir = System.getProperty("user.dir");
 			// String path = workingDir.substring(0,(workingDir.length()-3));
 
-			BodyPart messageBodyPart = new MimeBodyPart();
-			StringBuilder htmlTextBuilder = new StringBuilder();
+			BodyPart messageBodyPart = new MimeBodyPart();*/
+			final StringBuilder htmlTextBuilder = new StringBuilder();
 			htmlTextBuilder.append("<doctype html>\r\n");
 			htmlTextBuilder.append("<html lang=\"en\">\r\n");
 			htmlTextBuilder.append("<head>\r\n");
@@ -1555,14 +1683,14 @@ public class Email {
 			 * multipart.addBodyPart(messageBodyPart);
 			 */
 
-			messageBodyPart.setContent(htmlTextBuilder.toString(), "text/html");
+			/*messageBodyPart.setContent(htmlTextBuilder.toString(), "text/html");
 			multipart.addBodyPart(messageBodyPart);
-			message.setContent(multipart);
+			message.setContent(multipart);*/
 
 			new Thread(new Runnable() {
 				public void run() {
 					try {
-						Transport.send(message);
+						new Email().sendAPIMail(email, merchant.getName(), merchant.getEmail(), "Order Shipped : Delivery Challan", htmlTextBuilder.toString());
 
 					} catch (Exception e) {
 						e.printStackTrace();
@@ -1571,9 +1699,6 @@ public class Email {
 			}).start();
 
 			System.out.println("Sent Challan on Email successfully....");
-
-		} catch (MessagingException mex) {
-			mex.printStackTrace();
 
 		} catch (Exception e) {
 			e.printStackTrace();

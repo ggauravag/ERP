@@ -30,7 +30,7 @@
 		id="content">
 	<div class="container">
 		<div class="block-header">
-			<h1>Manage Returns</h1>
+			<h1><bean:message key="operator.return.managereturn.label" /></h1>
 		</div>
 
 		<div class="card">
@@ -38,19 +38,18 @@
 				name="custForm" class="form-horizontal" role="form">
 				<input type="hidden" name="action" value="return">
 				<div class="card-header">
-					<h2>Enter Order ID or Name or Mobile and verify the details</h2>
+					<h2><bean:message key="operator.return.managereturn.head1" /></h2>
 				</div>
 				<div class="card-body card-padding">
 					<font color="red"><html:errors property="orderError" /></font>
 					<div class="form-group">
-						<label for="inputOrder" class="col-sm-2 control-label">Order
-							ID</label>
+						<label for="inputOrder" class="col-sm-2 control-label"><bean:message key="operator.complaint.processcomp.orderid" /></label>
 						<div class="col-sm-6">
 							<div class="fg-line">
 								<input type="text" class="form-control" id="inputOrderID"
 									placeholder="Enter Order ID">
 							</div>
-							<span class="md-shopping-basket form-control-feedback"></span>
+							<span class="zmdi zmdi-shopping-basket form-control-feedback"></span>
 						</div>
 					</div>
 					<div class="form-group">
@@ -59,14 +58,13 @@
 					</div>
 					<div class="row">
 						<div class="form-input">
-							<label for="inputMobile" class="col-sm-2 control-label">Mobile
-								Number</label>
+							<label for="inputMobile" class="col-sm-2 control-label"><bean:message key="operator.complaint.processcomp.mobile" /></label>
 							<div class="col-sm-6 m-b-25">
 								<div class="fg-line">
 									<input type="text" class="form-control" id="inputMobile"
 										placeholder="Enter Mobile">
 								</div>
-								<span class="md-phone-android form-control-feedback"></span>
+								<span class="zmdi zmdi-smartphone-android form-control-feedback"></span>
 							</div>
 						</div>
 
@@ -85,14 +83,13 @@
 						<div class="col-sm-6"></div>
 					</div>
 					<div class="form-group">
-						<label for="inputName" class="col-sm-2 control-label">Customer
-							Name</label>
+						<label for="inputName" class="col-sm-2 control-label"><bean:message key="operator.feedback.viewfeedback.custname" /></label>
 						<div class="col-sm-6">
 							<div class="fg-line">
 								<input type="text" class="form-control" id="inputName"
 									placeholder="Enter Name">
 							</div>
-							<span class="md md-person form-control-feedback"></span>
+							<span class="zmdi zmdi-account form-control-feedback"></span>
 						</div>
 					</div>
 					<div id="fillOrderDetails"></div>
@@ -100,40 +97,38 @@
 				<!-- card-body card-padding div 1-->
 
 				<div class="card-header">
-					<h2>Customer Details</h2>
+					<h2><bean:message key="operator.return.managereturn.head2" /></h2>
 				</div>
 
 				<div class="card-body card-padding">
 					<div class="form-group">
-						<label for="inputName" class="col-sm-2 control-label">Customer
-							Name</label>
+						<label for="inputName" class="col-sm-2 control-label"><bean:message key="operator.feedback.viewfeedback.custname" /></label>
 						<div class="col-sm-8">
 							<div class="fg-line">
 								<input type="text" class="form-control" id="selectName" readonly>
 							</div>
-							<span class="md md-person form-control-feedback"></span>
+							<span class="zmdi zmdi-account form-control-feedback"></span>
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="inputEmail" class="col-sm-2 control-label">Email</label>
+						<label for="inputEmail" class="col-sm-2 control-label"><bean:message key="operator.editorder.email" /></label>
 						<div class="col-sm-8">
 							<div class="fg-line">
 								<input type="email" name="email" class="form-control"
 									id="selectEmail" readonly>
 							</div>
-							<span class="md md-email form-control-feedback"></span>
+							<span class="zmdi zmdi-email form-control-feedback"></span>
 						</div>
 					</div>
 
 					<div class="form-group">
-						<label for="inputMobile" class="col-sm-2 control-label">Mobile
-							Number</label>
+						<label for="inputMobile" class="col-sm-2 control-label"><bean:message key="operator.editorder.mobile" /></label>
 						<div class="col-sm-8">
 							<div class="fg-line">
 								<input type="text" name="mobile" class="form-control"
 									id="selectMobile" readonly>
 							</div>
-							<span class="md-phone-android form-control-feedback"></span>
+							<span class="zmdi zmdi-smartphone-android form-control-feedback"></span>
 						</div>
 					</div>
 
@@ -142,17 +137,16 @@
 						<input type="hidden" name="returnAmount" id="returnAmount" value="0"/>
 						<div class="form-group">
 							<div class="col-sm-2 col-sm-offset-1">
-								<label class="control-label"><strong><h5>Product
-											Name</h5></strong></label>
+								<label class="control-label"><strong><h5><bean:message key="operator.editorder.prodname" /></h5></strong></label>
 							</div>
 							<div class="col-sm-2 col-sm-offset-1">
-								<label class="control-label"><strong><h5>Rate</h5></strong></label>
+								<label class="control-label"><strong><h5><bean:message key="operator.vieworder.rate" /></h5></strong></label>
 							</div>
 							<div class="col-sm-2 col-sm-offset-1">
-								<label class="control-label"><strong><h5>Quantity</h5></strong></label>
+								<label class="control-label"><strong><h5><bean:message key="operator.editorder.qty" /></h5></strong></label>
 							</div>
 							<div class="col-sm-2 col-sm-offset-1">
-								<label class="control-label"><strong><h5>Total</h5></strong></label>
+								<label class="control-label"><strong><h5><bean:message key="operator.vieworder.total" /></h5></strong></label>
 							</div>
 						</div>
 						<div id="productDetails"></div>
@@ -163,24 +157,23 @@
 						<h4>Return Details :</h4>
 						<div class="form-group">
 							<div class="col-sm-2">
-								<label class="control-label"><strong><h5>Product
-											Name</h5></strong></label>
+								<label class="control-label"><strong><h5><bean:message key="operator.editorder.prodname" /></h5></strong></label>
 							</div>
 							<div class="col-sm-2">
-								<label class="control-label"><strong><h5>Rate</h5></strong></label>
+								<label class="control-label"><strong><h5><bean:message key="operator.vieworder.rate" /></h5></strong></label>
 							</div>
 							<div class="col-sm-2">
-								<label class="control-label"><strong><h5>Quantity</h5></strong></label>
+								<label class="control-label"><strong><h5><h5><bean:message key="operator.editorder.qty" /></h5></strong></label>
 							</div>
 							
 							<div class="col-sm-2">
-								<label class="control-label"><strong><h5>Return Time #### Qty</h5></strong></label>
+								<label class="control-label"><strong><h5><bean:message key="operator.return.managereturn.returntime" /></h5></strong></label>
 							</div>
 							<div class="col-sm-2">
-								<label class="control-label"><strong><h5>Return Qty</h5></strong></label>
+								<label class="control-label"><strong><h5><bean:message key="operator.return.managereturn.returnqty" /></h5></strong></label>
 							</div>
 							<div class="col-sm-2">
-								<label class="control-label"><strong><h5>Return</h5></strong></label>
+								<label class="control-label"><strong><h5><bean:message key="operator.return.managereturn.return" /></h5></strong></label>
 							</div>
 						</div>
 						<div id="returnDetails"></div>

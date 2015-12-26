@@ -4,7 +4,6 @@ import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +12,6 @@ import com.dbt.data.Complaint;
 import com.dbt.data.Customer;
 import com.dbt.data.Order;
 import com.dbt.database.DBConnection;
-import com.dbt.exception.NoConnectionException;
 import com.dbt.support.Email;
 
 public class ComplaintDAO {

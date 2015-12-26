@@ -13,9 +13,16 @@ public class OrderForm extends ActionForm {
 	String name, email, house, line1, line2, city, state, mobile, zip, numProd;
 	String[] productNames, productPrices, productQtys;
 	String custID,type,tin,orderTime;
+	String custType;
 	
-	
-	
+	public String getCustType() {
+		return custType;
+	}
+
+	public void setCustType(String custType) {
+		this.custType = custType;
+	}
+
 	public String getOrderTime() {
 		return orderTime;
 	}
@@ -125,7 +132,7 @@ public class OrderForm extends ActionForm {
 		productPrices = request.getParameterValues("prodPrice");
 		productQtys = request.getParameterValues("prodQty");
 		numProd = request.getParameter("numProd");
-		System.out.println("OrderForm Called : "+name);
+		System.out.println("OrderForm Called : "+name+", Order Time is : "+orderTime+" TIN is : "+tin);
 
 		ActionErrors errors = new ActionErrors();
 		if (name == null || name == "")

@@ -52,7 +52,7 @@ public class SessionFilter implements Filter {
 
 		if ((uri.contains(".jsp") || uri.contains(".do"))
 				&& !uri.contains("login") && !uri.contains("forgotPassword")
-				&& !uri.contains("ForgotPassword")) {
+				&& !uri.contains("ForgotPassword") && !uri.contains("feedback.jsp") && !uri.contains("Submitfeedback")) {
 			logger.info("SessionFilter : Called with session " + session);
 			if (session == null || session.getAttribute("user") == null) {
 				httpResponse.sendRedirect(httprequest.getContextPath()

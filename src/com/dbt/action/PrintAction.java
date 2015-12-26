@@ -47,9 +47,8 @@ public class PrintAction extends Action {
 				result = "printOrder";
 			}
 		} else if ("letterHead".equals(printType)) {
-			
+
 			result = "printLetter";
-			
 
 		} else if ("challan".equals(printType)) {
 			String shipID = request.getParameter("shipID");
@@ -90,6 +89,15 @@ public class PrintAction extends Action {
 						Integer.parseInt(paymentID));
 				payment.setReceiptId(receiptID);
 				request.getSession().setAttribute("payment", payment);
+			} else {
+				Payment payment = (Payment) request.getSession().getAttribute(
+						"payment");
+				if (payment != null) {
+					int receiptID = new DocumentDAO().getPrintableID(
+							merchant.getId(), "RECEIPT", payment.getId());
+					payment.setReceiptId(receiptID);
+					request.getSession().setAttribute("payment", payment);
+				}
 			}
 			result = "printReceipt";
 		} else if ("orderPrint".equals(printType)) {

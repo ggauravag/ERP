@@ -23,7 +23,10 @@
 		<form-bean name="returnForm" type="com.dbt.forms.ReturnForm"></form-bean>
 		<form-bean name="manageCusForm" type="com.dbt.forms.ManageCustomerForm"></form-bean>
 		<form-bean name="profileForm" type="com.dbt.forms.ProfileForm"></form-bean>
-	</form-beans>
+		<form-bean name="deletePurchaseForm" type="com.dbt.forms.DeletePurchaseForm"></form-bean>
+		<form-bean name="editOrderForm" type="com.dbt.forms.EditOrderForm"></form-bean>
+		<form-bean name="feedbackForm" type="com.dbt.forms.FeedbackForm"></form-bean>
+		</form-beans>
 
 	<global-exceptions>
 		<exception type="java.lang.Exception" key="error.global.mesage"
@@ -40,6 +43,27 @@
 			<forward name="success" path="/Profile.jsp"></forward>
 			<forward name="login" redirect="true" path="/logout.do"></forward>
 			<forward name="failure" path="/Profile.jsp"></forward>
+		</action>
+		
+		<action path="/feedback/Submitfeedback" type="com.dbt.action.FeedbackAction">
+			<forward name="success" path="/feedback/feedback.jsp"></forward>
+		</action>
+	
+		<action path="/operator/feedback/CreateFeedback" name="feedbackForm" validate="true" input="/operator/feedback/CreateFeedback.jsp" type="com.dbt.action.FeedbackAction" >
+			<forward name="success" path="/operator/feedback/CreateFeedback.jsp"></forward>
+		</action>
+
+		<action path="/EditOrder" validate="true" input="/operator/EditOrder.jsp"
+			name="editOrderForm" type="com.dbt.action.EditOrderAction" scope="request">
+			<forward name="success" redirect="true" path="/operator/EditOrder.jsp"></forward>
+			<forward name="failure" redirect="true" path="/operator/EditOrder.jsp"></forward>
+		</action>
+
+		<action path="/operator/purchase/DeletePurchase" validate="true"
+			input="/operator/purchase/viewPurchase.jsp" name="deletePurchaseForm"
+			type="com.dbt.action.DeletePurchase">
+			<forward name="success" path="/operator/purchase/viewPurchase.jsp"></forward>
+			<forward name="failure" path="/operator/purchase/viewPurchase.jsp"></forward>
 		</action>
 
 		<action path="/operator/return/TakeReturn" validate="true"
@@ -96,6 +120,7 @@
 			<forward name="success" redirect="true" path="/operator/AddStock.jsp"></forward>
 			<forward name="failure" redirect="true" path="/operator/AddStock.jsp"></forward>
 		</action>
+		
 
 		<action path="/owner/AddCapital" validate="true"
 			input="/owner/AddCapital.jsp" name="capitalForm" type="com.dbt.action.CapitalAction"
@@ -103,7 +128,6 @@
 			<forward name="success" path="/owner/AddCapital.jsp"></forward>
 			<forward name="failure" path="/owner/AddCapital.jsp"></forward>
 		</action>
-
 
 		<action path="/operator/ProcessOrder" validate="true" name="processForm"
 			input="/operator/processOrder.jsp" type="com.dbt.action.ProcessOrderAction"

@@ -4,7 +4,6 @@ import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,7 +11,6 @@ import java.util.List;
 import com.dbt.data.Address;
 import com.dbt.data.Customer;
 import com.dbt.database.DBConnection;
-import com.dbt.exception.NoConnectionException;
 import com.dbt.support.Email;
 
 public class CustomerDAO {
@@ -113,7 +111,42 @@ public class CustomerDAO {
 			con = DBConnection.getConnection();
 			String query = "select user_id,(select tin from merchant where _id = user_id) as tin,concat(first_name,' ',last_name) as name,mobile,email,house_no,line_1,line_2,city,state,zip,type from user JOIN address on user._id = address.user_id where lower(concat(first_name,' ',last_name)) like '%"
 					+ name.toLowerCase()
-					+ "%' and user.type in ('CUSTOMER','MERCHANT') ";
+					+ "%' and user.type in ('CUSTOMER','MERCHANT') order by name ";
+			// System.out.println("CustomerDAO : Query - "+query);
+			stmt = con.prepareStatement(query);
+			set = stmt.executeQuery();
+			while (set.next()) {
+				Address address = new Address(set.getString("house_no"),
+						set.getString("line_1"), set.getString("line_2"),
+						set.getString("city"), set.getString("state"),
+						set.getString("zip"));
+				Customer customer = new Customer(set.getInt("user_id"),
+						set.getString("name"), set.getString("mobile"),
+						set.getString("email"), address, set.getString("type"),
+						set.getString("tin"));
+				customers.add(customer);
+			}
+		} catch (Exception e) {
+
+			Email.sendExceptionReport(e);
+		} finally {
+			DBConnection.closeResource(con, stmt, set);
+		}
+
+		return customers;
+	}
+	
+	public List<Customer> getCustomerById(int id) {
+		List<Customer> customers = new ArrayList<Customer>();
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet set = null;
+		try {
+			System.out.println("CustomerDAO : ID - " + id);
+			con = DBConnection.getConnection();
+			String query = "select user_id,(select tin from merchant where _id = user_id) as tin,concat(first_name,' ',last_name) as name,mobile,email,house_no,line_1,line_2,city,state,zip,type from user JOIN address on user._id = address.user_id where user._id = "
+					+ id
+					+ " and user.type in ('CUSTOMER','MERCHANT') ";
 			// System.out.println("CustomerDAO : Query - "+query);
 			stmt = con.prepareStatement(query);
 			set = stmt.executeQuery();

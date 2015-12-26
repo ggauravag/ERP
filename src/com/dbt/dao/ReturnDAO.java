@@ -48,7 +48,7 @@ public class ReturnDAO {
 			
 			Email.sendExceptionReport(e);
 		} finally {
-			DBConnection.closeResource(con, stmt, res);
+			DBConnection.closeResource(null, stmt, res);
 		}
 		return result;
 	}
@@ -89,7 +89,7 @@ public class ReturnDAO {
 			
 			Email.sendExceptionReport(e);
 		} finally {
-			DBConnection.closeResource(con, stmt, null);
+			DBConnection.closeResource(null, stmt, null);
 		}
 		return success;
 	}
@@ -127,7 +127,7 @@ public class ReturnDAO {
 			
 			Email.sendExceptionReport(e);
 		} finally {
-			DBConnection.closeResource(con, stmt, set);
+			DBConnection.closeResource(null, stmt, set);
 		}
 
 		return returns;

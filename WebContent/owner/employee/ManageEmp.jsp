@@ -24,19 +24,18 @@
 		id="content">
 	<div class="container">
 		<div class="block-header">
-			<h1>MANAGE EMPLOYEE</h1>
+			<h1><bean:message key="owner.employee.manageemp.label" /></h1>
 		</div>
 
 		<div class="card">
 			<form action="owner/employee/ManageEmployee.do" class="form-horizontal"
 				method="post" enctype="multipart/form-data" id="ManempForm">
 				<div class="card-header">
-					<h2>Employee Details</h2>
+					<h2><bean:message key="owner.employee.manageemp.head1" /></h2>
 				</div>
 				<div class="card-body card-padding">
 					<div id="nameDiv" class="form-group">
-						<label for="inputName" class="col-sm-2 control-label">Employee
-							Name</label>
+						<label for="inputName" class="col-sm-2 control-label"><bean:message key="owner.employee.manageemp.empname" /></label>
 						<div class="col-sm-6">
 							<div class="fg-line">
 								<input type="text" class="form-control" id="inputName"
@@ -83,8 +82,7 @@
 					<div id="empData" style="visibility:; display:;">
 
 						<div class="form-group">
-							<label for="inputEmpID" class="col-sm-2 control-label">Employee
-								ID</label>
+							<label for="inputEmpID" class="col-sm-2 control-label"><bean:message key="owner.employee.manageemp.empid" /></label>
 							<div class="col-sm-8">
 								<div class="fg-line">
 									<input type="text" class="form-control" id="inputEmpID"
@@ -97,8 +95,7 @@
 						</div>
 
 						<div class="form-group">
-							<label for="inputEmpEmail" class="col-sm-2 control-label">Employee
-								Email</label>
+							<label for="inputEmpEmail" class="col-sm-2 control-label"><bean:message key="owner.employee.manageemp.empemail" /></label>
 							<div class="col-sm-8">
 								<div class="fg-line">
 									<input type="text" class="form-control" id="inputEmpEmail"
@@ -112,8 +109,7 @@
 
 
 						<div class="form-group">
-							<label for="inputEmpRole" class="col-sm-2 control-label">Employee
-								Role</label>
+							<label for="inputEmpRole" class="col-sm-2 control-label"><bean:message key="owner.employee.manageemp.role" /></label>
 							<div class="col-sm-8">
 								<div class="fg-line">
 									<input type="text" class="form-control" id="inputEmpRole"
@@ -126,8 +122,7 @@
 						</div>
 
 						<div class="form-group">
-							<label for="inputEmpDoj" class="col-sm-2 control-label">Date
-								of Joining</label>
+							<label for="inputEmpDoj" class="col-sm-2 control-label"><bean:message key="owner.employee.addemp.doj" /></label>
 							<div class="col-sm-8">
 								<div class="fg-line">
 									<input type="text" class="form-control" id="inputEmpDoj"
@@ -140,8 +135,7 @@
 						</div>
 
 						<div class="form-group">
-							<label for="inputEmpMobile" class="col-sm-2 control-label">Employee
-								Mobile</label>
+							<label for="inputEmpMobile" class="col-sm-2 control-label"><bean:message key="owner.employee.manageemp.mobile" /></label>
 							<div class="col-sm-8">
 								<div class="fg-line">
 									<input type="text" class="form-control" id="inputEmpMobile"
@@ -157,8 +151,7 @@
 
 
 						<div class="form-group">
-							<label for="inputEmpSal" class="col-sm-2 control-label">Employee
-								Salary</label>
+							<label for="inputEmpSal" class="col-sm-2 control-label"><bean:message key="owner.employee.manageemp.empsalary" /></label>
 							<div class="col-sm-8">
 								<div class="fg-line">
 									<input type="text" class="form-control" id="inputEmpSal"
@@ -171,8 +164,7 @@
 						</div>
 
 						<div class="form-group">
-							<label for="inputEmpDueSal" class="col-sm-2 control-label">Due
-								Salary(till today)</label>
+							<label for="inputEmpDueSal" class="col-sm-2 control-label"><bean:message key="owner.employee.manageemp.duesalary" /></label>
 							<div class="col-sm-8">
 								<div class="fg-line">
 									<input type="text" class="form-control" id="inputEmpDueSal"
@@ -188,8 +180,7 @@
 
 						<div class="row">
 							<div class="form-input">
-								<label for="inputEmpHouse" class="col-sm-2 control-label">Employee
-									Address</label>
+								<label for="inputEmpHouse" class="col-sm-2 control-label"><bean:message key="owner.employee.manageemp.empaddress" /></label>
 								<div class="col-sm-2 m-b-25">
 									<div class="fg-line">
 										<input type="text" class="form-control" id="inputEmpHouse"
@@ -274,8 +265,7 @@
 
 
 						<div class="form-group" id="p1">
-							<label for="inputDoj" class="col-sm-2 control-label">ID
-								Proof 1</label>
+							<label for="inputDoj" class="col-sm-2 control-label"><bean:message key="owner.employee.manageemp.proof1" /></label>
 
 							<div class="fileinput fileinput-new " data-provides="fileinput">
 								<div class="fileinput-preview thumbnail"
@@ -294,7 +284,7 @@
 						</div>
 
 						<div class="form-group" id="p2" style="display: none;">
-							<label class="col-sm-2 control-label">ID Proof 2</label>
+							<label class="col-sm-2 control-label"><bean:message key="owner.employee.manageemp.proof2" /></label>
 
 							<div class="fileinput fileinput-new " data-provides="fileinput">
 								<div class="fileinput-preview thumbnail"
@@ -312,7 +302,7 @@
 						</div>
 						<div class="form-group" id="p3"
 							style="visibility: hidden; display: none;">
-							<label class="col-sm-2 control-label">ID Proof 3</label>
+							<label class="col-sm-2 control-label"><bean:message key="owner.employee.manageemp.proof3" /></label>
 
 							<div class="fileinput fileinput-new " data-provides="fileinput">
 								<div class="fileinput-preview thumbnail"
@@ -330,7 +320,7 @@
 						</div>
 						<div class="form-group" id="p4"
 							style="visibility: hidden; display: none;">
-							<label class="col-sm-2 control-label">ID Proof 4</label>
+							<label class="col-sm-2 control-label"><bean:message key="owner.employee.manageemp.proof4" /></label>
 
 							<div class="fileinput fileinput-new " data-provides="fileinput">
 								<div class="fileinput-preview thumbnail"

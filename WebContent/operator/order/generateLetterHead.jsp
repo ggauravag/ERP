@@ -26,7 +26,7 @@
 		id="content">
 	<div class="container">
 		<div class="block-header">
-			<h1>Letter Head</h1>
+			<h1><bean:message key="operator.order.generateletterhead.label" /></h1>
 		</div>
 
 		<div class="card">
@@ -36,25 +36,25 @@
 					type="hidden" name="letterText" id="letterTextField" />
 
 				<div class="card-header">
-					<h2>Enter the details :</h2>
+					<h2><bean:message key="operator.order.generateletterhead.head1" /></h2>
 				</div>
 				<div class="card-body card-padding">
 					<font color="red"><html:errors property="orderError" /></font>
 
 					<div class="form-group">
-						<label class="col-sm-2 control-label">Date : </label>
+						<label class="col-sm-2 control-label"><bean:message key="operator.order.generateletterhead.date" /> </label>
 						<div class="input-group form-group col-sm-2">
-							<span class="input-group-addon"><i class="md md-event"></i></span>
+							<span class="input-group-addon"><i class="zmdi zmdi-event"></i></span>
 							<div class="dtp-container dropdown fg-line">
 								<input type='text' name="date" class="form-control date-picker"
-									data-toggle="dropdown" placeholder="Click here...">
+									data-toggle="dropdown" placeholder="Letter Date">
 							</div>
+							<span class="zmdi zmdi-calendar form-control-feedback"></span>
 						</div>
-
+						 
 					</div>
 					<div class="form-group">
-						<label class="col-sm-2 control-label">Reference No.
-							(Optional) : </label>
+						<label class="col-sm-2 control-label"><bean:message key="operator.order.generateletterhead.refno" /> </label>
 						<div class="input-group col-sm-2">
 							<div class="fg-line">
 								<input type="text" name="refNum" class="form-control"
@@ -63,7 +63,7 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<label class="col-sm-2 control-label">To (Optional) : </label>
+						<label class="col-sm-2 control-label"><bean:message key="operator.order.generateletterhead.to" /> </label>
 						<div class="input-group col-sm-2">
 							<div class="fg-line">
 								<input type="text" name="to" class="form-control"
@@ -72,8 +72,7 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<label class="col-sm-2 control-label">Address / Other
-							Details (Optional) : </label>
+						<label class="col-sm-2 control-label"><bean:message key="operator.order.generateletterhead.addressotherdetail" /> </label>
 						<div class="input-group col-sm-8">
 							<div class="fg-line">
 								<input type="text" name="toAddress" class="form-control"
@@ -82,7 +81,7 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<label class="col-sm-2 control-label">Contact (Mobile/Landline) (Optional) : </label>
+						<label class="col-sm-2 control-label"><bean:message key="operator.order.generateletterhead.contact" /> </label>
 						<div class="input-group col-sm-8">
 							<div class="fg-line">
 								<input type="text" name="toContact" class="form-control"
@@ -91,7 +90,7 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<label class="col-sm-2 control-label">Subject (Optional) :
+						<label class="col-sm-2 control-label"><bean:message key="operator.order.generateletterhead.subject" />
 						</label>
 						<div class="input-group col-sm-7">
 							<div class="fg-line">

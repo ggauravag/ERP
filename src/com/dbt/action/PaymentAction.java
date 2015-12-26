@@ -33,7 +33,7 @@ public class PaymentAction extends Action {
 		String desc = payForm.getDescription();
 
 		String dateTime = payForm.getPayTime();
-		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy hh:mm a");
+		SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy hh:mm aa");
 		Date date = null;
 		if (!"".equals(dateTime) && dateTime != null) {
 			try {
@@ -52,6 +52,7 @@ public class PaymentAction extends Action {
 
 		Payment payment = new PaymentDAO().makePayment(paidBy, amount, orderId,
 				medium, desc,date);
+		//System.out.println("Payment ID is : "+payment.getId()+", amount : "+payment.getAmount());
 		if (payment != null) {
 			request.getSession().setAttribute("payment", payment);
 			request.getSession().setAttribute("status", "success");

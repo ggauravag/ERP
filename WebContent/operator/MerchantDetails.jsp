@@ -24,7 +24,7 @@
 	<section id="content">
 	<div class="container">
 		<div class="block-header">
-			<h1>Merchant Details</h1>
+			<h1><bean:message key="operator.merchantdetails.label" /></h1>
 		</div>
 
 		<div class="card">
@@ -32,18 +32,18 @@
 				class="form-horizontal" role="form">
 
 				<div class="card-header">
-					<h2>Add Merchant details of the new stock</h2>
+					<h2><bean:message key="operator.merchantdetails.head1" /></h2>
 				</div>
 
 				<div class="card-body card-padding">
 
 					<div id="merchantDiv" class="row form-group">
-						<label for="selectMerchant" class="col-sm-2 control-label">Merchant name</label>
+						<label for="selectMerchant" class="col-sm-2 control-label"><bean:message key="operator.addstock.merchantdetails.mername" /></label>
 						<div class="col-sm-6">
 							<jsp:useBean id="list" class="com.dbt.dao.StockDAO" scope="page"></jsp:useBean>
-							<select class="form-control selectpicker" id="selectMerchant"
+							<select class="selectpicker" id="selectMerchant"
 								name="selectMerchant" data-live-search="true">
-								<option value="">Select Category</option>
+								<option value="">Select Merchant</option>
 
 								<jspcore:forEach var="merchant" items="${list.allMerchants}">
 									<option value="${merchant.id}">${merchant.name}</option>
@@ -51,9 +51,9 @@
 							</select> <small id="error" class="help-block"></small>
 						</div>
 
-						<button class="btn btn-gray waves-effect waves-button waves-float" type="button"
+						<button class="btn bgm-gray waves-effect waves-button waves-float" type="button"
 							id="addMerchantButton">
-							<i class="md md-add"></i> Add New Merchant
+							<i class="zmdi zmdi-plus"></i> Add New Merchant
 						</button>
 					</div>
 
@@ -102,32 +102,46 @@
 
 
 				<div class="card-header">
-					<h2>Add Payment details</h2>
+					<h2><bean:message key="operator.merchantdetails.head2" /></h2>
 				</div>
 
 				<div class="card-body card-padding">
+				
+					<div  class="form-group">
+						<label for="inputDesc" class="col-sm-2 control-label"><bean:message key="operator.addstock.merchantdetails.addPayment" /></label>
+						<div class="col-sm-8">
+							<div class="checkbox m-b-15">
+								<label>
+                                    <input type="checkbox" id="addPayment" name="addPayment" value="Yes" checked>
+                                    <i class="input-helper"></i>
+								</label>
+							</div>
+						</div>
+					</div>
+				
+				
 					<div class="row">
 						<div class="form-input" id="amountDiv">
-							<label for="inputAmount" class="col-sm-2 control-label">Amount</label>
+							<label for="inputAmount" class="col-sm-2 control-label"><bean:message key="operator.addstock.merchantdetails.amount" /></label>
 							<div class="col-sm-3 m-b-25">
 								<div class="fg-line">
 									<input type="text" id="amount" name="amount" value="${newStockDetails.amount}"
 										class="form-control" placeholder="Enter Amount">
 								</div>
-								<span class="md-attach-money form-control-feedback"></span> <small
+								<span class="zmdi zmdi-money form-control-feedback"></span> <small
 									id="error" class="help-block"></small>
 							</div>
 						</div>
 
 						<div class="form-input" id="currentDiv">
-							<label for="currentPayment" class="col-sm-2 control-label">Current payment</label>
+							<label for="currentPayment" class="col-sm-2 control-label"><bean:message key="operator.addstock.merchantdetails.currentpayment" /></label>
 							<div class="col-sm-3 m-b-25">
 								<div>
 									<div class="fg-line">
 										<input type="text" id="currentPayment" name="currentPayment"
 											class="form-control" placeholder="Enter current payment">
 									</div>
-									<span class="md-attach-money form-control-feedback"></span> <small
+									<span class="zmdi zmdi-money form-control-feedback"></span> <small
 										id="error" class="help-block"></small>
 								</div>
 							</div>
@@ -135,45 +149,44 @@
 					</div>
 
 					<div id="modeDiv" class="form-group">
-						<label for="selectMode" class="col-sm-2 control-label">Expenditure
-							Mode</label>
-						<div class="col-sm-8">
-							<select class="form-control selectpicker" id="selectMode"
+						<label for="selectMode" class="col-sm-2 control-label"><bean:message key="operator.addstock.merchantdetails.expmode" /></label>
+						<div class="col-sm-8 disabled">
+							<select class="form-control" id="selectMode"
 								name="selectMode">
 								<option value="">Select Mode</option>
 								<option value="Cheque">Cheque</option>
 								<option value="Cash">Cash</option>
+								<option value="Online/Bank Transfer">Online/Bank Transfer</option>
 								<option value="Credit/Debit">Credit/Debit card</option>
 							</select> <small id="error" class="help-block"></small>
 						</div>
 					</div>
 
 					<div id="descDiv" class="form-group">
-						<label for="inputDesc" class="col-sm-2 control-label">Description</label>
+						<label for="inputDesc" class="col-sm-2 control-label"><bean:message key="operator.addstock.merchantdetails.desc" /></label>
 						<div class="col-sm-8">
 							<div class="fg-line">
 								<input type="text" class="form-control" name="inputDesc"
 									id="inputDesc" placeholder="Description for mode of payement">
 							</div>
-							<span class="md-description form-control-feedback"></span> <small
+							<span class="zmdi zmdi-file-text form-control-feedback"></span> <small
 								id="error" class="help-block"> </small>
 						</div>
 					</div>
 
 					<div id="paidDiv" class="form-group">
-						<label for="inputPaid" class="col-sm-2 control-label">Paid
-							by/to</label>
+						<label for="inputPaid" class="col-sm-2 control-label"><bean:message key="operator.addstock.merchantdetails.paid" /></label>
 						<div class="col-sm-8">
 							<div class="fg-line">
 								<input type="text" class="form-control" name="inputPaid"
 									id="inputPaid" placeholder="Name of the person">
 							</div>
-							<span class="md md-person form-control-feedback"></span> <small
+							<span class="zmdi zmdi-account form-control-feedback"></span> <small
 								id="error" class="help-block"> </small>
 						</div>
 					</div>
 
-					<br /> <br /> <br />
+					<br /> <br /> 
 					<div class="form-group">
 						<div class="col-sm-offset-2 col-sm-10">
 							<button type="submit" class="btn btn-primary btn-lg col-sm-3">Add Stock</button>
@@ -193,6 +206,30 @@
 	<!-- Javascript Libraries -->
 
 	<%@include file="../js/includejs.jsp"%>
+	<script>
 	
+		$("#addPayment").click(
+			function(event)		
+			{
+				if(this.checked)
+				{
+					$("#amountDiv").show();
+					$("#currentDiv").show();
+					$("#modeDiv").show();
+					$("#descDiv").show();
+					$("#paidDiv").show();
+				}
+				else
+				{
+					$("#amountDiv").hide();
+					$("#currentDiv").hide();
+					$("#modeDiv").hide();
+					$("#descDiv").hide();
+					$("#paidDiv").hide();
+				}
+			}
+		);
+	
+	</script>
 </body>
 </html>

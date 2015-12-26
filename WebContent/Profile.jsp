@@ -30,7 +30,7 @@
                         <ul class="actions m-t-20 hidden-xs">
                             <li class="dropdown">
                                 <a href="#" data-toggle="dropdown">
-                                    <i class="md md-more-vert"></i>
+                                    <i class="zmdi zmdi-more-vert"></i>
                                 </a>
                     
                                 <ul class="dropdown-menu dropdown-menu-right">
@@ -61,7 +61,7 @@
                                     </a>
                                     
                                     <a href="#" class="pmop-edit">
-                                        <i class="md md-camera-alt"></i> <span class="hidden-xs">Update Profile Picture</span>
+                                        <i class="zmdi zmdi-camera-alt"></i> <span class="hidden-xs">Update Profile Picture</span>
                                     </a>
                                 </div>
                                 
@@ -73,10 +73,10 @@
                                 <h2>Contact</h2>
                                 
                                 <ul>
-                                    <li><i class="md md-phone"></i> ${user.mobile }</li>
-                                    <li><i class="md md-email"></i> ${user.email }</li>
+                                    <li><i class="zmdi zmdi-phone"></i> ${user.mobile }</li>
+                                    <li><i class="zmdi zmdi-email"></i> ${user.email }</li>
                                     <!-- <li>
-                                        <i class="md md-location-on"></i>
+                                        <i class="zmdi zmdi-location-on"></i>
                                         <address class="m-b-0">
                                             10098 ABC Towers, <br/>
                                             Dubai Silicon Oasis, Dubai, <br/>
@@ -99,12 +99,12 @@
                             
                             <div class="pmb-block">
                                 <div class="pmbb-header">
-                                    <h2><i class="md md-person m-r-5"></i> Basic Information</h2>
+                                    <h2><i class="zmdi zmdi-person m-r-5"></i> Basic Information</h2>
                                     
                                     <ul class="actions">
                                         <li class="dropdown">
                                             <a href="#" data-toggle="dropdown">
-                                                <i class="md md-more-vert"></i>
+                                                <i class="zmdi zmdi-more-vert"></i>
                                             </a>
                                             
                                             <ul class="dropdown-menu dropdown-menu-right">
@@ -146,7 +146,7 @@
                                                 <div class="fg-line">
                                                     <input type="text" id="inputFname" name="Fname" class="form-control" placeholder="${user.firstName }">
                                                 </div>
-                                                <span class="md md-person form-control-feedback"></span> <small
+                                                <span class="zmdi zmdi-person form-control-feedback"></span> <small
 								id="error" class="help-block"><font color="red"></font>
 								<html:errors property="fnameError" /> </small>
                                             </dd>
@@ -157,7 +157,7 @@
                                                 <div class="fg-line">
                                                     <input type="text" id="inputLname" name="Lname" class="form-control" placeholder="${user.lastName }">
                                                 </div>
-                                                <span class="md md-person form-control-feedback"></span> <small
+                                                <span class="zmdi zmdi-person form-control-feedback"></span> <small
 								id="error" class="help-block"><font color="red"></font>
 								<html:errors property="lnameError" /> </small>
                                             </dd>
@@ -177,12 +177,12 @@
                         
                             <div class="pmb-block">
                                 <div class="pmbb-header">
-                                    <h2><i class="md md-phone m-r-5"></i> Contact Information</h2>
+                                    <h2><i class="zmdi zmdi-phone m-r-5"></i> Contact Information</h2>
                                     
                                     <ul class="actions">
                                         <li class="dropdown">
                                             <a href="#" data-toggle="dropdown">
-                                                <i class="md md-more-vert"></i>
+                                                <i class="zmdi zmdi-more-vert"></i>
                                             </a>
                                             
                                             <ul class="dropdown-menu dropdown-menu-right">
@@ -217,7 +217,7 @@
 									id="inputMobile" name="mobile" placeholder="Enter Mobile"
 									data-mask="000-000-0000" />
                                                 </div>
-                                                <span class="md-phone-android form-control-feedback"></span> <small
+                                                <span class="zmdi zmdi-phone-android form-control-feedback"></span> <small
 								id="error" class="help-block"> <font color="red"></font>
 								<html:errors property="mobileError" />
 							</small>
@@ -237,12 +237,12 @@
                             
                              <div class="pmb-block">
                                 <div class="pmbb-header">
-                                    <h2><i class="md md-equalizer m-r-5"></i> Change Password</h2>
+                                    <h2><i class="zmdi zmdi-equalizer m-r-5"></i> Change Password</h2>
                                     
                                     <ul class="actions">
                                         <li class="dropdown">
                                             <a href="#" data-toggle="dropdown">
-                                                <i class="md md-more-vert"></i>
+                                                <i class="zmdi zmdi-more-vert"></i>
                                             </a>
                                             
                                             <ul class="dropdown-menu dropdown-menu-right">
@@ -296,12 +296,12 @@
                             
                              <div class="pmb-block">
                                 <div class="pmbb-header">
-                                    <h2><i class="md md-equalizer m-r-5"></i> Change Profile Picture</h2>
+                                    <h2><i class="zmdi zmdi-equalizer m-r-5"></i> Change Profile Picture</h2>
                                     
                                     <ul class="actions">
                                         <li class="dropdown">
                                             <a href="#" data-toggle="dropdown">
-                                                <i class="md md-more-vert"></i>
+                                                <i class="zmdi zmdi-more-vert"></i>
                                             </a>
                                             
                                             <ul class="dropdown-menu dropdown-menu-right">

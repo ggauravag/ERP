@@ -10,13 +10,12 @@ import org.apache.struts.action.ActionMessage;
 
 public class ManageCustomerForm extends ActionForm {
 
-	
 	private static final long serialVersionUID = 1L;
 
-	String buttonType, name, email, mob, type, house, line1, line2, city, state, mobile, pin, tin;
+	String buttonType, name, email, mob, type, house, line1, line2, city,
+			state, mobile, pin, tin;
 	int id;
-	
-	
+
 	public int getId() {
 		return id;
 	}
@@ -120,7 +119,7 @@ public class ManageCustomerForm extends ActionForm {
 	public void setTin(String tin) {
 		this.tin = tin;
 	}
-	
+
 	public String getButtonType() {
 		return buttonType;
 	}
@@ -132,13 +131,13 @@ public class ManageCustomerForm extends ActionForm {
 	public static long getSerialversionuid() {
 		return serialVersionUID;
 	}
-	
+
 	String mobileReg = "^[7-9]{1}[0-9]{9}$";
-	
+
 	@Override
 	public ActionErrors validate(ActionMapping mapping,
 			HttpServletRequest request) {
-		
+
 		name = request.getParameter("inputName");
 		email = request.getParameter("inputEmail");
 		mobile = request.getParameter("inputMobile");
@@ -152,12 +151,12 @@ public class ManageCustomerForm extends ActionForm {
 		type = request.getParameter("customerType");
 		buttonType = request.getParameter("buttonType");
 		id = Integer.parseInt(request.getParameter("customerId"));
-		
-		System.out.println(email + mobile + tin + line1 + line2 + house + pin + city
-				+ state + id + type);
-		
+
+		System.out.println(email + mobile + tin + line1 + line2 + house + pin
+				+ city + state + id + type);
+
 		System.out.println("Manage Customer Form : Name = " + name);
-		
+
 		ActionErrors errors = new ActionErrors();
 		if (name == null || name == "")
 			errors.add("nameError", new ActionMessage("name.blankError"));
@@ -165,8 +164,7 @@ public class ManageCustomerForm extends ActionForm {
 			errors.add("houseError", new ActionMessage("house.blankError"));
 		if (line1 == null || line1 == "")
 			errors.add("line1Error", new ActionMessage("address.blankError"));
-		if(buttonType.equals(""))
-		{
+		if (buttonType.equals("")) {
 			if (city == null || city.equals("Select City"))
 				errors.add("cityError", new ActionMessage("city.blankError"));
 			if (state == null || state.equals("Select State"))
@@ -180,12 +178,12 @@ public class ManageCustomerForm extends ActionForm {
 			errors.add("mobileError", new ActionMessage("mobile.blankError"));
 		if (mobile != null && !mobile.matches(mobileReg))
 			errors.add("mobileError", new ActionMessage("mobile.invalidError"));
-		if (email != null && !EmailValidator.getInstance().isValid(email))
+		if (!"".equals(email)
+				&& !EmailValidator.getInstance().isValid(email))
 			errors.add("emailError", new ActionMessage("email.invalidError"));
-		if(type.equals("MERCHANT"))
-		{
-			if (tin == null || tin == "")
-				errors.add("tinError", new ActionMessage("tin.blankError"));
+		if (type.equals("MERCHANT")) {
+			if(!"".equals(tin) && tin.length() != 11)
+				errors.add("tinError",new ActionMessage("tin.invalidError"));
 		}
 		return errors;
 	}

@@ -29,7 +29,11 @@ public class ManageCustomerDAO {
 			ps = con.prepareStatement(query);
 			ps.setString(1, names[0]);
 			ps.setString(2, lname);
-			ps.setString(3, email);
+			if ("".equals(email) || email == null) {
+				ps.setNull(3, java.sql.Types.VARCHAR);
+			} else {
+				ps.setString(3, email);
+			}
 			ps.setString(4, mobile);
 			ps.setInt(5, id);
 
@@ -39,18 +43,29 @@ public class ManageCustomerDAO {
 				System.out.println("User Table updated");
 				if (type.equals("MERCHANT")) {
 					String query1 = "update merchant set merchant_name=?, mobile=?, email=?, tin=? where _id=?";
+					ps.close();
 					ps = con.prepareStatement(query1);
 					ps.setString(1, name);
 					ps.setString(2, mobile);
-					ps.setString(3, email);
+					if ("".equals(email) || email == null) {
+						ps.setNull(3, java.sql.Types.VARCHAR);
+					} else {
+						ps.setString(3, email);
+					}
+
 					ps.setString(4, tin);
 					ps.setInt(5, id);
 				} else {
 					String query1 = "update customer set name=?, mobile=?, email=? where user_id=?";
+					ps.close();
 					ps = con.prepareStatement(query1);
 					ps.setString(1, name);
 					ps.setString(2, mobile);
-					ps.setString(3, email);
+					if ("".equals(email) || email == null) {
+						ps.setNull(3, java.sql.Types.VARCHAR);
+					} else {
+						ps.setString(3, email);
+					}
 					ps.setInt(4, id);
 				}
 				ps.executeUpdate();

@@ -3,16 +3,17 @@ package com.dbt.dao;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import com.dbt.data.Capital;
+import com.dbt.data.Expenditure;
 import com.dbt.data.Loan;
+import com.dbt.data.Transaction;
 import com.dbt.database.DBConnection;
-import com.dbt.exception.NoConnectionException;
 import com.dbt.support.Email;
 
 public class ExpenditureDAO {
@@ -92,6 +93,7 @@ public class ExpenditureDAO {
 
 			if (result == 1) {
 				String idQuery = "select _id from transaction where amount=? and paid_by=? order by timestamp desc";
+				ps.close();
 				ps = con.prepareStatement(idQuery);
 				ps.setInt(1, amount);
 				ps.setString(2, paid);
@@ -139,6 +141,7 @@ public class ExpenditureDAO {
 
 			if (result == 1) {
 				String idQuery = "select _id from expenditure where transaction_id=?";
+				ps.close();
 				ps = con.prepareStatement(idQuery);
 				ps.setInt(1, txId);
 
@@ -378,6 +381,8 @@ public class ExpenditureDAO {
 						+ " expenditure added.");
 				result = true;
 			}
+			
+			con.setAutoCommit(true);
 
 		} catch (Exception ex) {
 			Email.sendExceptionReport(ex);
@@ -385,5 +390,70 @@ public class ExpenditureDAO {
 			DBConnection.closeResource(con, null, null);
 		}
 		return result;
+	}
+	
+	public Expenditure getExpenditureById(int transactID,int expenditureID)
+	{
+		Expenditure exp = null;
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet set = null;
+		try
+		{
+			con = DBConnection.getConnection();
+			stmt = con.prepareStatement("select t._id,'SALARY' as 'type',e._id as 'exp_id',t.amount,t.mode,t.paid_by,t.timestamp,concat(u.first_name,u.last_name) as 'detail'"
+					+" from expenditure e join `transaction` t on e.transaction_id = t._id join salary_expenditure se on e._id = se.expenditure_id join employee em on em.employee_id = se.employee_id join `user` u on u._id = em.employee_id"
+					+" where e._id = ? and t._id = ?"
+					+" union"
+					+" select t._id,'DAILY' as 'type',e._id as 'exp_id',t.amount,t.mode,t.paid_by,t.timestamp,de.details as 'detail'"
+					+" from expenditure e join `transaction` t on e.transaction_id = t._id join daily_expenditure de on de.expenditure_id = e._id"
+					+" where e._id = ? and t._id = ?"
+					+" union"
+					+" select t._id,'LOAN' as 'type',e._id as 'exp_id',t.amount,t.mode,t.paid_by,t.timestamp,concat(l._id,'|',l.amount,'|',l.tenure,'|',l.installment,'|',l.interest_rate) as 'detail'"
+					+" from expenditure e join `transaction` t on e.transaction_id = t._id join loan_expenditure de on de.expenditure_id = e._id join loan l on l._id = de.loan_id"
+					+" where e._id = ? and t._id = ? union"
+					+" select t._id,'PURCHASE' as 'type',e._id as 'exp_id',t.amount,t.mode,t.paid_by,t.timestamp,concat(m.merchant_name,'|',m.mobile,'|',p.amount,'|',p.date) as 'detail'"
+					+" from expenditure e join `transaction` t on e.transaction_id = t._id join purchase_expenditure de on de.expenditure_id = e._id join purchase p on de.purchase_id = p._id join merchant m on m._id = p.merchant_id"
+					+" where e._id = ? and t._id = ?"
+					+" union"
+					+" select t._id,'INTEREST' as 'type',e._id as 'exp_id',t.amount,t.mode,t.paid_by,t.timestamp,concat(l._id,'|',l.amount,'|',l.interest_rate,'|',l.lender) as 'detail'"
+					+" from expenditure e join `transaction` t on e.transaction_id = t._id join interest_expenditure de on de.expenditure_id = e._id join capital l on l._id = de.capital_id"
+					+" where e._id = ? and t._id = ?");
+			
+			stmt.setInt(1, expenditureID);
+			stmt.setInt(2, transactID);
+			stmt.setInt(3, expenditureID);
+			stmt.setInt(4, transactID);
+			stmt.setInt(5, expenditureID);
+			stmt.setInt(6, transactID);
+			stmt.setInt(7, expenditureID);
+			stmt.setInt(8, transactID);
+			stmt.setInt(9, expenditureID);
+			stmt.setInt(10, transactID);
+			System.out.println(stmt);
+			set = stmt.executeQuery();
+			if(set.next())
+			{
+				String[] values = set.getString("mode").split(";");
+				if(values.length == 1)
+				{
+					String[] v = values.clone();
+					values = new String[2];
+					values[0] = v[0];
+					values[1] = "None";
+				}
+				Transaction trans = new Transaction(set.getInt("exp_id"), set.getInt("_id"), set.getInt("amount"), set.getString("paid_by"), values[0], values[1], new Date(set.getTimestamp("timestamp").getTime()), "EXPENDITURE");
+				exp = new Expenditure(set.getString("type"), set.getInt("exp_id"), trans, set.getString("detail"));
+			}
+		}
+		catch(Exception e)
+		{
+			Email.sendExceptionReport(e);
+		}
+		finally
+		{
+			DBConnection.closeResource(con, stmt, set);
+		}
+		return exp;
 	}
 }

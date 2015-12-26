@@ -24,59 +24,56 @@
 		id="content">
 	<div class="container">
 		<div class="block-header">
-			<h1>Payment Receipt</h1>
+			<h1><bean:message key="operator.payment.amountpaid.label" /></h1>
 		</div>
 
 		<div class="card">
 			<form class="form-horizontal" method="post" id="payForm" role="form">
 
 				<div class="card-header">
-					<h2>Payment Details</h2>
+					<h2><bean:message key="operator.payment.amountpaid.head1" /></h2>
 				</div>
 				<div class="card-body card-padding">
 
 					<div class="form-group">
-						<label class="col-sm-3 control-label">Transaction ID : </label>
+						<label class="col-sm-3 control-label"><bean:message key="operator.payment.amountpaid.txid" /> </label>
 						<div class="col-sm-5">
 							<label class="control-label"><strong>${payment.id}</strong></label>
 						</div>
 					</div>
 					<div class="form-group">
-						<label class="col-sm-3 control-label">Transaction Date &
-							Time : </label>
+						<label class="col-sm-3 control-label"><bean:message key="operator.payment.amountpaid.txdatetime" /> </label>
 						<div class="col-sm-5">
 							<label class="control-label"><strong>${payment.datetime}</strong></label>
 						</div>
 					</div>
 					<div class="form-group">
-						<label class="col-sm-3 control-label">Order ID : </label>
+						<label class="col-sm-3 control-label"><bean:message key="operator.payment.amountpaid.orderid" /> </label>
 						<div class="col-sm-5">
 							<label class="control-label"><strong>${payment.orderId}</strong></label>
 						</div>
 					</div>
 					<div class="form-group">
-						<label class="col-sm-3 control-label">Amount (In Figures)
-							: </label>
+						<label class="col-sm-3 control-label"><bean:message key="operator.payment.amountpaid.amountfig" /> </label>
 						<div class="col-sm-5">
 							<label class="control-label"><strong>${payment.amount}</strong></label>
 						</div>
 					</div>
 					<div class="form-group">
-						<label class="col-sm-3 control-label">Amount (In Words) :
+						<label class="col-sm-3 control-label"><bean:message key="operator.payment.amountpaid.amountword" />
 						</label>
 						<div class="col-sm-5">
 							<label class="control-label"><strong>${payment.getAmountInWords()}</strong></label>
 						</div>
 					</div>
 					<div class="form-group">
-						<label class="col-sm-3 control-label">Payment Mode : </label>
+						<label class="col-sm-3 control-label"><bean:message key="operator.payment.amountpaid.paymode" /> </label>
 						<div class="col-sm-5">
 							<label class="control-label"><strong>${payment.mode}</strong></label>
 						</div>
 					</div>
 					<div class="form-group">
-						<label class="col-sm-3 control-label">Description/Paid By
-							: </label>
+						<label class="col-sm-3 control-label"><bean:message key="operator.payment.amountpaid.desc" /> </label>
 						<div class="col-sm-5">
 							<label class="control-label"><strong>${payment.paidBy}</strong></label>
 						</div>
@@ -88,12 +85,12 @@
 				<div class="form-group">
 					<div class="row">
 						<button type="button" id="generateReceipt"
-							class="col-sm-offset-2 col-sm-3 btn btn-primary waves-effect waves-button waves-float">
-							<i class="md md-receipt"></i> &nbsp;&nbsp;Generate Receipt
+							class="col-sm-offset-2 col-sm-3 btn btn-primary">
+							<i class="zmdi zmdi-receipt" style="padding-left: 10px"></i>Generate Receipt
 						</button>
 						<button type="button" id="sendReceipt"
-							class="col-sm-offset-2 col-sm-3 btn btn-primary waves-effect waves-button waves-float">
-							<i class="md md-message"></i> &nbsp;&nbsp;SEND SMS/EMAIL RECEIPT
+							class="col-sm-offset-2 col-sm-3 btn btn-primary">
+							<i class="zmdi zmdi-phone-msg" style="padding-left: 10px"></i>SEND SMS/EMAIL RECEIPT
 						</button>
 					</div>
 				</div>
@@ -128,8 +125,7 @@
 							<div class="modal-body">
 								<div class="row">
 									<div class="form-group">
-										<label for="inputName" class="col-sm-6 control-label">Customer
-											Mobile (if Multiple,then CSV) :</label>
+										<label for="inputName" class="col-sm-6 control-label"><bean:message key="operator.payment.amountpaid.mobile" /></label>
 										<div class="col-sm-12">
 											<div class="fg-line">
 												<input class="form-control" type="text" id="sendMobiles"
@@ -140,8 +136,7 @@
 								</div>
 								<div class="row">
 									<div class="form-group">
-										<label for="inputName" class="col-sm-6 control-label">Customer
-											Email (if Multiple,then CSV) :</label>
+										<label for="inputName" class="col-sm-6 control-label"><bean:message key="operator.payment.amountpaid.email" /></label>
 										<div class="col-sm-12">
 											<div class="fg-line">
 												<input type="text" class="form-control" id="sendEmails"

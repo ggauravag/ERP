@@ -24,24 +24,6 @@ import com.dbt.support.Email;
 
 public class OrderAction extends Action {
 
-	private boolean isMerchant(String name) {
-
-		name = name.toLowerCase();
-		boolean isMerchant = false;
-		String[] names = { "enterprise", "canning", "plastic", "material",
-				"and", "trading", "co.", "company", "furniture", "market",
-				"store", "service", "sons" };
-
-		for (String each : names) {
-			if (name.contains(each)) {
-				isMerchant = true;
-				break;
-			}
-		}
-
-		return isMerchant;
-	}
-
 	@Override
 	public ActionForward execute(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
@@ -52,8 +34,11 @@ public class OrderAction extends Action {
 		OrderForm orderform = (OrderForm) form;
 
 		String method = request.getParameter("confirm");
-		try {
-			if (method == null) {
+		System.out.println("Method is : "+method);
+		try 
+		{
+			if (method == null) 
+			{
 				String name = orderform.getName();
 				String email = orderform.getEmail();
 				String house = orderform.getHouse();
@@ -83,105 +68,130 @@ public class OrderAction extends Action {
 				List<Product> products = new ArrayList<Product>();
 				int amount = 0;
 
-				for (int i = 0; i < numProducts; i++) {
+				for (int i = 0; i < numProducts; i++) 
+				{
 					String[] props = prodName[i].split(" : ");
-					amount += Integer.parseInt(qtys[i])
-							* Integer.parseInt(prices[i]);
-					products.add(new Product(Integer.parseInt(props[1]), 0,
-							props[0], Integer.parseInt(qtys[i]), Integer
-									.parseInt(prices[i]), 0));
+					amount += Integer.parseInt(qtys[i]) * Integer.parseInt(prices[i]);
+					products.add(new Product(Integer.parseInt(props[1]), 0,props[0], Integer.parseInt(qtys[i]), Integer.parseInt(prices[i]), 0));
 				}
+				request.setAttribute("orderAmount", amount);
+				
 				String dateTime = orderform.getOrderTime();
 
-				SimpleDateFormat formatter = new SimpleDateFormat(
-						"MM/dd/yyyy hh:mm a");
+				SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy hh:mm a");
 				Date date = null;
-				if (!"".equals(dateTime) && dateTime != null) {
-					try {
+				
+				if (!"".equals(dateTime) && dateTime != null) 
+				{
+					try 
+					{
 						date = formatter.parse(dateTime);
-					} catch (Exception e) {
+						System.out.println("Valid Date : "+dateTime);
+					} 
+					catch (Exception e) 
+					{
 						Email.sendExceptionReport(e);
 						date = new Date();
 					}
-				} else {
+				}
+				else 
+				{
+					System.out.println("Invalid date : "+dateTime);
 					date = new Date();
 				}
+				
 				Order order = new Order(cust, products, 0, date, amount);
 				request.getSession().setAttribute("order", order);
-				if (isMerchant(name)) {
+				if ("MERCHANT".equals(orderform.getCustType())) 
+				{
 					order.getCustomer().setType("MERCHANT");
 					request.setAttribute("needTin", true);
-				} else {
+				} 
+				else
+				{
 					order.getCustomer().setType("CUSTOMER");
 					request.setAttribute("needTin", false);
 				}
 
 				result = "confirm";
-			} else if ("submit".equals(method)) {
-				Order order = (Order) request.getSession()
-						.getAttribute("order");
+				
+			} 
+			else if ("submit".equals(method)) 
+			{
+				Order order = (Order) request.getSession().getAttribute("order");
 
-				if (order == null) {
+				if (order == null) 
+				{
 					result = "failure";
-				} else {
-
+				} 
+				else 
+				{
 					int cid = order.getCustomer().getId();
-					System.out
-							.println("OrderAction - Submit Clicked, CID is : "
-									+ cid);
-					if (cid == -1) {
-						if (order.getCustomer().getType().equals("MERCHANT")) {
-							String tinNumber = request
-									.getParameter("tinNumber");
+					System.out.println("OrderAction - Submit Clicked, CID is : "+ cid);
+					if (cid == -1) 
+					{
+						if (order.getCustomer().getType().equals("MERCHANT")) 
+						{
+							String tinNumber = request.getParameter("tinNumber");
+							System.out.println("OrderAction - Submit : tinNumber = "+tinNumber);
 							order.getCustomer().setTin(tinNumber);
-							cid = new CustomerDAO().insertMerchant(order
-									.getCustomer());
+							cid = new CustomerDAO().insertMerchant(order.getCustomer());
 
-							if (cid != 0) {
+							if (cid != 0)
+							{
 								result = "success";
-
-							} else {
+							} 
+							else 
+							{
 								result = "failure";
 								request.setAttribute("status", false);
 							}
-						} else {
-							cid = new CustomerDAO().insertCustomer(order
-									.getCustomer());
-							if (cid != 0) {
+						} 
+						else 
+						{
+							cid = new CustomerDAO().insertCustomer(order.getCustomer());
+							if (cid != 0) 
+							{
 								result = "success";
-							} else {
+							} 
+							else 
+							{
 								result = "failure";
 								request.setAttribute("status", false);
 							}
 						}
-					} else {
+					} 
+					else 
+					{
 						result = "success";
-
 					}
 
-					System.out
-							.println("OrderAction - Submit Clicked, result is : "
-									+ result);
-					if ("success".equals(result)) {
+					System.out.println("OrderAction - Submit Clicked, result is : "+ result);
+					if ("success".equals(result)) 
+					{
 						order.getCustomer().setId(cid);
 						boolean isOrderTaken = OrderDAO.takeOrder(order);
-						if (!isOrderTaken) {
+						if (!isOrderTaken) 
+						{
 							result = "failure";
 							request.setAttribute("status", false);
-						} else {
-
+						} 
+						else 
+						{
 							request.setAttribute("order", order);
 						}
 					}
 				}
-			} else if ("reset".equals(method)) {
-				Order order = (Order) request.getSession()
-						.getAttribute("order");
+			} 
+			else if ("reset".equals(method)) 
+			{
+				Order order = (Order) request.getSession().getAttribute("order");
 				request.setAttribute("order", order);
 				result = "modify";
 			}
-
-		} catch (Exception e) {
+		} 
+		catch (Exception e) 
+		{
 			request.setAttribute("status", false);
 			Email.sendExceptionReport(e);
 		}

@@ -2,15 +2,16 @@ package com.dbt.dao;
 
 import java.sql.CallableStatement;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Types;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
 
+import com.dbt.data.Attendance;
 import com.dbt.database.DBConnection;
-import com.dbt.exception.NoConnectionException;
 import com.dbt.support.Email;
 
 public class AttendanceDAO {
@@ -56,8 +57,7 @@ public class AttendanceDAO {
 			stmt.execute();
 
 			result = stmt.getInt(4);
-			stmt.close();
-			con.close();
+			
 
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -68,5 +68,36 @@ public class AttendanceDAO {
 
 		System.out.println("Attendance DAO: Data inserted");
 		return result;
+	}
+	
+	public List<Attendance> getAttendance(Date from, Date to, int empId)
+	{
+		List<Attendance> attendance = new ArrayList<Attendance>();
+		
+		System.out.println("At attendanceDAO, from : " + from);
+		System.out.println("At attendanceDAO, to : " + to);
+		
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet set = null;
+		try {
+			con = DBConnection.getConnection();
+			String query = "select * from attendance where employee_id=? and date BETWEEN ? and ? order by `date`";
+			
+			stmt = con.prepareStatement(query);
+			stmt.setInt(1, empId);
+			stmt.setDate(2, from);
+			stmt.setDate(3, to);
+			set = stmt.executeQuery();
+			while (set.next()) {
+				attendance.add(new Attendance(empId, set.getDate("date"), set.getInt("halfday")));
+			}
+		} catch (Exception e) {
+			Email.sendExceptionReport(e);
+		} finally {
+			DBConnection.closeResource(con, stmt, set);
+		}
+
+		return attendance;
 	}
 }

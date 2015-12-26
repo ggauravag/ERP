@@ -26,7 +26,7 @@
             <section id="content">
                 <div class="container">
                     <div class="block-header">
-                        <h1>Add Capital</h1>
+                        <h1><bean:message key="owner.employee.addcapital.label" /></h1>
                     </div>
                     
                     <div class="card">
@@ -34,11 +34,11 @@
                         		name="capitalForm" id="capitalForm" role="form">
                             
                             <div class="card-header">
-                                <h2>Capital Details</h2>
+                                <h2><bean:message key="owner.employee.addcapital.head1" /></h2>
                             </div>
                             <div class="card-body card-padding">
                                 <div class="form-group" id="amountDiv">
-                                    <label for="inputAmount" class="col-sm-2 control-label">Capital Amount</label>
+                                    <label for="inputAmount" class="col-sm-2 control-label"><bean:message key="owner.addcapital.amount" /></label>
                                     <div class="col-sm-8">
                                         <div class="fg-line">
                                             <input type="text" class="form-control" name="inputAmount" id="inputAmount" placeholder="Amount (Rs)">
@@ -49,7 +49,7 @@
                                     </div>
                                 </div>
                                 <div class="form-group" id="rateDiv">
-                                    <label for="inputRate" class="col-sm-2 control-label">Interest Rate</label>
+                                    <label for="inputRate" class="col-sm-2 control-label"><bean:message key="owner.addcapital.rate" /></label>
                                     <div class="col-sm-8">
                                         <div class="fg-line">
                                             <input type="text" class="form-control" name="inputRate" id="inputRate" placeholder="Interest Rate (%)">
@@ -61,7 +61,7 @@
                                 </div>
                                 
                                 <div class="form-group" id="lenderDiv">
-                                    <label for="inputLender" class="col-sm-2 control-label">Lender Name</label>
+                                    <label for="inputLender" class="col-sm-2 control-label"><bean:message key="owner.addcapital.name" /></label>
                                     <div class="col-sm-8">
                                         <div class="fg-line">
                                             <input type="text" class="form-control" name="inputLender" id="inputLender" placeholder="Enter Lender's Name">

@@ -248,6 +248,39 @@ public class StockDAO {
 		}
 		return result;
 	}
+	
+	public boolean addStock(int merchantId,int orderAmount, List<Product> products)
+	{
+		boolean result = false;
+		Connection con = null;
+		try 
+		{
+			con = DBConnection.getConnection();
+			int prodId = 0, purchaseId;
+			purchaseId = addPurchase(merchantId, orderAmount, con);
+			Iterator<Product> iter = products.iterator();
+			while (iter.hasNext()) 
+			{
+				Product prod = iter.next();
+	
+				prodId = updateProductStock(prod.getId(), prod.getCategory(),
+						prod.getQuantity(), prod.getCostPrice(),
+						prod.getSellPrice(), con);
+				addPurchaseItem(purchaseId, prodId, prod.getQuantity(),
+						prod.getCostPrice() * prod.getQuantity(), con);
+			}
+			result = true;
+		}
+		catch(Exception e)
+		{
+			Email.sendExceptionReport(e);
+		}
+		finally
+		{
+			DBConnection.closeResource(con, null, null);
+		}
+		return result;
+	}
 
 	public boolean purchaseStock(int merchantId, int orderAmount,
 			int currentPay, String payMode, String desc, String paidTo,
@@ -268,9 +301,9 @@ public class StockDAO {
 			boolean purExp = addPurchaseExpenditure(purchaseId, expId, con);
 
 			Iterator<Product> iter = products.iterator();
-			while (iter.hasNext()) {
+			while (iter.hasNext()) 
+			{
 				Product prod = iter.next();
-
 				prodId = updateProductStock(prod.getId(), prod.getCategory(),
 						prod.getQuantity(), prod.getCostPrice(),
 						prod.getSellPrice(), con);
@@ -287,6 +320,7 @@ public class StockDAO {
 				System.out.println("Stock Purchased successfully");
 				result = true;
 			}
+			con.setAutoCommit(true);
 
 		} catch (Exception ex) {
 			Email.sendExceptionReport(ex);

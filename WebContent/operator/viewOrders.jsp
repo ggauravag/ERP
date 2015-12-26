@@ -27,27 +27,26 @@
 		id="content">
 	<div class="container">
 		<div class="block-header">
-			<h1>View Orders</h1>
+			<h1><bean:message key="operator.vieworder.label" /></h1>
 		</div>
 
 		<div class="card">
-			<form class="form-horizontal" action="operator/payment/PayOrder.do" method="post"
-				id="payForm" role="form">
+			<form class="form-horizontal" action="operator/payment/PayOrder.do"
+				method="post" id="payForm" role="form">
 
 				<div class="card-header">
-					<h2>Enter Order ID or Name or Mobile and verify the details</h2>
+					<h2><bean:message key="operator.vieworder.head1" /></h2>
 				</div>
 				<div class="card-body card-padding">
 					<font color="red"><html:errors property="orderError" /></font>
 					<div class="form-group">
-						<label for="inputOrder" class="col-sm-2 control-label">Order
-							ID</label>
+						<label for="inputOrder" class="col-sm-2 control-label"><bean:message key="operator.processorder.orderid" /></label>
 						<div class="col-sm-6">
 							<div class="fg-line">
 								<input type="text" class="form-control" id="inputOrderID"
 									placeholder="Enter Order ID">
 							</div>
-							<span class="md-shopping-basket form-control-feedback"></span>
+							<span class="zmdi zmdi-shopping-basket form-control-feedback"></span>
 						</div>
 					</div>
 					<div class="form-group">
@@ -56,14 +55,13 @@
 					</div>
 					<div class="row">
 						<div class="form-input">
-							<label for="inputMobile" class="col-sm-2 control-label">Mobile
-								Number</label>
+							<label for="inputMobile" class="col-sm-2 control-label"><bean:message key="operator.processorder.mobile" /></label>
 							<div class="col-sm-6 m-b-25">
 								<div class="fg-line">
 									<input type="text" class="form-control" id="inputMobile"
 										placeholder="Enter Mobile">
 								</div>
-								<span class="md-phone-android form-control-feedback"></span>
+								<span class="zmdi zmdi-smartphone-android form-control-feedback"></span>
 							</div>
 						</div>
 
@@ -82,55 +80,84 @@
 						<div class="col-sm-6"></div>
 					</div>
 					<div class="form-group">
-						<label for="inputName" class="col-sm-2 control-label">Customer
-							Name</label>
+						<label for="inputName" class="col-sm-2 control-label"><bean:message key="operator.processorder.cusname" /></label>
 						<div class="col-sm-6">
 							<div class="fg-line">
 								<input type="text" class="form-control" id="inputName"
 									placeholder="Enter Name">
 							</div>
-							<span class="md md-person form-control-feedback"></span>
+							<span class="zmdi zmdi-account form-control-feedback"></span>
 						</div>
+					</div>
+					<div class="form-group">
+						<label for="inputOrder" class="col-sm-2 control-label">OR</label>
+						<div class="col-sm-6"></div>
+					</div>
+					<div class="form-group">
+						<div class="form-input">
+							<label for="inputMobile" class="col-sm-2 control-label"><bean:message key="operator.processorder.orderdate" /> </label>
+							<div class="col-sm-2 m-b-25">
+								<div class="dtp-container dropdown fg-line open">
+									<input type="text" name="fromDate"
+										class="form-control date-picker" data-toggle="dropdown"
+										aria-expanded="true" id="inputFromDate"
+										placeholder="From Date">
+								</div>
+								<span class="zmdi zmdi-calendar form-control-feedback"></span>
+
+							</div>
+							<div class="col-sm-2 m-b-25">
+								<label class="control-label">to</label>
+							</div>
+							<div class="col-sm-2 m-b-25">
+
+								<div class="dtp-container dropdown fg-line open">
+									<input type="text" name="toDate"
+										class="form-control date-picker" data-toggle="dropdown"
+										aria-expanded="true" id="inputToDate" placeholder="To Date">
+								</div>
+								<span class="zmdi zmdi-calendar form-control-feedback"></span> 
+							</div>
+						</div>
+
 					</div>
 					<div id="fillOrderDetails"></div>
 				</div>
 				<!-- card-body card-padding div 1-->
 
 				<div class="card-header">
-					<h2>Customer Details</h2>
+					<h2><bean:message key="operator.vieworder.head2" /></h2>
 				</div>
 
 				<div class="card-body card-padding">
 					<div class="form-group">
-						<label for="inputName" class="col-sm-2 control-label">Customer
-							Name</label>
+						<label for="inputName" class="col-sm-2 control-label"><bean:message key="operator.processorder.cusname" /></label>
 						<div class="col-sm-8">
 							<div class="fg-line">
 								<input type="text" class="form-control" id="selectName" readonly>
 							</div>
-							<span class="md md-person form-control-feedback"></span>
+							<span class="zmdi zmdi-account form-control-feedback"></span>
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="inputEmail" class="col-sm-2 control-label">Email</label>
+						<label for="inputEmail" class="col-sm-2 control-label"><bean:message key="operator.processorder.email" /></label>
 						<div class="col-sm-8">
 							<div class="fg-line">
 								<input type="email" name="email" class="form-control"
 									id="selectEmail" readonly>
 							</div>
-							<span class="md md-email form-control-feedback"></span>
+							<span class="zmdi zmdi-email form-control-feedback"></span>
 						</div>
 					</div>
 
 					<div class="form-group">
-						<label for="inputMobile" class="col-sm-2 control-label">Mobile
-							Number</label>
+						<label for="inputMobile" class="col-sm-2 control-label"><bean:message key="operator.processorder.mobile" /></label>
 						<div class="col-sm-8">
 							<div class="fg-line">
 								<input type="text" name="mobile" class="form-control"
 									id="selectMobile" readonly>
 							</div>
-							<span class="md-phone-android form-control-feedback"></span>
+							<span class="zmdi zmdi-smartphone-android form-control-feedback"></span>
 						</div>
 					</div>
 
@@ -139,17 +166,16 @@
 
 						<div class="form-group">
 							<div class="col-sm-2 col-sm-offset-1">
-								<label class="control-label"><strong><h5>Product
-											Name</h5></strong></label>
+								<label class="control-label"><strong><h5><bean:message key="operator.processorder.prodname" /></h5></strong></label>
 							</div>
 							<div class="col-sm-2 col-sm-offset-1">
-								<label class="control-label"><strong><h5>Rate</h5></strong></label>
+								<label class="control-label"><strong><h5><bean:message key="operator.vieworder.rate" /></h5></strong></label>
 							</div>
 							<div class="col-sm-2 col-sm-offset-1">
-								<label class="control-label"><strong><h5>Quantity</h5></strong></label>
+								<label class="control-label"><strong><h5><bean:message key="operator.processorder.qty" /></h5></strong></label>
 							</div>
 							<div class="col-sm-2 col-sm-offset-1">
-								<label class="control-label"><strong><h5>Total</h5></strong></label>
+								<label class="control-label"><strong><h5><bean:message key="operator.vieworder.total" /></h5></strong></label>
 							</div>
 						</div>
 						<div id="productDetails"></div>
@@ -159,29 +185,25 @@
 					<div id="orderDiv" class="form-input">
 						<h4>Shipment Details :</h4>
 						<div class="panel-group" role="tablist" id="panelDiv"
-							aria-multiselectable="true">
-							
-						</div>
+							aria-multiselectable="true"></div>
 					</div>
 				</div>
 				<!-- card-body card-padding div 2-->
 
 				<div class="card-header">
-					<h4>Payment Details</h4>
+					<h4><bean:message key="operator.vieworder.head3" /></h4>
 				</div>
 				<div class="card-body card-padding">
 					<input type="hidden" name="itemJSON" id="itemJSON" />
 
 					<div class="row">
 						<div class="form-group">
-							<label class="control-label col-sm-3 ">Total Payment : <font
+							<label class="control-label col-sm-3 "><bean:message key="operator.vieworder.totalpayment" /> <font
 								color="black" size="5px"><span class="WebRupee">&#x20B9;
 								</span><label id="total"></label></font>
-							</label> <label class="control-label col-sm-3 col-sm-offset-1">Payment
-								Made : <font color="green" size="5px"><span
-									class="WebRupee">&#x20B9; </span><label id="paid"></label></font>
-							</label> <label class="control-label col-sm-3 col-sm-offset-1">Total
-								Due : <font color="red" size="5px"><span class="WebRupee">&#x20B9;
+							</label> <label class="control-label col-sm-3 col-sm-offset-1"><bean:message key="operator.vieworder.paymentmade" />
+							 <font color="green" size="5px"><span class="WebRupee">&#x20B9; </span><label id="paid"></label></font>
+							</label> <label class="control-label col-sm-3 col-sm-offset-1"><bean:message key="operator.vieworder.due" /> <font color="red" size="5px"><span class="WebRupee">&#x20B9;
 								</span><label id="due"></label></font>
 							</label>
 						</div>
@@ -189,14 +211,14 @@
 					<div class="table-responsive">
 						<table class="table table-hover">
 							<thead>
-								<th>Txn ID</th>
-								<th>Date/Time</th>
-								<th>Amount</th>
-								<th>Mode</th>
-								<th>Paid By</th>
-								<th>Order ID</th>
-								<th>Type</th>
-								<th>Receipt</th>
+								<th><bean:message key="operator.vieworder.table.txid" /></th>
+								<th><bean:message key="operator.vieworder.table.datetime" /></th>
+								<th><bean:message key="operator.vieworder.table.amount" /></th>
+								<th><bean:message key="operator.vieworder.table.mode" /></th>
+								<th><bean:message key="operator.vieworder.table.paidby" /></th>
+								<th><bean:message key="operator.vieworder.table.orderid" /></th>
+								<th><bean:message key="operator.vieworder.table.type" /></th>
+								<th><bean:message key="operator.vieworder.table.receipt" /></th>
 							</thead>
 							<tbody id="paymentDetails">
 
@@ -208,9 +230,13 @@
 				<br /> <br /> <br />
 				<div class="form-group">
 					<div class="col-sm-offset-2 col-sm-10">
-						<button type="button"  onclick="javascript:window.open('operator/payment/payOrder.jsp', '_self', '', '');" class="btn btn-primary btn-lg col-sm-4">Pay
-							For Order</button>
-						<button type="button" onclick="javascript:window.open('operator/processOrder.jsp', '_self', '', '');" class="btn btn-primary btn-lg col-sm-4 col-sm-offset-1">Ship Order</button>
+						<button type="button"
+							onclick="javascript:window.open('operator/payment/payOrder.jsp', '_self', '', '');"
+							class="btn btn-primary btn-lg col-sm-4">Pay For Order</button>
+						<button type="button"
+							onclick="javascript:window.open('operator/processOrder.jsp', '_self', '', '');"
+							class="btn btn-primary btn-lg col-sm-4 col-sm-offset-1">Ship
+							Order</button>
 					</div>
 				</div>
 				<br>
@@ -237,8 +263,8 @@
 	<!-- card div --> <!-- container div --> </section> </section>
 
 	<%@include file="../../js/includejs.jsp"%>
-	<script
-		src="<%=basePath%>/vendors/bootstrap-datetimepicker/bootstrap-datetimepicker.min.js"></script>
-	<script type="text/javascript" src="<%=basePath%>/js/extra.js"></script>
+	<script type="text/javascript" src="js/extra.js"></script>
+	<script src="vendors/moment/moment.min.js"></script>
+	<script src="vendors/bootstrap-datetimepicker/bootstrap-datetimepicker.min.js"></script>
 </body>
 </html>

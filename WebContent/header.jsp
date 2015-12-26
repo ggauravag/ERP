@@ -113,9 +113,9 @@
 					class="tm-settings" href="#"></a>
 					<ul class="dropdown-menu dm-icon pull-right">
 						<li><a data-action="fullscreen" href="#"><i
-								class="md md-fullscreen"></i> Toggle Fullscreen</a></li>
+								class="zmdi zmdi-fullscreen"></i> Toggle Fullscreen</a></li>
 						
-						<li><a href="#"><i class="md md-settings"></i> Other
+						<li><a href="#"><i class="zmdi zmdi-settings"></i> Other
 								Settings</a></li>
 					</ul></li>
 

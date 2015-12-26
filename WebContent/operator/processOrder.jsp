@@ -25,7 +25,7 @@
 	<section id="content">
 	<div class="container">
 		<div class="block-header">
-			<h1>Process Order</h1>
+			<h1><bean:message key="operator.processorder.label" /></h1>
 		</div>
 
 		<div class="card">
@@ -33,19 +33,18 @@
 				method="post" role="form">
 
 				<div class="card-header">
-					<h2>Enter Order ID or Name or Mobile and verify the details</h2>
+					<h2><bean:message key="operator.processorder.head1" /></h2>
 				</div>
 				<div class="card-body card-padding">
 					<font color="red"><html:errors property="orderError" /></font>
 					<div class="form-group">
-						<label for="inputOrder" class="col-sm-2 control-label">Order
-							ID</label>
+						<label for="inputOrder" class="col-sm-2 control-label"><bean:message key="operator.processorder.orderid" /></label>
 						<div class="col-sm-6">
 							<div class="fg-line">
 								<input type="text" class="form-control" id="inputOrderID"
 									placeholder="Enter Order ID">
 							</div>
-							<span class="md-shopping-basket form-control-feedback"></span>
+							<span class="zmdi zmdi-shopping-basket form-control-feedback"></span>
 						</div>
 					</div>
 					<div class="form-group">
@@ -54,14 +53,13 @@
 					</div>
 					<div class="row">
 						<div class="form-input">
-							<label for="inputMobile" class="col-sm-2 control-label">Mobile
-								Number</label>
+							<label for="inputMobile" class="col-sm-2 control-label"><bean:message key="operator.processorder.mobile" /></label>
 							<div class="col-sm-6 m-b-25">
 								<div class="fg-line">
 									<input type="text" class="form-control" id="inputMobile"
 										placeholder="Enter Mobile">
 								</div>
-								<span class="md-phone-android form-control-feedback"></span>
+								<span class="zmdi zmdi-smartphone-android form-control-feedback"></span>
 							</div>
 						</div>
 
@@ -80,53 +78,82 @@
 						<div class="col-sm-6"></div>
 					</div>
 					<div class="form-group">
-						<label for="inputName" class="col-sm-2 control-label">Customer
-							Name</label>
+						<label for="inputName" class="col-sm-2 control-label"><bean:message key="operator.processorder.cusname" /></label>
 						<div class="col-sm-6">
 							<div class="fg-line">
 								<input type="text" class="form-control" id="inputName"
 									placeholder="Enter Name">
 							</div>
-							<span class="md md-person form-control-feedback"></span>
+							<span class="zmdi zmdi-account form-control-feedback"></span>
 						</div>
+					</div>
+					<div class="form-group">
+						<label for="inputOrder" class="col-sm-2 control-label">OR</label>
+						<div class="col-sm-6"></div>
+					</div>
+					<div class="form-group">
+						<div class="form-input">
+							<label for="inputMobile" class="col-sm-2 control-label"><bean:message key="operator.processorder.orderdate" /> </label>
+							<div class="col-sm-2 m-b-25">
+								<div class="dtp-container dropdown fg-line open">
+									<input type="text" name="fromDate"
+										class="form-control date-picker" data-toggle="dropdown"
+										aria-expanded="true" id="inputFromDate"
+										placeholder="From Date">
+								</div>
+								<span class="zmdi zmdi-calendar form-control-feedback"></span>
+
+							</div>
+							<div class="col-sm-2 m-b-25">
+								<label class="control-label">to</label>
+							</div>
+							<div class="col-sm-2 m-b-25">
+
+								<div class="dtp-container dropdown fg-line open">
+									<input type="text" name="toDate"
+										class="form-control date-picker" data-toggle="dropdown"
+										aria-expanded="true" id="inputToDate" placeholder="To Date">
+								</div>
+								<span class="zmdi zmdi-calendar form-control-feedback"></span> 
+							</div>
+						</div>
+
 					</div>
 					<div id="fillOrderDetails"></div>
 				</div>
 				<!-- card-body card-padding div 1-->
 
 				<div class="card-header">
-					<h2>Customer Details</h2>
+					<h2><bean:message key="operator.processorder.head2" /></h2>
 				</div>
 				<div class="card-body card-padding">
 					<div class="form-group">
-						<label for="inputName" class="col-sm-2 control-label">Customer
-							Name</label>
+						<label for="inputName" class="col-sm-2 control-label"><bean:message key="operator.processorder.cusname" /></label>
 						<div class="col-sm-8">
 							<div class="fg-line">
 								<input type="text" class="form-control" id="selectName" readonly>
 							</div>
-							<span class="md md-person form-control-feedback"></span>
+							<span class="zmdi zmdi-account form-control-feedback"></span>
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="inputEmail" class="col-sm-2 control-label">Email</label>
+						<label for="inputEmail" class="col-sm-2 control-label"><bean:message key="operator.processorder.email" /></label>
 						<div class="col-sm-8">
 							<div class="fg-line">
 								<input type="email" name="email" class="form-control"
 									id="selectEmail" readonly>
 							</div>
-							<span class="md md-email form-control-feedback"></span>
+							<span class="zmdi zmdi-email form-control-feedback"></span>
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="inputMobile" class="col-sm-2 control-label">Mobile
-							Number</label>
+						<label for="inputMobile" class="col-sm-2 control-label"><bean:message key="operator.processorder.mobile" /></label>
 						<div class="col-sm-8">
 							<div class="fg-line">
 								<input type="text" name="mobile" class="form-control"
 									id="selectMobile" readonly>
 							</div>
-							<span class="md-phone-android form-control-feedback"></span>
+							<span class="zmdi zmdi-smartphone-android form-control-feedback"></span>
 						</div>
 					</div>
 
@@ -135,15 +162,13 @@
 
 						<div class="form-group">
 							<div class="col-sm-2 col-sm-offset-1">
-								<label class="control-label"><strong>To be
-										Shipped ? </strong></label>
+								<label class="control-label"><strong><bean:message key="operator.processorder.tobeshipped" /> </strong></label>
 							</div>
 							<div class="col-sm-2 col-sm-offset-1">
-								<label class="control-label"><strong>Product
-										Name</strong></label>
+								<label class="control-label"><strong><bean:message key="operator.processorder.prodname" /></strong></label>
 							</div>
 							<div class="col-sm-2 col-sm-offset-1">
-								<label class="control-label"><strong>Quantity</strong></label>
+								<label class="control-label"><strong><bean:message key="operator.processorder.qty" /></strong></label>
 							</div>
 						</div>
 						<div id="productDetails"></div>
@@ -153,14 +178,16 @@
 						<h4>Discount Details :</h4>
 
 						<div class="form-group">
-							<div class="col-sm-2 col-sm-offset-1">
-								<label for="discount" class="control-label">Discount Amount (If Any)</label>
-							</div>
 							<div class="col-sm-3">
+								<label for="discount" class="control-label"><bean:message key="operator.processorder.discount" /></label>
+							</div>
+							<div class="col-sm-3" style="margin-left: -75px">
 								<div class="fg-line">
 									<input type="text" name="discount" id="discount" class="form-control"
 										placeholder="Enter Any Discount (If Applicable)">
+										
 								</div>
+								<span class="input-group-addon"><i class="zmdi zmdi-money"></i></span>
 							</div>
 						</div>
 					</div>
@@ -168,21 +195,20 @@
 				<!-- card-body card-padding div 2-->
 
 				<div class="card-header">
-					<h2>Shipping Details</h2>
+					<h2><bean:message key="operator.processorder.head3" /></h2>
 				</div>
 				<div class="card-body card-padding">
 					<input type="hidden" name="itemJSON" id="itemJSON" />
 					<div class="row">
 						<div class="form-input">
-							<label for="inputMedium" class="col-sm-2 control-label">Shipping
-								Medium</label>
+							<label for="inputMedium" class="col-sm-2 control-label"><bean:message key="operator.processorder.shippingmedium" /></label>
 							<div class="select col-sm-4 m-b-25">
 								<select name="mediumType" class="form-control"
 									data-live-search="true">
 									<option>Select Transport Medium</option>
 									<option>Tempo / Owner Vehicle</option>
 									<option>Buyer's Own</option>
-									<option>Transport Company</option>
+									<option>Transport/Courier Company</option>
 								</select>
 							</div>
 							<small class="help-block"><font color="red"><html:errors
@@ -193,20 +219,21 @@
 							<div class="col-sm-3">
 								<div class="fg-line">
 									<input type="text" name="vehicleNum" class="form-control"
-										placeholder="Enter Vehicle Number">
+										placeholder="Vehicle/Shipment Number">
 								</div>
+								<span class="input-group-addon">
+								<i class="zmdi zmdi-local-shipping"></i></span>
 							</div>
 						</div>
 					</div>
 
 					<div class="row">
 						<div class="form-input">
-							<label for="inputHouse" class="col-sm-2 control-label">Driver
-								Details</label>
+							<label for="inputHouse" class="col-sm-2 control-label"><bean:message key="operator.processorder.driverdetails" /></label>
 							<div class="col-sm-4 m-b-25">
 								<div class="fg-line open">
 									<input type="text" name="mediumName" class="form-control"
-										placeholder="Driver Name">
+										placeholder="Driver/Courier Company Name">
 								</div>
 							</div>
 						</div>
@@ -216,23 +243,23 @@
 									<input type="text" name="contactMedium" class="form-control"
 										id="inputAddress1" placeholder="Contact Number">
 								</div>
-
+								
 							</div>
 						</div>
 					</div>
 
 					<div class="row">
-						<label for="inputDate" class="col-sm-2 control-label">Shipping
-							Date/Time</label>
-						<div class="col-sm-4">
+						<label for="inputDate" class="col-sm-2 control-label"><bean:message key="operator.processorder.shippingdatetime" /></label>
+						<div class="col-sm-3">
 							<div class="input-group form-group">
-								<span class="input-group-addon"><i class="md md-event"></i></span>
+								
 								<div class="dtp-container dropdown fg-line open">
 									<input type="text" name="shipDate"
 										class="form-control date-time-picker" data-toggle="dropdown"
 										aria-expanded="true" id="inputDate"
 										placeholder="Shipping Date & Time">
 								</div>
+								<span class="input-group-addon"><i class="zmdi zmdi-calendar"></i></span>
 								<small class="help-block"><font color="red"><html:errors
 											property="dateError" /></font></small>
 							</div>
@@ -240,9 +267,8 @@
 					</div>
 					
 					<div class="row">
-						<label for="inputCharge" class="col-sm-2 control-label">Shipping
-							Charges</label>
-						<div class="col-sm-4">
+						<label for="inputCharge" class="col-sm-2 control-label"><bean:message key="operator.processorder.shippingcharges" /></label>
+						<div class="col-sm-2">
 							<div class="input-group form-group">
 								
 								<div class="dtp-container dropdown fg-line open">
@@ -250,6 +276,7 @@
 										class="form-control" id="inputCharge"
 										placeholder="Ex. 1000">
 								</div>
+								<span class="input-group-addon"><i class="zmdi zmdi-money"></i></span>
 								<small class="help-block"><font color="red"><html:errors
 											property="dateError" /></font></small>
 							</div>
@@ -277,16 +304,7 @@
 	<!-- card div --> <!-- container div --> </section> </section>
 
 	<%@include file="../js/includejs.jsp"%>
-	<script
-		src="vendors/bootstrap-datetimepicker/bootstrap-datetimepicker.min.js"></script>
-	<script src="vendors/moment/moment.min.js"></script>
-	<script src="vendors/noUiSlider/jquery.nouislider.all.min.js"></script>
-	<script src="vendors/input-mask/input-mask.min.js"></script>
-	<script src="vendors/farbtastic/farbtastic.min.js"></script>
-	<script src="vendors/summernote/summernote.min.js"></script>
-	<script
-		src="vendors/bootstrap-datetimepicker/bootstrap-datetimepicker.min.js"></script>
-	<script src="vendors/fileinput/fileinput.min.js"></script>
+		<script src="vendors/fileinput/fileinput.min.js"></script>
 	<script type="text/javascript" src="js/extra.js"></script>
 </body>
 </html>

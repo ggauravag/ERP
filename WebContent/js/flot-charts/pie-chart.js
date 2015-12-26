@@ -37,7 +37,8 @@ $(document).ready(function(){
                     x: 20,
                     y: 0
                 },
-                defaultTheme: false
+                defaultTheme: false,
+                cssClass: 'flot-tooltip'
             }
             
         });
@@ -74,7 +75,8 @@ $(document).ready(function(){
                     x: 20,
                     y: 0
                 },
-                defaultTheme: false
+                defaultTheme: false,
+                cssClass: 'flot-tooltip'
             }
             
         });

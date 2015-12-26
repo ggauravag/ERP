@@ -26,7 +26,7 @@
             <section id="content">
                 <div class="container">
                     <div class="block-header">
-                        <h1>Add Loan</h1>
+                        <h1><bean:message key="owner.employee.addloan.label" /></h1>
                     </div>
                     
                     <div class="card">
@@ -34,11 +34,11 @@
                         		name="loanForm" id="loanForm" class="form-horizontal" role="form">
                             
                             <div class="card-header">
-                                <h2>Loan Details</h2>
+                                <h2><bean:message key="owner.employee.addloan.head1" /></h2>
                             </div>
                             <div class="card-body card-padding">
                                 <div id="amountDiv" class="form-group">
-                                    <label for="inputAmount" class="col-sm-2 control-label">Loan Amount</label>
+                                    <label for="inputAmount" class="col-sm-2 control-label"><bean:message key="owner.addloan.amount" /></label>
                                     <div class="col-sm-8">
                                         <div class="fg-line">
                                             <input type="text" class="form-control" name="inputAmount" id="inputAmount" placeholder="Amount (Rs)">
@@ -49,7 +49,7 @@
                                     </div>
                                 </div>
                                 <div id="tenureDiv" class="form-group">
-                                    <label for="inputTenure" class="col-sm-2 control-label">Loan Tenure</label>
+                                    <label for="inputTenure" class="col-sm-2 control-label"><bean:message key="owner.addloan.tenure" /></label>
                                     <div class="col-sm-8">
                                         <div class="fg-line">
                                             <input type="text" class="form-control" name="inputTenure" id="inputTenure" placeholder="Tenure (years)">
@@ -61,7 +61,7 @@
                                 </div>
                                 
                                 <div id="monthlyDiv" class="form-group">
-                                    <label for="inputInstallment" class="col-sm-2 control-label">Monthly Installment</label>
+                                    <label for="inputInstallment" class="col-sm-2 control-label"><bean:message key="owner.addloan.monthly" /></label>
                                     <div class="col-sm-8">
                                         <div class="fg-line">
                                             <input type="text" class="form-control" name="inputInstallment" id="inputInstallment" placeholder="Installment (monthly)">
@@ -73,7 +73,7 @@
                                 </div>
                                 
                                 <div id="interestDiv" class="form-group">
-                                    <label for="inputInterest" class="col-sm-2 control-label">Interest Rate</label>
+                                    <label for="inputInterest" class="col-sm-2 control-label"><bean:message key="owner.addloan.rate" /></label>
                                     <div class="col-sm-8">
                                         <div class="fg-line">
                                             <input type="text" class="form-control" name="inputInterest" id="inputInterest" placeholder="Interest Rate (%)">

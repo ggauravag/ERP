@@ -21,7 +21,7 @@
 		id="content">
 	<div class="container">
 		<div class="block-header">
-			<h1>MANAGE EMPLOYEE</h1>
+			<h1><bean:message key="operator.markattendance.label" /></h1>
 		</div>
 
 		<div class="card">
@@ -30,27 +30,26 @@
 
 
 				<div class="card-header">
-					<h2>Mark Attendance</h2>
+					<h2><bean:message key="operator.markattendance.head1" /></h2>
 				</div>
 
 				<div class="card-body card-padding">
 					<div id="nameDiv" class="form-group">
-						<label for="inputName" class="col-sm-2 control-label">Employee
-							Name</label>
+						<label for="inputName" class="col-sm-2 control-label"><bean:message key="operator.markattendance.empname" /></label>
 						<div class="col-sm-6">
 							<div class="fg-line">
 								<input type="text" class="form-control" id="inputName"
 									name="Empname" placeholder="Enter Employee Name"
 									autofocus="true" />
 							</div>
-							<span class="md md-person form-control-feedback"></span> <small
+							<span class="zmdi zmdi-person form-control-feedback"></span> <small
 								id="error" class="help-block"><font color="red"></font>
 								<html:errors property="nameError" /> </small>
 						</div>
 						<button type="button" class="btn btn-info" data-toggle="tooltip"
 							data-placement="top" title data-original-title="Search Employees"
 							id="searchEmpDetails">
-							<i class="md md-search"></i>
+							<i class="zmdi zmdi-search"></i>
 						</button>
 					</div>
 
@@ -64,7 +63,7 @@
 					<div id="HalfDayAtten" class="form-group">
 					<div class="checkbox">
 				<label> <input type="checkbox" value="Yes" name="halfDay">
-					<i class="input-helper"></i> Mark HalfDay 
+					<i class="input-helper"></i> <bean:message key="operator.markattendance.halfday" /> 
 				</label>
 			</div>
 					</div>

@@ -6,6 +6,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import com.dbt.data.Order;
 import com.dbt.data.Payment;
@@ -19,52 +20,27 @@ public class DBTSms {
 	 * @param args
 	 */
 
-	public static String schedule(String msidn, String msg, String date,
-			String time) {
+	public static String schedule(String msidn, String msg, Date date) {
 		String rsp = "";
 		// String user = AESCrypto.decrypt("7fMs2hJHbPeLdaQM93dBJA==");
-		String password = "tran";
-		String sid = "DEMOOO";
-		// String flash = "0";
-		// msisdn = "91"+msisdn;
-		System.out.println("SMS Sent");
+
+		System.out.println("SMS Scheduled ! ");
 		try {
-			// Construct The 11Post Data
-
-			//SimpleDateFormat format1 = new SimpleDateFormat("dd-MM-yyyy");
-			//SimpleDateFormat format2 = new SimpleDateFormat("HH:mm:00");
-			// java.util.Date date = new java.util.Date();
-			// String sendondate =
-			// format1.format(date)+"T"+format2.format(date);
-
-			String data = "reqid=1&format=text&route_id=loop&username=ramfur";
-			data += "&" + URLEncoder.encode("password", "UTF-8") + "="
-					+ URLEncoder.encode(password, "UTF-8");
-			data += "&" + URLEncoder.encode("to", "UTF-8") + "="
-					+ URLEncoder.encode(msidn, "UTF-8");
-			data += "&" + URLEncoder.encode("message", "UTF-8") + "="
-					+ URLEncoder.encode(msg, "UTF-8");
-			data += "&" + URLEncoder.encode("sender", "UTF-8") + "="
-					+ URLEncoder.encode(sid, "UTF-8");
-			data += "&" + URLEncoder.encode("sendondate", "UTF-8") + "=" + date
-					+ "T" + time;
-			// data += "&" + URLEncoder.encode("sendondate", "UTF-8") + "=" +
-			// "30-10-2014T23:58:00";
-
-			// System.out.println("Data is : "+data);
-			// Push the HTTP Request
+			
+			SimpleDateFormat format = new SimpleDateFormat("ddMMyyyykk:mm");
+			System.out.println("Scheduled time is : "+format.format(date));
 			URL url = new URL(
-					"http://118.139.181.117/API/WebSMS/Http/v1.0a/index.php?username=tran&"
-							+ data);
+					"http://198.24.149.4/API/pushsms.aspx?loginID=ramfur&password=programmer&mobile="
+							+ URLEncoder.encode(msidn, "UTF-8")
+							+ "&text="
+							+ URLEncoder.encode(msg,"UTF-8")
+							+ "&senderid=RAMFUR&route_id=2&Unicode=0&sch="
+							+ URLEncoder.encode(format.format(date),"UTF-8") + "");
+			
 			URLConnection conn = url.openConnection();
 			conn.setDoOutput(false);
 
-			// OutputStreamWriter wr = new
-			// OutputStreamWriter(conn.getOutputStream());
-			// wr.write(data);
-			// wr.flush();
-
-			// Read The Response
+		
 			BufferedReader rd = new BufferedReader(new InputStreamReader(
 					conn.getInputStream()));
 			String line;
@@ -121,6 +97,29 @@ public class DBTSms {
 		// xx:xx
 	}
 
+	public static String sendFeedback(String mobile, String item, String name,
+			String token, boolean shopclues) {
+		String resp;
+		String msg;
+		if (shopclues) {
+			msg = "Dear "
+					+ name
+					+ ",\nKindly give us feedback for the order("
+					+ item
+					+ ") that you had placed on ShopClues. Click here http://erp.dreambit.co.in/feedback/feedback.jsp?token="
+					+ token + "";
+		} else {
+			msg = "Dear "
+					+ name
+					+ ",\nKindly give us feedback for the order("
+					+ item
+					+ ") you had placed with us. Click here http://erp.dreambit.co.in/feedback/feedback.jsp?token="
+					+ token + "";
+		}
+		resp = sendSMS(mobile, msg);
+		return resp;
+	}
+
 	public static String sendOwnerOTP(String mobile, String name) {
 		String otp = Utils.getOTP(6);
 		String msg = name.toUpperCase()
@@ -133,7 +132,7 @@ public class DBTSms {
 	public static void sendOrderSMS(String[] mobile, Order order) {
 		String text = "Dear " + order.getCustomer().getName()
 				+ ",\nYour order has been placed with Order ID : "
-				+ order.getId() + ", and amount of order (VAT Exclusive) is : "
+				+ order.getId() + ", and amount of order is : "
 				+ order.getAmount()
 				+ ". Please refer the order ID for future purposes.";
 		StringBuffer buffer = new StringBuffer();
@@ -145,18 +144,19 @@ public class DBTSms {
 		}
 		sendSMS(buffer.toString(), text);
 	}
-	
-	public static void sendReceiptSMS(String[] mobile, Payment payment,Order order) {
+
+	public static void sendReceiptSMS(String[] mobile, Payment payment,
+			Order order) {
 		String text = "Dear " + order.getCustomer().getName()
-				+ ",\nWe have received an amount of Rs. " + payment.getAmount() + " for Order ID "
-				+ order.getId() + " as "+payment.getMode();
-		if(!"".equals(payment.getDescription()))
-		{
-			text += "("+payment.getDescription()+")";
+				+ ",\nWe have received an amount of Rs. " + payment.getAmount()
+				+ " for Order ID " + order.getId() + " as " + payment.getMode();
+		if (!"".equals(payment.getDescription())) {
+			text += "(" + payment.getDescription() + ")";
 		}
-		
-		text += " from "+payment.getPaidBy()+" wide Txn ID "+payment.getId()+".";
-		
+
+		text += " from " + payment.getPaidBy() + " wide Txn ID "
+				+ payment.getId() + ".";
+
 		StringBuffer buffer = new StringBuffer();
 		for (int i = 0; i < mobile.length; i++) {
 			if (mobile[i] != null && i != mobile.length - 1)
@@ -166,11 +166,15 @@ public class DBTSms {
 		}
 		sendSMS(buffer.toString(), text);
 	}
-	
-	public static void sendShipmentSMS(String[] mobile, Shipment shipment,Order order) {
+
+	public static void sendShipmentSMS(String[] mobile, Shipment shipment,
+			Order order) {
 		String text = "Dear " + order.getCustomer().getName()
-				+ ",\nYour order has been shipped by "+shipment.getMedium()+", No.("+shipment.getMediumNumber()+"). Contact : "+shipment.getMediumName()+" ( "+shipment.getContact()+" ) for further tracking.";
-				
+				+ ",\nYour order has been shipped by " + shipment.getMedium()
+				+ ", No.(" + shipment.getMediumNumber() + "). Contact : "
+				+ shipment.getMediumName() + " ( " + shipment.getContact()
+				+ " ) for further tracking.";
+
 		StringBuffer buffer = new StringBuffer();
 		for (int i = 0; i < mobile.length; i++) {
 			if (mobile[i] != null && i != mobile.length - 1)
@@ -192,8 +196,8 @@ public class DBTSms {
 		try {
 			// Construct The 11Post Data
 
-			//SimpleDateFormat format1 = new SimpleDateFormat("dd-MM-yyyy");
-			//SimpleDateFormat format2 = new SimpleDateFormat("HH:mm:00");
+			// SimpleDateFormat format1 = new SimpleDateFormat("dd-MM-yyyy");
+			// SimpleDateFormat format2 = new SimpleDateFormat("HH:mm:00");
 			java.util.Date date = new java.util.Date();
 			// String sendondate =
 			// format1.format(date)+"T"+format2.format(date);
@@ -253,7 +257,10 @@ public class DBTSms {
 
 			// ResultSet rs = ps.executeQuery();
 
-			sendOwnerOTP("9982166368", "Ashok");
+			//sendOwnerOTP("7062421139", "Heyy, This is a test message.");
+			
+			sendSMS("7062421145", "Heyy Anuj Kumar, This is a test message.");
+			
 			// while(rs.next())
 			// {
 

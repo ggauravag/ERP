@@ -2,6 +2,7 @@ package com.dbt.data;
 
 public class Product {
 	int orderID;
+
 	public int getOrderID() {
 		return orderID;
 	}
@@ -12,6 +13,7 @@ public class Product {
 
 	int id;
 	int category;
+	String categoryName;
 	String name;
 	int quantity;
 	int sellPrice;
@@ -25,9 +27,8 @@ public class Product {
 		this.sellPrice = 0;
 		this.costPrice = 0;
 	}
-	
-	public Product(String name)
-	{
+
+	public Product(String name) {
 		this.id = 0;
 		this.category = 0;
 		this.name = name;
@@ -38,13 +39,28 @@ public class Product {
 
 	public Product(int id, int category, String name, int quantity,
 			int sellPrice, int costPrice) {
-		
+
 		this.id = id;
 		this.category = category;
 		this.name = name;
 		this.quantity = quantity;
 		this.sellPrice = sellPrice;
 		this.costPrice = costPrice;
+	}
+
+	public Product(int id, String categoryName, String name) {
+
+		this.id = id;
+		this.categoryName = categoryName;
+		this.name = name;
+	}
+	
+	public String getCategoryName() {
+		return categoryName;
+	}
+
+	public void setCategoryName(String categoryName) {
+		this.categoryName = categoryName;
 	}
 
 	public int getId() {

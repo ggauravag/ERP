@@ -48,7 +48,7 @@ body,h1,h2,h3,h4,h5,h6 {
 				</h1>
 			</div>
 			<div class="col-xs-9 text-right">
-				<h2>Order Confirmation</h2>
+				<h2><bean:message key="operator.printorder.head1" /></h2>
 				<h5 id="type"></h5>
 				<h1 style="margin-top: -10px">
 					<small style="color : black;">Order ID #${order.id} | Date :

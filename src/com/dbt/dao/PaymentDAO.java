@@ -4,7 +4,6 @@ import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
@@ -12,7 +11,6 @@ import java.util.List;
 
 import com.dbt.data.Payment;
 import com.dbt.database.DBConnection;
-import com.dbt.exception.NoConnectionException;
 import com.dbt.support.Email;
 
 public class PaymentDAO {
@@ -52,6 +50,11 @@ public class PaymentDAO {
 		}
 
 		return payableAmount;
+	}
+	
+	public void getPaymentOrder(int transactID)
+	{
+		
 	}
 
 	public Payment getPaymentByID(int payID) {

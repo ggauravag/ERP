@@ -23,7 +23,7 @@
 		id="content">
 	<div class="container">
 		<div class="block-header">
-			<h1>ADD EMPLOYEE</h1>
+			<h1><bean:message key="owner.employee.addemp.label" /></h1>
 		</div>
 
 		<div class="card">
@@ -31,11 +31,11 @@
 				styleClass="form-horizontal" method="post"
 				enctype="multipart/form-data">
 				<div class="card-header">
-					<h2>Add New Employee</h2>
+					<h2><bean:message key="owner.employee.addemp.head1" /></h2>
 				</div>
 				<div class="card-body card-padding">
 					<div class="form-group" id="nameDiv">
-						<label for="Fname" class="col-sm-2 control-label">Name</label>
+						<label for="Fname" class="col-sm-2 control-label"><bean:message key="owner.employee.addemp.name" /></label>
 						<div class="col-sm-4">
 							<div class="fg-line">
 								<input type="text" class="form-control" id="inputFname"
@@ -54,7 +54,7 @@
 					</div>
 
 					<div class="form-group" id="emailDiv">
-						<label for="inputEmail" class="col-sm-2 control-label">Email</label>
+						<label for="inputEmail" class="col-sm-2 control-label"><bean:message key="owner.employee.addemp.email" /></label>
 						<div class="col-sm-8">
 							<div class="fg-line">
 								<input type="text" class="form-control" id="inputEmail"
@@ -68,7 +68,7 @@
 
 
 					<div class="form-group" id="mobileDiv">
-						<label for="inputMobile" class="col-sm-2 control-label">Mobile</label>
+						<label for="inputMobile" class="col-sm-2 control-label"><bean:message key="owner.employee.addemp.mobile" /></label>
 						<div class="col-sm-8">
 							<div class="fg-line">
 
@@ -86,7 +86,7 @@
 
 					<div class="row">
 						<div id="houseDiv" id="houseDiv" class="form-input">
-							<label for="inputHouse" class="col-sm-2 control-label">Address</label>
+							<label for="inputHouse" class="col-sm-2 control-label"><bean:message key="owner.employee.addemp.address" /></label>
 							<div class="col-sm-2 m-b-25">
 								<div class="fg-line">
 									<input type="text" class="form-control" id="inputHouse"
@@ -168,7 +168,7 @@
 					</div>
 
 					<div id="roleDiv" class="form-group">
-						<label for="inputRole" class="col-sm-2 control-label">Role</label>
+						<label for="inputRole" class="col-sm-2 control-label"><bean:message key="owner.employee.addemp.role" /></label>
 						<div class="col-sm-3">
 							<div class="fg-line select">
 
@@ -189,7 +189,7 @@
 					</div>
 
 					<div id="salaryDiv" class="form-group">
-						<label for="inputSalary" class="col-sm-2 control-label">Salary</label>
+						<label for="inputSalary" class="col-sm-2 control-label"><bean:message key="owner.employee.addemp.salary" /></label>
 						<div class="col-sm-3">
 							<div class="fg-line">
 								<input type="text" class="form-control" id="inputSalary"
@@ -204,7 +204,7 @@
 
 					<div id="showDT" style="display: none;">
 						<div class="form-group">
-							<label class="col-sm-2 control-label">Select Time</label>
+							<label class="col-sm-2 control-label"><bean:message key="owner.employee.addemp.selecttime" /></label>
 							<div class="col-sm-6">
 
 								<div class="radio radio-inline m-r-20">
@@ -228,7 +228,7 @@
 						</div>
 
 						<div id="SEtime" class="form-group" style="display: none;">
-							<label class="col-sm-2 control-label">Time</label>
+							<label class="col-sm-2 control-label"><bean:message key="owner.employee.addemp.time" /></label>
 							<div class="col-sm-4">
 								<div class="input-group">
 									<div class="dtp-container dropdown fg-line">
@@ -256,8 +256,7 @@
 
 
 						<div class="form-group">
-							<label for="inputDoj" class="col-sm-2 control-label">Profile
-								Picture</label>
+							<label for="inputDoj" class="col-sm-2 control-label"><bean:message key="owner.employee.addemp.profilepic" /></label>
 
 							<div class="fileinput fileinput-new " data-provides="fileinput">
 								<div class="fileinput-preview thumbnail"
@@ -277,8 +276,7 @@
 
 					</div>
 					<div id="dojDiv" class="form-group">
-						<label for="inputDoj" class="col-sm-2 control-label">Date
-							of Joining</label>
+						<label for="inputDoj" class="col-sm-2 control-label"><bean:message key="owner.employee.addemp.doj" /></label>
 						<div class="col-sm-4">
 							<div class="input-group">
 								<div class="dtp-container dropdown fg-line">

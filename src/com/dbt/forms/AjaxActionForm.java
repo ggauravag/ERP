@@ -2,6 +2,7 @@ package com.dbt.forms;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionMapping;
@@ -58,9 +59,10 @@ public class AjaxActionForm extends ActionForm {
 	public ActionErrors validate(ActionMapping mapping,
 			HttpServletRequest request) {
 		// TODO Auto-generated method stub
-
-		action = request.getParameter("action");
+	
 		ActionErrors errors = new ActionErrors();
+		
+		action = request.getParameter("action");
 		if ("getCustomerDetails".equals(action)) {
 
 		} else if ("sendOrderDetails".equals(action)) {
@@ -117,8 +119,32 @@ public class AjaxActionForm extends ActionForm {
 
 		} else if ("getPurchaseById".equals(action)) {
 
-		} else {
+		} else if ("getProductsByOrderId".equals(action)) {
 
+		} else if ("deleteOrderedProductById".equals(action)) {
+
+		} else if ("setReminder".equals(action)) {
+
+		} else if ("getFeedback".equals(action)) {
+
+		} else if ("getReminder".equals(action)) {
+
+		} else if ("getEmployeeAttendance".equals(action)) {
+
+		} else if ("getTransaction".equals(action)) {
+
+		} else if("getExpenditureById".equals(action)) {
+			
+		} else if("getPaymentById".equals(action)){
+			
+		} else if("getOrderAndPurchase".equals(action)){
+			
+		} else if("removeDocument".equals(action)){
+			
+		} else if("getDocumentsById".equals(action)){
+			
+		}
+		else {
 			errors.add("error", new ActionMessage("request.invalid"));
 		}
 

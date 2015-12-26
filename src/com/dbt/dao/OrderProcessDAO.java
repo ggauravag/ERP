@@ -3,7 +3,6 @@ package com.dbt.dao;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -15,7 +14,6 @@ import org.json.simple.JSONObject;
 
 import com.dbt.data.Product;
 import com.dbt.database.DBConnection;
-import com.dbt.exception.NoConnectionException;
 import com.dbt.support.Email;
 import com.dbt.vo.Shipment;
 

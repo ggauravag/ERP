@@ -1,6 +1,12 @@
 package com.dbt.action;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintWriter;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
@@ -9,6 +15,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.fileupload.FileItemIterator;
+import org.apache.commons.fileupload.FileItemStream;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.commons.validator.EmailValidator;
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
@@ -18,13 +28,13 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
-import sun.font.EAttribute;
-
 import com.dbt.dao.AttendanceDAO;
 import com.dbt.dao.ComplaintDAO;
 import com.dbt.dao.CustomerDAO;
+import com.dbt.dao.DocumentDAO;
 import com.dbt.dao.EmployeeDAO;
 import com.dbt.dao.ExpenditureDAO;
+import com.dbt.dao.FeedbackDAO;
 import com.dbt.dao.MerchantDAO;
 import com.dbt.dao.OrderDAO;
 import com.dbt.dao.PaymentDAO;
@@ -33,19 +43,29 @@ import com.dbt.dao.PurchaseDAO;
 import com.dbt.dao.ReturnDAO;
 import com.dbt.dao.ShipmentDAO;
 import com.dbt.dao.StockDAO;
+import com.dbt.dao.TransactionDAO;
+import com.dbt.dao.UtilityDAO;
 import com.dbt.data.Address;
+import com.dbt.data.Attendance;
 import com.dbt.data.Capital;
 import com.dbt.data.Complaint;
 import com.dbt.data.Customer;
 import com.dbt.data.Employee;
+import com.dbt.data.Expenditure;
+import com.dbt.data.Feedback;
 import com.dbt.data.Loan;
 import com.dbt.data.Merchant;
 import com.dbt.data.Order;
 import com.dbt.data.Order_item;
 import com.dbt.data.Payment;
 import com.dbt.data.Product;
+import com.dbt.data.Question;
+import com.dbt.data.Reminder;
+import com.dbt.data.Transaction;
 import com.dbt.data.User;
 import com.dbt.support.DBTSms;
+import com.dbt.support.Document;
+import com.dbt.support.DropBoxConfig;
 import com.dbt.support.Email;
 import com.dbt.vo.Shipment;
 
@@ -57,126 +77,729 @@ public class AjaxAction extends Action {
 			throws Exception {
 		// TODO Auto-generated method stub
 
-		String action = request.getParameter("action");
-		System.out.println("AjaxActionServlet: service(): action = " + action);
+		String action = "";
+		// System.out.println("AjaxActionServlet: service(): action = " +
+		// action);
 
+		action = request.getParameter("action");
+		
 		if ("getCustomerDetails".equals(action)) {
 			getCustomerDetails(request, response);
 		}
 
-		if ("sendOrderDetails".equals(action)) {
+		else if ("sendOrderDetails".equals(action)) {
 			sendOrderDetails(request, response);
 		}
 
-		if ("getProductByCategory".equals(action)) {
+		else if ("getProductByCategory".equals(action)) {
 			getProductsByCategory(request, response);
 		}
 
-		if ("getOrderByNameIDMobile".equals(action)) {
+		else if ("getOrderByNameIDMobile".equals(action)) {
 			getOrderByNameIDMobile(request, response);
 		}
 
-		if ("getFirmsDetails".equals(action)) {
+		else if ("getFirmsDetails".equals(action)) {
 			getFirmsDetails(request, response);
 		}
 
-		if ("sendShipmentDetails".equals(action)) {
+		else if ("sendShipmentDetails".equals(action)) {
 			sendShipmentDetails(request, response);
 		}
 
-		if ("getUserName".equals(action)) {
+		else if ("getUserName".equals(action)) {
 			getUserName(request, response);
 		}
 
-		if ("setFirm".equals(action)) {
+		else if ("setFirm".equals(action)) {
 			setFirm(request, response);
 		}
-		if ("getOrder".equals(action)) {
+		else if ("getOrder".equals(action)) {
 			getOrder(request, response);
 		}
 
-		if ("checkStock".equals(action)) {
+		else if ("checkStock".equals(action)) {
 			checkStock(request, response);
 		}
 
-		if ("getPaymentDetails".equals(action)) {
+		else if ("getPaymentDetails".equals(action)) {
 			getPaymentDetails(request, response);
 		}
 
-		if ("sendReceiptDetails".equals(action)) {
+		else if ("sendReceiptDetails".equals(action)) {
 			sendReceiptDetails(request, response);
 		}
 
-		if ("getShipmentDetails".equals(action)) {
+		else if ("getShipmentDetails".equals(action)) {
 			getShipmentDetails(request, response);
 		}
 
-		if ("getExpenditureDetail".equals(action)) {
+		else if ("getExpenditureDetail".equals(action)) {
 			getExpenditureDetail(request, response);
 		}
 
-		if ("getEmployeeDetails".equals(action)) {
+		else if ("getEmployeeDetails".equals(action)) {
 			getEmployeeDetails(request, response);
 		}
 
-		if ("addCategory".equals(action)) {
+		else if ("addCategory".equals(action)) {
 			addCategory(request, response);
 		}
 
-		if ("addNewProduct".equals(action)) {
+		else if ("addNewProduct".equals(action)) {
 			addNewProduct(request, response);
 		}
 
-		if ("addNewMerchant".equals(action)) {
+		else if ("addNewMerchant".equals(action)) {
 			addNewMerchant(request, response);
 		}
-		if ("getComplaintByOIDCIDMobile".equals(action)) {
+		else if ("getComplaintByOIDCIDMobile".equals(action)) {
 			getComplaintByOIDCIDMobile(request, response);
 		}
-		if ("getAttendanceDetails".equals(action)) {
+		else if ("getAttendanceDetails".equals(action)) {
 			getAttendanceDetails(request, response);
 		}
-		if ("getEmpDetails".equals(action)) {
-			System.out.println("Ajax called");
+		else if ("getEmpDetails".equals(action)) {
+			//System.out.println("Ajax called");
 			getEmpDetails(request, response);
 		}
 
-		if ("getCities".equals(action)) {
+		else if ("getCities".equals(action)) {
 			getCities(request, response);
 		}
 
-		if ("getPurchaseData".equals(action)) {
+		else if ("getPurchaseData".equals(action)) {
 			getPurchaseData(request, response);
 		}
 
-		if ("getReturnDetails".equals(action)) {
+		else if ("getReturnDetails".equals(action)) {
 			getReturnDetails(request, response);
 		}
 
-		if ("getEmployeesDetails".equals(action)) {
+		else if ("getEmployeesDetails".equals(action)) {
 			getEmployeesDetails(request, response);
 		}
 
-		if ("getCustomerByNameMob".equals(action)) {
+		else if ("getCustomerByNameMob".equals(action)) {
 			getCustomerByNameMob(request, response);
 		}
 
-		if ("getPurchaseDetail".equals(action)) {
+		else if ("getPurchaseDetail".equals(action)) {
 			getPurchaseDetail(request, response);
 		}
-		
-		if("getPurchaseById".equals(action)){
+
+		else if ("getPurchaseById".equals(action)) {
 			getPurchaseById(request, response);
 		}
 
+		else if ("getProductsByOrderId".equals(action)) {
+			getProductsByOrderId(request, response);
+		}
+
+		else if ("getCustomerDetailsById".equals(action)) {
+			getCustomerDetailsById(request, response);
+		}
+
+		else if ("deleteOrderedProductById".equals(action)) {
+			deleteOrderedProductById(request, response);
+		}
+
+		else if ("getFeedback".equals(action)) {
+			getFeedback(request, response);
+		}
+
+		else if ("setReminder".equals(action)) {
+			setReminder(request, response);
+		}
+
+		else if ("getReminder".equals(action)) {
+			getReminder(request, response);
+		}
+
+		else if ("getEmployeeAttendance".equals(action)) {
+			getEmployeeAttendance(request, response);
+		}
+
+		else if ("getTransaction".equals(action)) {
+			getTransaction(request, response);
+		}
+		
+		else if("getExpenditureById".equals(action)){
+			getExpenditureById(request, response);
+		}
+		
+		else if("getPaymentById".equals(action)){
+			getPaymentById(request, response);
+		}
+		
+		else if("getOrderAndPurchase".equals(action)){
+			getOrderAndPurchase(request, response);
+		}
+		
+		else if("getDocumentsById".equals(action)){
+			getDocumentsById(request, response);
+		}
+		
+		else if("removeDocument".equals(action)){
+			removeDocument(request, response);
+		}
+		
 		return null;
+	}
+	
+	public void removeDocument(HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
+		String fileName = request.getParameter("fileName");
+		String inputId = request.getParameter("id");
+		JSONObject responseJSON = new JSONObject();
+		if(NumberUtils.isNumber(inputId) && !fileName.isEmpty())
+		{
+			int id = Integer.parseInt(inputId);
+			DropBoxConfig config = new DropBoxConfig();
+			DocumentDAO dao = new DocumentDAO();
+			if(dao.removeDocument(id) && config.deleteFromDropBox(fileName))
+			{
+				responseJSON.put("status", 1);
+			}
+			else
+			{
+				responseJSON.put("status", 0);
+			}
+		}
+		else
+		{
+			responseJSON.put("status", 2);
+		}
+		
+		String jsonResponse = responseJSON.toJSONString();
+		System.out.println("AjaxActionServlet - removeDocument() : "+jsonResponse);
+		response.setContentType("text/json");
+		PrintWriter writer = response.getWriter();
+		writer.write(jsonResponse);
+		writer.flush();
+	}
+	
+	
+	
+	public void getDocumentsById(HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
+		String inputId = request.getParameter("id");
+		String inputType = request.getParameter("type");
+		JSONObject responseJSON = new JSONObject();
+		if(NumberUtils.isNumber(inputId))
+		{
+			JSONArray docs = new JSONArray();
+			responseJSON.put("status", 1);
+			Iterator<Document> iter = new DocumentDAO().getDocuments(Integer.parseInt(inputId), inputType).iterator();
+			
+			while(iter.hasNext())
+			{
+				Document document = iter.next();
+				JSONObject doc = new JSONObject();
+				doc.put("id", document.getId());
+				doc.put("name", document.getName());
+				doc.put("type", document.getType());
+				doc.put("entityId", document.getEntityId());
+				doc.put("url", document.getUrl());
+				docs.add(doc);
+			}
+			
+			responseJSON.put("documents", docs);
+		}
+		else
+		{
+			responseJSON.put("status", 0);
+		}
+		
+		String jsonResponse = responseJSON.toJSONString();
+		System.out.println("AjaxActionServlet - getDocumentsById() : "+jsonResponse);
+		response.setContentType("text/json");
+		PrintWriter writer = response.getWriter();
+		writer.write(jsonResponse);
+		writer.flush();
+	}
+	
+	public void getOrderAndPurchase(HttpServletRequest request,
+	HttpServletResponse response) throws Exception {
+		String inputId = request.getParameter("inputId");
+		String inputName = request.getParameter("inputName");
+		String inputFromDate = request.getParameter("inputFromDate");
+		String inputToDate = request.getParameter("inputToDate");
+		String inputMobile = request.getParameter("inputMobile");
+		int id;
+		try
+		{
+			id = Integer.parseInt(inputId);
+		}
+		catch(Exception e)
+		{
+			id = 0;
+		}
+		
+		Date startDate = null,endDate = null;
+		SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+		if(!inputFromDate.equals("") && !inputToDate.equals(""))
+		{
+			startDate = format.parse(inputFromDate);
+			endDate = format.parse(inputToDate);
+		}
+		else
+		{
+			Calendar calendar = Calendar.getInstance();
+			calendar.setTime(new Date());
+			calendar.add(Calendar.DATE, 1);
+			startDate = calendar.getTime();
+			endDate = calendar.getTime();
+		}
+		
+		List<JSONObject> orders = new OrderDAO().getOrderAndPurchaseDetail(id, inputName, startDate, endDate, inputMobile);
+		JSONObject resp = new JSONObject();
+		resp.put("status", 1);
+		resp.put("orders", orders);
+		String jsonResponse = resp.toJSONString();
+		System.out.println("AjaxActionServlet - getOrderAndPurchaseDetail() : "+jsonResponse);
+		response.setContentType("text/json");
+		PrintWriter writer = response.getWriter();
+		writer.write(jsonResponse);
+		writer.flush();
+	}
+	
+	public void getExpenditureById(HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
+		String id = request.getParameter("id");
+		String expID = request.getParameter("relatedId");
+		JSONObject resp = new JSONObject();
+		if(NumberUtils.isNumber(id) && NumberUtils.isNumber(expID))
+		{
+			int transactId = Integer.parseInt(id);
+			int expenditureId = Integer.parseInt(expID);
+			Expenditure expenditure = new ExpenditureDAO().getExpenditureById(transactId, expenditureId);
+			resp.put("id",expenditure.getId());
+			resp.put("status", true);
+			resp.put("type", expenditure.getType());
+			resp.put("detail", expenditure.getDetails());
+			JSONObject transaction = new JSONObject();
+			Transaction tran = expenditure.getTransaction();
+			transaction.put("id", tran.getTransactionId());
+			transaction.put("amount", tran.getAmount());
+			transaction.put("paidBy", tran.getPaidBy());
+			transaction.put("mode", tran.getMode());
+			transaction.put("description", tran.getDescription());
+			transaction.put("type", tran.getType());
+			transaction.put("relatedId", tran.getRelatedId());
+			transaction.put("time", tran.getPrintableTime());
+			resp.put("transaction", transaction);
+		}
+		
+		String jsonResponse = resp.toJSONString();
+		System.out.println("AjaxActionServlet - getExpenditureById() : "+jsonResponse);
+		response.setContentType("text/json");
+		PrintWriter writer = response.getWriter();
+		writer.write(jsonResponse);
+		writer.flush();
+		
+	}
+	
+	public void getPaymentById(HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
+		
+		String id = request.getParameter("id");
+		String expID = request.getParameter("relatedId");
+		JSONObject resp = new JSONObject();
+		if(NumberUtils.isNumber(id) && NumberUtils.isNumber(expID))
+		{
+			int transactId = Integer.parseInt(id);
+			int orderId = Integer.parseInt(expID);
+			Payment payment = new PaymentDAO().getPaymentByID(transactId);
+			
+			resp.put("id", payment.getId());
+			resp.put("amount", payment.getAmount());
+			resp.put("paidBy", payment.getPaidBy());
+			resp.put("mode", payment.getMode());
+			resp.put("description", payment.getDescription());
+			resp.put("type", payment.getType());
+			resp.put("time", payment.getPrintableTime());
+
+			Order order = new OrderDAO().getOrder(orderId);
+			JSONObject orderResp = new JSONObject();
+			orderResp.put("custName", order.getCustomer().getName());
+			orderResp.put("amount",order.getAmount());
+			orderResp.put("time", order.getPrintableTime());
+			orderResp.put("id", order.getId());
+			resp.put("order", orderResp);
+		}
+		resp.put("status", true);
+		String jsonResponse = resp.toJSONString();
+		System.out.println("AjaxActionServlet - getTransaction() : "+jsonResponse);
+		response.setContentType("text/json");
+		PrintWriter writer = response.getWriter();
+		writer.write(jsonResponse);
+		writer.flush();
+	}
+
+	public void getTransaction(HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
+		String id = request.getParameter("id");
+		String mobile = request.getParameter("mobile");
+		String from = request.getParameter("from");
+		String to = request.getParameter("end");
+		String name = request.getParameter("name");
+		SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+		int transactId = 0;
+		Date startDate = null,endDate = null;
+		
+		JSONObject res = new JSONObject();
+		JSONArray transArray = new JSONArray();
+		
+		if(NumberUtils.isNumber(id))
+			transactId = Integer.parseInt(id);
+		
+		if(!from.equals("") && !to.equals(""))
+		{
+			startDate = format.parse(from);
+			endDate = format.parse(to);
+		}
+		else
+		{
+			Calendar calendar = Calendar.getInstance();
+			calendar.setTime(new Date());
+			calendar.add(Calendar.DATE, 1);
+			startDate = calendar.getTime();
+			endDate = calendar.getTime();
+		}
+		
+		TransactionDAO dao = new TransactionDAO();
+		List<Transaction> transactions = dao.getTransaction(transactId, name, mobile, startDate, endDate);
+		Iterator<Transaction> transIter = transactions.iterator();
+		JSONObject transaction;
+		while(transIter.hasNext())
+		{
+			Transaction tran = transIter.next();
+			transaction = new JSONObject();
+			transaction.put("id", tran.getTransactionId());
+			transaction.put("amount", tran.getAmount());
+			transaction.put("paidBy", tran.getPaidBy());
+			transaction.put("mode", tran.getMode());
+			transaction.put("description", tran.getDescription());
+			transaction.put("type", tran.getType());
+			transaction.put("relatedId", tran.getRelatedId());
+			transaction.put("time", tran.getPrintableTime());
+			transArray.add(transaction);
+		}
+		
+		res.put("status", true);
+		res.put("transactions", transArray);
+		String jsonResponse = res.toJSONString();
+		System.out.println("AjaxActionServlet - getTransaction() : "+jsonResponse);
+		response.setContentType("text/json");
+		PrintWriter writer = response.getWriter();
+		writer.write(jsonResponse);
+		writer.flush();
+	}
+
+	public void getEmployeeAttendance(HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
+
+		String empId = request.getParameter("empId");
+		String startDate = request.getParameter("startDate");
+		String endDate = request.getParameter("endDate");
+
+		SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+
+		Date fromDate = format.parse(startDate);
+		Date toDate = format.parse(endDate);
+
+		List<Attendance> attendance = new AttendanceDAO().getAttendance(
+				new java.sql.Date(fromDate.getTime()),
+				new java.sql.Date(toDate.getTime()), Integer.parseInt(empId));
+
+		JSONObject resp = new JSONObject();
+		JSONArray attJSON = new JSONArray();
+		Iterator<Attendance> iter = attendance.iterator();
+
+		while (iter.hasNext()) {
+			Attendance att = iter.next();
+			JSONObject tempJSON = new JSONObject();
+			tempJSON.put("presentDate", att.getDate().toString());
+			tempJSON.put("halfDay", att.getHalfDay());
+			attJSON.add(tempJSON);
+		}
+		resp.put("attendance", attJSON);
+		String responseText = resp.toJSONString();
+		System.out.println("AjaxActionServlet : Response JSON is : "
+				+ responseText);
+		response.setContentType("text/json");
+		response.getWriter().write(responseText);
+	}
+
+	public void getReminder(HttpServletRequest request,
+			HttpServletResponse response) throws IOException {
+
+		List<Reminder> reminders = new UtilityDAO().getAllReminders();
+
+		Iterator<Reminder> iterator = reminders.iterator();
+		JSONObject resp = new JSONObject();
+		JSONArray remindersJSON = new JSONArray();
+		while (iterator.hasNext()) {
+			Reminder reminder = iterator.next();
+			JSONObject reminderJSON = new JSONObject();
+			reminderJSON.put("title", reminder.getTitle());
+			reminderJSON.put("message", reminder.getMessage());
+			reminderJSON.put("startDate", reminder.getStartDate().toString());
+			reminderJSON.put("endDate", reminder.getEndDate().toString());
+			reminderJSON.put("frequency", reminder.getFrequency());
+			remindersJSON.add(reminderJSON);
+		}
+		resp.put("status", true);
+		resp.put("reminders", remindersJSON);
+		String responseText = resp.toJSONString();
+		System.out.println("AjaxActionServlet : Response JSON is : "
+				+ responseText);
+		response.setContentType("text/json");
+		response.getWriter().write(responseText);
+
+	}
+
+	public void setReminder(HttpServletRequest request,
+			HttpServletResponse response) throws IOException {
+		String message = request.getParameter("message");
+		String freq = request.getParameter("frequency");
+		String title = request.getParameter("title");
+		String mobiles = request.getParameter("mobile");
+		String startDate = request.getParameter("from");
+		String endDate = request.getParameter("to");
+
+		String messageSend = "ALERT : " + title + "\n" + message;
+
+		Date fromDate, toDate = null;
+
+		SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy hh:mm aaa");
+		System.out.println("Start : " + startDate + ", End : " + endDate);
+		JSONObject resp = new JSONObject();
+		try {
+			fromDate = format.parse(startDate);
+			toDate = format.parse(endDate);
+
+			for (Date d = fromDate; d.compareTo(toDate) <= 0;) {
+				DBTSms.schedule(mobiles, messageSend, d);
+				System.out.println("Time is : " + d.toString());
+				Calendar calendar = Calendar.getInstance();
+				calendar.setTime(d);
+				calendar.add(getUnit(freq), 1);
+				// System.out.println("Freq is : "+freq+", Unit : "+getUnit(freq));
+				d = calendar.getTime();
+			}
+
+			new UtilityDAO()
+					.addReminder(message, freq, fromDate, toDate, title);
+			resp.put("status", true);
+		} catch (Exception e) {
+			resp.put("status", false);
+			resp.put("message", "Unable to parse Dates ! Can't set Reminder !");
+		}
+
+		String responseText = resp.toJSONString();
+		System.out.println("AjaxActionServlet : Response JSON is : "
+				+ responseText);
+		response.setContentType("text/json");
+		response.getWriter().write(responseText);
+	}
+
+	public int getUnit(String freq) {
+		int result = 0;
+		switch (freq) {
+		case "DAILY":
+			result = Calendar.DATE;
+			break;
+		case "MONTHLY":
+			result = Calendar.MONTH;
+			break;
+		case "YEARLY":
+			result = Calendar.YEAR;
+			break;
+		case "WEEKLY":
+			result = Calendar.WEEK_OF_YEAR;
+		}
+		return result;
+	}
+
+	public void getFeedback(HttpServletRequest request,
+			HttpServletResponse response) throws IOException {
+		String order = request.getParameter("orderId");
+		String name = request.getParameter("custName");
+		String mobile = request.getParameter("custMobile");
+		String from = request.getParameter("fromdate");
+		String to = request.getParameter("todate");
+
+		int orderID = 0;
+		Date toDate, fromDate;
+		SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+		if (!"".equals(order) && order != null) {
+			orderID = Integer.parseInt(order);
+		}
+
+		try {
+			fromDate = format.parse(from);
+			toDate = format.parse(to);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			// Email.sendExceptionReport(e);
+			fromDate = new Date();
+			Calendar calendar = Calendar.getInstance();
+			calendar.setTime(fromDate);
+			calendar.add(Calendar.DATE, 1);
+			fromDate = calendar.getTime();
+
+			toDate = new Date();
+			calendar = Calendar.getInstance();
+			calendar.setTime(toDate);
+			calendar.add(Calendar.DATE, 1);
+			toDate = calendar.getTime();
+		}
+
+		List<Feedback> feedbacks = new FeedbackDAO().searchFeedback(orderID,
+				name, mobile, toDate, fromDate);
+
+		Iterator<Feedback> iterator = feedbacks.iterator();
+		JSONObject resp = new JSONObject();
+		JSONArray feedbackJSON = new JSONArray();
+
+		while (iterator.hasNext()) {
+			Feedback fbk = iterator.next();
+			JSONObject fb = new JSONObject();
+			fb.put("id", fbk.getId());
+			fb.put("orderID", fbk.getOrderId());
+			fb.put("generateDate", fbk.getGenerateDate().toString());
+			if (fbk.getSubmitDate() != null)
+				fb.put("submitDate", fbk.getSubmitDate().toString());
+			else
+				fb.put("submitDate", "");
+			JSONArray questions = new JSONArray();
+			Iterator<Question> ques = fbk.getQuestions().iterator();
+			while (ques.hasNext()) {
+				Question q = ques.next();
+				JSONObject jsq = new JSONObject();
+				jsq.put("id", q.getId());
+				jsq.put("response", q.getResponse());
+				jsq.put("text", q.getText());
+				jsq.put("type", q.getType());
+				questions.add(jsq);
+			}
+			fb.put("questions", questions);
+
+			feedbackJSON.add(fb);
+		}
+
+		resp.put("status", true);
+		resp.put("feedbacks", feedbackJSON);
+		String responseText = resp.toJSONString();
+		System.out.println("AjaxActionServlet : Response JSON is : "
+				+ responseText);
+		response.setContentType("text/json");
+		response.getWriter().write(responseText);
+
+	}
+
+	public void getProductsByOrderId(HttpServletRequest request,
+			HttpServletResponse response) throws IOException {
+
+		int oid = Integer.parseInt(request.getParameter("orderId"));
+
+		String responseText = "";
+		System.out.println("AjaxActionServlet, Order Id :" + oid);
+
+		List<Order> order = new OrderDAO().getProductsByOrderId(oid);
+		Iterator<Order> iter = order.iterator();
+		JSONObject list = new JSONObject();
+		JSONArray orderArray = new JSONArray();
+
+		while (iter.hasNext()) {
+			Order o = iter.next();
+			JSONObject ord = new JSONObject();
+
+			JSONObject custom = new JSONObject();
+			Customer cus = o.getCustomer();
+			custom.put("customerName", cus.getName());
+			custom.put("mobile", cus.getMobile());
+			custom.put("email", cus.getEmail());
+			custom.put("customerId", cus.getId());
+
+			ord.put("customer", custom);
+
+			JSONObject address = new JSONObject();
+			Address add = cus.getAddress();
+			address.put("house_no", add.getHouseNo());
+			address.put("line1", add.getLine1());
+			address.put("line2", add.getLine2());
+			address.put("city", add.getCity());
+			address.put("state", add.getState());
+			address.put("zip", add.getZip());
+
+			ord.put("address", address);
+
+			JSONObject product = new JSONObject();
+			Product p = o.getProduct();
+			product.put("productName", p.getName());
+			product.put("categoryName", p.getCategoryName());
+			product.put("productId", p.getId());
+
+			ord.put("product", product);
+
+			JSONObject orderitem = new JSONObject();
+			Order_item oi = o.getOrderitem();
+			orderitem.put("orderId", oi.getOrder_id());
+			orderitem.put("quantity", oi.getQuantity());
+			orderitem.put("amount", oi.getAmount());
+			orderitem.put("shipId", oi.getShip_id());
+
+			ord.put("orderitem", orderitem);
+
+			orderArray.add(ord);
+		}
+		list.put("orderdetails", orderArray);
+		responseText = list.toJSONString();
+		System.out.println("AjaxActionServlet : Response JSON is : "
+				+ responseText);
+		response.setContentType("text/json");
+		response.getWriter().write(responseText);
+	}
+
+	public void deleteOrderedProductById(HttpServletRequest request,
+			HttpServletResponse response) throws IOException {
+
+		int prodId = Integer.parseInt(request.getParameter("productId"));
+		int orderId = Integer.parseInt(request.getParameter("orderId"));
+		int amount = Integer.parseInt(request.getParameter("prodAmount"));
+		int quantity = Integer.parseInt(request.getParameter("prodQuantity"));
+
+		System.out.println("At AjaxAction - deleteProduct(), Product Id : "
+				+ prodId);
+
+		boolean status = new OrderDAO().deleteProductById(prodId, orderId,
+				amount, quantity);
+
+		if (status)
+			System.out.println("Product deleted successfully, Id : " + prodId);
+		else
+			System.out.println("Unable to delete product, Id : " + prodId);
+
 	}
 
 	public void getPurchaseById(HttpServletRequest request,
 			HttpServletResponse response) throws IOException {
-		
+		String pid = request.getParameter("pid");
+		int purchaseID = 0;
+		if (pid != null && pid.length() != 0) {
+			purchaseID = Integer.parseInt(pid);
+		}
+
+		JSONObject responseJSON = new PurchaseDAO().getPurchaseById(purchaseID);
+		String responseText = responseJSON.toJSONString();
+		System.out.println(responseText);
+		response.setContentType("text/json");
+		response.getWriter().write(responseText);
 	}
-	
+
 	public void getPurchaseDetail(HttpServletRequest request,
 			HttpServletResponse response) throws IOException {
 		String pid = request.getParameter("pid");
@@ -216,7 +839,10 @@ public class AjaxAction extends Action {
 			JSONObject c = new JSONObject();
 			c.put("id", p.getId());
 			c.put("name", p.getName());
-			c.put("email", p.getEmail());
+			if (p.getEmail() == null)
+				c.put("email", "");
+			else
+				c.put("email", p.getEmail());
 			c.put("mobile", p.getMobile());
 			c.put("tin", p.getTin());
 			c.put("type", p.getType());
@@ -236,6 +862,46 @@ public class AjaxAction extends Action {
 		list.put("customers", customersArray);
 		responseText = list.toJSONString();
 		// logger.info("getCustomerDetails() - "+responseText);
+		System.out.println("AjaxActionServlet : Response JSON is : "
+				+ responseText);
+		response.setContentType("text/json");
+		response.getWriter().write(responseText);
+	}
+
+	public void getCustomerDetailsById(HttpServletRequest request,
+			HttpServletResponse response) throws IOException {
+
+		int custId = Integer.parseInt(request.getParameter("customerId"));
+		String responseText = "";
+		List<Customer> customers = new CustomerDAO().getCustomerById(custId);
+		Iterator<Customer> iter = customers.iterator();
+		JSONObject list = new JSONObject();
+		JSONArray productsArray = new JSONArray();
+		while (iter.hasNext()) {
+			Customer p = iter.next();
+			JSONObject product = new JSONObject();
+			product.put("id", p.getId());
+			product.put("name", p.getName());
+			if (p.getEmail() == null)
+				product.put("email", "");
+			else
+				product.put("email", p.getEmail());
+			product.put("mobile", p.getMobile());
+			JSONObject address = new JSONObject();
+			Address add = p.getAddress();
+			address.put("house_no", add.getHouseNo());
+			address.put("line1", add.getLine1());
+			address.put("line2", add.getLine2());
+			address.put("city", add.getCity());
+			address.put("state", add.getState());
+			address.put("zip", add.getZip());
+
+			product.put("address", address);
+
+			productsArray.add(product);
+		}
+		list.put("customers", productsArray);
+		responseText = list.toJSONString();
 		System.out.println("AjaxActionServlet : Response JSON is : "
 				+ responseText);
 		response.setContentType("text/json");
@@ -489,7 +1155,7 @@ public class AjaxAction extends Action {
 				"merchant");
 
 		Order order = (Order) request.getSession().getAttribute("order");
-		String responseText = "";
+		String responseText = "{ \"status\":\"success\" }";
 		if (merchant == null) {
 			responseText = "{ \"status\":\"failure\" }";
 		} else if (email.length != 0) {
@@ -618,7 +1284,7 @@ public class AjaxAction extends Action {
 		Order order = new OrderDAO().getOrder(orderid);
 		Merchant merchant = (Merchant) request.getSession().getAttribute(
 				"merchant");
-		String responseText = "";
+		String responseText = "{ \"status\":\"success\" }";
 		if (merchant == null) {
 			responseText = "{ \"status\":\"failure\" }";
 		} else if (email.length != 0) {
@@ -637,10 +1303,35 @@ public class AjaxAction extends Action {
 		String name = request.getParameter("name");
 		String oid = request.getParameter("order");
 		String mob = request.getParameter("mobile");
+		String toDate = request.getParameter("to");
+		String fromDate = request.getParameter("from");
+		Date to = null, from = null;
+		if (!"".equals(toDate) && !"".equals(fromDate)) {
+			SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+			try {
+				to = format.parse(toDate);
+				from = format.parse(fromDate);
+			} catch (Exception e) {
+				to = new Date();
+				from = new Date();
+			}
+		} else {
+			to = new Date();
+			Calendar calendar = Calendar.getInstance();
+			calendar.setTime(to);
+			calendar.add(Calendar.DATE, 1);
+			to = calendar.getTime();
+
+			from = new Date();
+			calendar.setTime(from);
+			calendar.add(Calendar.DATE, 1);
+			from = calendar.getTime();
+		}
 		String responseText = "";
 		// System.out.println("AjaxActionServlet : "+name+oid+mob);
 
-		List<Order> order = new OrderDAO().getOrderDetails(oid, name, mob);
+		List<Order> order = new OrderDAO().getOrderDetails(oid, name, mob, to,
+				from);
 		Iterator<Order> iter = order.iterator();
 		JSONObject list = new JSONObject();
 		JSONArray custArray = new JSONArray();
@@ -650,7 +1341,7 @@ public class AjaxAction extends Action {
 			ord.put("oid", o.getId());
 			ord.put("amount", o.getAmount());
 			ord.put("date", o.getDatetime().toString());
-
+			ord.put("status", o.getStatus());
 			JSONArray itemArray = new JSONArray();
 
 			List<Order_item> items = o.getOrderitems();
@@ -686,8 +1377,8 @@ public class AjaxAction extends Action {
 	public void setFirm(HttpServletRequest request, HttpServletResponse response)
 			throws IOException {
 		String firm = request.getParameter("firmString");
-		int fid = Integer.parseInt(request.getParameter("firm"));
-		System.out.println(firm + " || " + fid);
+
+		// System.out.println(firm + " || " + fid);
 		JSONParser parser = new JSONParser();
 		try {
 			JSONObject firmObj = (JSONObject) parser.parse(firm);
@@ -799,7 +1490,11 @@ public class AjaxAction extends Action {
 			JSONObject product = new JSONObject();
 			product.put("id", p.getId());
 			product.put("name", p.getName());
-			product.put("email", p.getEmail());
+			if (p.getEmail() == null)
+				product.put("email", "");
+			else
+				product.put("email", p.getEmail());
+
 			product.put("mobile", p.getMobile());
 			product.put("tin", p.getTin());
 			product.put("type", p.getType());
@@ -856,7 +1551,7 @@ public class AjaxAction extends Action {
 		Order orderSend = new OrderDAO().getOrder(order.getId());
 		Merchant merchant = (Merchant) request.getSession().getAttribute(
 				"merchant");
-		String resposneText = "";
+		String resposneText = "{ \"status\":\"success\" }";
 		if (merchant == null) {
 			resposneText = "{ \"status\":\"failure\" }";
 		} else if (email.length != 0) {

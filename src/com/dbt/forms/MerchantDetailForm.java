@@ -11,7 +11,23 @@ public class MerchantDetailForm extends ActionForm {
 
 	private static final long serialVersionUID = 1L;
 	
-	String merchantId, amount, expMode, description, paid, currentAmount;
+	String merchantId, amount, expMode, description, paid, currentAmount, addPayment;
+	
+	public String getMerchantId() {
+		return merchantId;
+	}
+
+	public void setMerchantId(String merchantId) {
+		this.merchantId = merchantId;
+	}
+
+	public String getAddPayment() {
+		return addPayment;
+	}
+
+	public void setAddPayment(String addPayment) {
+		this.addPayment = addPayment;
+	}
 
 	public String getmerchantId() {
 		return merchantId;
@@ -76,22 +92,25 @@ public class MerchantDetailForm extends ActionForm {
 		paid = request.getParameter("inputPaid");
 		merchantId = request.getParameter("selectMerchant");
 		
+		
 		System.out.println("MerchantDetailForm : Merchant Id : " + merchantId);
 		
 		ActionErrors errors = new ActionErrors();
-		if (merchantId == null || merchantId == "")
-			errors.add("merchantError", new ActionMessage("merchantId.blankError"));
-		if (amount == null || amount == "")
-			errors.add("amountError", new ActionMessage("amount.blankError"));
-		if (currentAmount == null || currentAmount == "")
-			errors.add("currentAmountError", new ActionMessage("currentAmount.blankError"));
-		if (expMode == null || expMode == "Select Mode")
-			errors.add("modeError", new ActionMessage("expMode.blankError"));
-		if (description == null || description.equals(""))
-			errors.add("descriptionError", new ActionMessage("description.blankError"));
-		if (paid == null || paid.equals(""))
-			errors.add("paidError", new ActionMessage("paid.blankError"));
-		
+		if("Yes".equals(getAddPayment()))
+		{
+			if (merchantId == null || merchantId == "")
+				errors.add("merchantError", new ActionMessage("merchantId.blankError"));
+			if (amount == null || amount == "")
+				errors.add("amountError", new ActionMessage("amount.blankError"));
+			if (currentAmount == null || currentAmount == "")
+				errors.add("currentAmountError", new ActionMessage("currentAmount.blankError"));
+			if (expMode == null || expMode == "Select Mode")
+				errors.add("modeError", new ActionMessage("expMode.blankError"));
+			/*if (description == null || description.equals(""))
+				errors.add("descriptionError", new ActionMessage("description.blankError"));*/
+			if (paid == null || paid.equals(""))
+				errors.add("paidError", new ActionMessage("paid.blankError"));
+		}
 		return errors;
 	}
 }

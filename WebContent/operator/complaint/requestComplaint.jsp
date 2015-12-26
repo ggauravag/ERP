@@ -36,19 +36,18 @@
 		id="content">
 	<div class="container">
 		<div class="block-header">
-			<h1>Request Complaint</h1>
+			<h1><bean:message key="operator.complaint.requestcomplaint.label" /></h1>
 		</div>
 
 		<div class="card">
 			<form class="form-horizontal" role="form" method="post">
 				<div class="card-header">
-					<h2>Order Details</h2>
+					<h2><bean:message key="operator.complaint.requestcomplaint.head1" /></h2>
 				</div>
 
 				<div class="card-body card-padding">
 					<div class="form-group">
-						<label for="inputOrderId" class="col-sm-2 control-label">Order
-							Id</label>
+						<label for="inputOrderId" class="col-sm-2 control-label"><bean:message key="operator.complaint.processcomp.orderid" /></label>
 						<div class="col-sm-8">
 							<div class="fg-line">
 								<input type="text" class="form-control" id="inputOrderId"
@@ -59,8 +58,7 @@
 					</div>
 
 					<div class="form-group">
-						<label for="inputMobile" class="col-sm-2 control-label">Mobile
-							Number </label>
+						<label for="inputMobile" class="col-sm-2 control-label"><bean:message key="operator.complaint.processcomp.mobile" /> </label>
 						<div class="col-sm-8">
 							<div class="fg-line">
 								<input type="text" class="form-control" id="inputMobile"
@@ -72,7 +70,7 @@
 
 
 					<div class="form-group">
-						<label for="inputName" class="col-sm-2 control-label">Name
+						<label for="inputName" class="col-sm-2 control-label"><bean:message key="operator.complaint.requestcomplaint.name" />
 						</label>
 						<div class="col-sm-8">
 							<div class="fg-line">

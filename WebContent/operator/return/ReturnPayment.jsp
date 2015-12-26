@@ -29,7 +29,7 @@
 		id="content">
 	<div class="container">
 		<div class="block-header">
-			<h1>Return Payments</h1>
+			<h1><bean:message key="operator.return.returnpayment.label" /></h1>
 		</div>
 
 		<div class="card">
@@ -40,15 +40,14 @@
 				<!-- card-body card-padding div 1-->
 
 				<div class="card-header">
-					<h4>Payment Details</h4>
+					<h4><bean:message key="operator.return.returnpayment.head1" /></h4>
 				</div>
 				<div class="card-body card-padding">
 					
 
 					<div class="row">
 						<div id="mediumDiv" class="form-input">
-							<label for="inputMedium" class="col-sm-3 control-label">Payment
-								Medium :</label>
+							<label for="inputMedium" class="col-sm-3 control-label"><bean:message key="operator.return.returnpayment.paymode" /></label>
 							<div class="select col-sm-4 m-b-25">
 								<select name="modeType" class="form-control" id="selectMedium">
 									<option value="Select Payment Mode">Select Payment Mode</option>
@@ -65,8 +64,7 @@
 					<input type='hidden' name="orderID" value="${orderID}"/>
 					<div class="row">
 						<div id="amountDiv" class="form-input">
-							<label for="inputHouse" class="col-sm-3 control-label">Amount
-								:</label>
+							<label for="inputHouse" class="col-sm-3 control-label"><bean:message key="operator.return.returnpayment.amount" /></label>
 							<div class="col-sm-4 m-b-25">
 								<div class="fg-line open">
 									<input type="text" name="amount" id="inputAmount"
@@ -80,8 +78,7 @@
 
 					<div class="row">
 						<div id="descriptionDiv" class="form-input">
-							<label for="inputHouse" class="col-sm-3 control-label">Description
-								:</label>
+							<label for="inputHouse" class="col-sm-3 control-label"><bean:message key="operator.return.returnpayment.desc" /></label>
 							<div class="col-sm-4 m-b-25">
 								<div class="fg-line open">
 									<input type="text" name="description" id="inputDescription"
@@ -97,8 +94,7 @@
 
 					<div class="row">
 						<div id="paidByDiv" class="form-input">
-							<label for="inputHouse" class="col-sm-3 control-label">Paid
-								By / Received Through :</label>
+							<label for="inputHouse" class="col-sm-3 control-label"><bean:message key="operator.return.returnpayment.paidby" /></label>
 							<div class="col-sm-4 m-b-25">
 								<div class="fg-line open">
 									<input type="text" name="paidBy" id="inputPaidBy"
