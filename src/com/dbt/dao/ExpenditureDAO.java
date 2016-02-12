@@ -1,8 +1,10 @@
 package com.dbt.dao;
 
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Types;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -15,6 +17,7 @@ import com.dbt.data.Loan;
 import com.dbt.data.Transaction;
 import com.dbt.database.DBConnection;
 import com.dbt.support.Email;
+import com.squareup.okhttp.Call;
 
 public class ExpenditureDAO {
 
@@ -335,17 +338,42 @@ public class ExpenditureDAO {
 
 		return result;
 	}
+	
+	public static void main(String[] args)
+	{
+		new ExpenditureDAO().addExpenditureDetail(5555, "Cash", "This is sample description.", "Gaurav Agarwal", "5", "salary", "Arjun Ji", "24");
+	}
 
 	public boolean addExpenditureDetail(int amount, String mode,
 			String description, String paid, String dynamic, String expType,
-			String receivedBy, String empId) {
+			String receivedBy, String empId) 
+	{
 		Connection con = null;
-
+		CallableStatement stmt = null;
 		boolean status = false;
 		boolean result = false;
-		try {
+		try 
+		{
+			if(!expType.equals("salary"))
+				empId = "0";
 			con = DBConnection.getConnection();
-			con.setAutoCommit(false);
+			stmt = con.prepareCall("{Call AddExpenditure(?,?,?,?,?,?,?,?,?,?)}");
+			stmt.setInt(1, amount);
+			stmt.setString(2, mode);
+			stmt.setString(3, description);
+			stmt.setString(4, paid);
+			stmt.setString(5, dynamic);
+			stmt.setString(6, expType);
+			stmt.setString(7, receivedBy);
+			stmt.setInt(8, Integer.parseInt(empId));
+			stmt.registerOutParameter(9, Types.INTEGER);
+			stmt.registerOutParameter(10, Types.INTEGER);
+			stmt.execute();
+			int txId = stmt.getInt(10);
+			int expId = stmt.getInt(9);
+			if(txId != 0 && expId != 0)
+				status = true;
+			/*con.setAutoCommit(false);
 
 			int txId = addTransaction(amount, mode, description, paid, con);
 			int expId = addExpenditure(txId, con);
@@ -366,28 +394,28 @@ public class ExpenditureDAO {
 						Integer.parseInt(dynamic), con);
 			else if (expType.equals("purchase"))
 				status = addPurchaseExpenditure(expId,
-						Integer.parseInt(dynamic), con);
+						Integer.parseInt(dynamic), con);*/
 			System.out.print("Tx Id : " + txId + ", Exp Id : " + expId
 					+ ", Status = " + status);
 
-			if (status == false || txId == 0 || expId == 0) {
-				con.rollback();
-				System.out.print("ExpenditureDAO : Unable to add " + expType
-						+ " expenditure.");
+			if (status == false || txId == 0 || expId == 0) 
+			{
+				System.out.print("ExpenditureDAO : Unable to add " + expType + " expenditure.");
 				result = false;
-			} else {
-				con.commit();
-				System.out.print("ExpenditureDAO : " + expType
-						+ " expenditure added.");
+			}
+			else 
+			{
+				System.out.print("ExpenditureDAO : " + expType + " expenditure added.");
 				result = true;
 			}
-			
-			con.setAutoCommit(true);
-
-		} catch (Exception ex) {
+		} 
+		catch (Exception ex) 
+		{
 			Email.sendExceptionReport(ex);
-		} finally {
-			DBConnection.closeResource(con, null, null);
+		} 
+		finally 
+		{
+			DBConnection.closeResource(con, stmt, null);
 		}
 		return result;
 	}

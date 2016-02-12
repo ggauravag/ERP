@@ -7,7 +7,7 @@ public class TestMemory {
 	public static void printMemory() {
 
 		int mb = 1024 * 1024;
-		if (DBConnection.onWebServer && DBConnection.useIP) {
+		if (!DBConnection.onWebServer && !DBConnection.useIP) {
 			// Getting the runtime reference from system
 			Runtime runtime = Runtime.getRuntime();
 

@@ -83,7 +83,64 @@ public class PaymentDAO {
 
 		return payment;
 	}
-
+	
+	public int getDiscount(int orderId)
+	{
+		int discount = 0;
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet set = null;
+		try
+		{
+			con = DBConnection.getConnection();
+			stmt = con.prepareStatement("SELECT discount FROM `order` WHERE _id = ?");
+			stmt.setInt(1, orderId);
+			set = stmt.executeQuery();
+			if(set.next())
+			{
+				if(set.getString("discount") != null)
+					discount = set.getInt("discount");
+			}
+		}
+		catch(Exception e)
+		{
+			Email.sendExceptionReport(e);
+		}
+		finally
+		{
+			DBConnection.closeResource(con, stmt, set);
+		}
+		return discount;
+	}
+	
+	public int getShippingCharge(int orderId)
+	{
+		int charge = 0;
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet set = null;
+		try
+		{
+			con = DBConnection.getConnection();
+			stmt = con.prepareStatement("SELECT distinct S._id, S.charge FROM `order_item` OI JOIN shipment S ON OI.ship_id = S._id WHERE OI.order_id = ?");
+			stmt.setInt(1, orderId);
+			set = stmt.executeQuery();
+			while(set.next())
+			{
+				charge += set.getInt("charge");
+			}
+		}
+		catch(Exception e)
+		{
+			Email.sendExceptionReport(e);
+		}
+		finally
+		{
+			DBConnection.closeResource(con, stmt, set);
+		}
+		return charge;
+	}
+	
 	public int getExtraAmount(int orderID) {
 		int extraAmount = 0;
 		Connection con = null;
@@ -140,7 +197,7 @@ public class PaymentDAO {
 	}
 
 	public Payment makePayment(String paidBy, int amount, int orderID,
-			String mode, String desc, Date payDate) {
+			String mode, String desc, Date payDate, int discountAmount) {
 		Payment pay = null;
 		Connection con = null;
 		CallableStatement stmt = null;
@@ -161,6 +218,8 @@ public class PaymentDAO {
 							res.getTimestamp("timestamp"),
 							res.getInt("amount"), res.getInt("order_id"),
 							res.getString("type"));
+				if(discountAmount != 0)
+					new OrderDAO().addUpDiscount(orderID, discountAmount);
 			}
 		} catch (Exception e) {
 

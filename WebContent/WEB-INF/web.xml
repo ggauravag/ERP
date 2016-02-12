@@ -28,6 +28,11 @@
 		<url-pattern>/UploadServlet</url-pattern>
 	</servlet-mapping>
 
+	<error-page>
+		<error-code>404</error-code>
+		<location>/errors/404.jsp</location>
+	</error-page>
+
 	<filter>
 		<filter-name>LoginFilter</filter-name>
 		<filter-class>com.dbt.filter.LoginFilter</filter-class>

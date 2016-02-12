@@ -67,6 +67,12 @@
 						</div>
 					</div>
 					<div class="form-group">
+						<label class="col-sm-3 control-label"><bean:message key="operator.payment.amountpaid.discount " /> </label>
+						<div class="col-sm-5">
+							<label class="control-label"><strong>${discount}</strong></label>
+						</div>
+					</div>
+					<div class="form-group">
 						<label class="col-sm-3 control-label"><bean:message key="operator.payment.amountpaid.paymode" /> </label>
 						<div class="col-sm-5">
 							<label class="control-label"><strong>${payment.mode}</strong></label>

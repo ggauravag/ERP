@@ -214,13 +214,13 @@
 	<script type="text/javascript" src="js/extra.js"></script>
 	<jspcore:if test="${status == 'success'}">
 		<script>
-		swal("Return Processed","The returned items has been suceesfully processed and the payment for the return has been credited !","success");
+		setTimeout(function(){swal("Return Processed","The returned items has been suceesfully processed and the payment for the return has been credited !","success")},0);
 		</script>
 		<jspcore:remove var="status" scope="session"/>
 	</jspcore:if>
 	<jspcore:if test="${status == 'failure'}">
 		<script>
-		swal("Unable to Process Return","The return request cannot be processed now, please try again later !","error");
+		setTimeout(function(){swal("Unable to Process Return","The return request cannot be processed now, please try again later !","error")},0);
 		</script>
 		<jspcore:remove var="status" scope="session"/>
 	</jspcore:if>

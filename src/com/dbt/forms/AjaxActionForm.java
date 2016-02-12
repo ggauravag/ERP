@@ -143,6 +143,8 @@ public class AjaxActionForm extends ActionForm {
 			
 		} else if("getDocumentsById".equals(action)){
 			
+		} else if("addCityInState".equals(action)){
+			
 		}
 		else {
 			errors.add("error", new ActionMessage("request.invalid"));

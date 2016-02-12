@@ -32,7 +32,8 @@ public class StockAction extends Action {
 
 		if (stockDetail == null) {
 			StockForm stockForm = (StockForm) form;
-			try {
+			try 
+			{
 				int category = Integer.parseInt(stockForm.getCategory());
 				int numProducts = Integer.parseInt(stockForm.getNumProd());
 				String[] prodNames = stockForm.getProductNames();
@@ -63,10 +64,13 @@ public class StockAction extends Action {
 			} catch (Exception e) {
 				Email.sendExceptionReport(e);
 			}
-		} else {
+		} 
+		else 
+		{
 			MerchantDetailForm merchantForm = (MerchantDetailForm) form;
 
-			try {
+			try 
+			{
 				int merchantId = Integer.parseInt(merchantForm.getmerchantId());
 				int amount = Integer.parseInt(merchantForm.getAmount());
 				int currentAmount = 0;

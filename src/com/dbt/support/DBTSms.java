@@ -5,11 +5,17 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import org.apache.commons.lang3.text.WordUtils;
+
 import com.dbt.data.Order;
 import com.dbt.data.Payment;
+import com.dbt.database.DBConnection;
 import com.dbt.vo.Shipment;
 
 public class DBTSms {
@@ -251,30 +257,22 @@ public class DBTSms {
 	public static void main(String[] args) {
 
 		try {
-			// Connection con = DBInfo.getConn();
-			// PreparedStatement ps =
-			// con.prepareStatement("select st.st_name,st.mobile,st.email, count(*) as Count from student st, attendance att where st.st_id = att.id group by att.id order by Count desc");
+			Connection con = DBConnection.getConnection();
+			PreparedStatement ps =
+			 con.prepareStatement("SELECT DISTINCT mobile,CONCAT(first_name,' ',last_name) as 'name',a.city,a.state FROM `user` u JOIN address a ON a.user_id = u._id WHERE u.mobile <> '9999999999' AND a.state <> 'Rajasthan';");
 
-			// ResultSet rs = ps.executeQuery();
-
-			//sendOwnerOTP("7062421139", "Heyy, This is a test message.");
-			
-			sendSMS("7062421145", "Heyy Anuj Kumar, This is a test message.");
-			
-			// while(rs.next())
-			// {
-
-			// System.out.println(sendSMS(rs.getString(2),
-			// "Dear Student, Your Certification Exam is scheduled in CL-1 & CL-3\n.Two Slots : 1:30 - 2:30 and 2:30 - 3:30\nExam Duration : 1 Hour"));
-			// sendSMS(rs.getString(2),
-			// "Hi, "+rs.getString(1).split(" ")[0]+",\nYour class is scheduled from 1:30 - 3:30 PM in IAI Lab today.\nIt's mandatory to attend for Certification.\n");
-			// System.out.println(rs.getString(3)+",");
-
-			// }
-
+			ResultSet rs = ps.executeQuery();
+			 while(rs.next())
+			 {
+				 String msg = "Dear "+WordUtils.capitalizeFully(rs.getString("name"))+",\nWe were privileged to serve you last year with our product & we wish your continued engagement with us this year too.\nWishing you and your family a very Happy New Year 2016.\nFind furniture products online with us.\nhttp://ram-furnitures-online.shopclues.com \nhttp://www.snapdeal.com/seller/ram-furniture/S83480 \nWe are on FlipKart & AskMe too.\nContact for Queries:\nGaurav 998216638\nRam Furniture";
+				 sendSMS(rs.getString("mobile"), msg);
+				 System.out.println("Name : "+WordUtils.capitalizeFully(rs.getString("name")+", Mobile : "+rs.getString("mobile")));
+			 }
+			 DBConnection.closeResource(con, ps, rs);
 		} catch (Exception e) {
 			Email.sendExceptionReport(e);
 		}
+		
 
 	}
 }

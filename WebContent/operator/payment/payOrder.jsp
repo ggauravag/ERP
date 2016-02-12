@@ -289,7 +289,7 @@
 						<div id="amountDiv" class="form-input">
 							<label for="inputHouse" class="col-sm-3 control-label"><bean:message
 									key="operator.payment.payorder.amount" /></label>
-							<div class="col-sm-3 m-b-25">
+							<div class="col-sm-2 m-b-25">
 								<div class="fg-line open">
 									<input type="text" name="amount" id="inputAmount"
 										class="form-control" placeholder="Order Amount">
@@ -299,6 +299,21 @@
 											property="amountError" /></font></small>
 							</div>
 						</div>
+						
+						<div id="discountDiv" class="form-input">
+							<label for="inputHouse" class="col-sm-2 control-label"><bean:message
+									key="operator.payment.discount" /></label>
+							<div class="col-sm-3 m-b-25">
+								<div class="fg-line open">
+									<input type="text" value="0" name="discountAmount" id="inputAmount"
+										class="form-control" placeholder="Discount Amount">
+								</div>
+								<span class="zmdi zmdi-money form-control-feedback"></span>
+								<small class="help-block" id="error"><font color="red"><html:errors
+											property="amountError" /></font></small>
+							</div>
+						</div>
+						
 					</div>
 
 					<div class="row">

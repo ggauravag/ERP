@@ -193,17 +193,32 @@
 				<div class="card-header">
 					<h4><bean:message key="operator.vieworder.head3" /></h4>
 				</div>
+				
+				
 				<div class="card-body card-padding">
 					<input type="hidden" name="itemJSON" id="itemJSON" />
 
 					<div class="row">
 						<div class="form-group">
-							<label class="control-label col-sm-3 "><bean:message key="operator.vieworder.totalpayment" /> <font
-								color="black" size="5px"><span class="WebRupee">&#x20B9;
-								</span><label id="total"></label></font>
-							</label> <label class="control-label col-sm-3 col-sm-offset-1"><bean:message key="operator.vieworder.paymentmade" />
+							<label class="control-label col-sm-5">
+							    <bean:message key="operator.vieworder.totalpayment" />
+								<font color="black" size="5px">
+								<span class="WebRupee">&#x20B9;</span>
+								<button class="btn btn-link" id="amountBreakup" style="font-size: 25px;color: black" type="button" data-trigger="hover" data-toggle="amount-popover" >
+                               		<label id="total"></label>
+                                </button>
+								
+								</font>
+<!-- 								<font color="grey" size="3px"> -->
+<!-- 									<span class="WebRupee">Discount : &#x20B9; -</span> -->
+<!-- 									<label id="discount"></label> -->
+<!-- 									<span class="WebRupee">Shipping Charge : &#x20B9; +</span> -->
+<!-- 									<label id="shippingCharge"></label> -->
+<!-- 								</font> -->
+							</label> 
+							<label class="control-label col-sm-3 "><bean:message key="operator.vieworder.paymentmade" />
 							 <font color="green" size="5px"><span class="WebRupee">&#x20B9; </span><label id="paid"></label></font>
-							</label> <label class="control-label col-sm-3 col-sm-offset-1"><bean:message key="operator.vieworder.due" /> <font color="red" size="5px"><span class="WebRupee">&#x20B9;
+							</label> <label class="control-label col-sm-3 "><bean:message key="operator.vieworder.due" /> <font color="red" size="5px"><span class="WebRupee">&#x20B9;
 								</span><label id="due"></label></font>
 							</label>
 						</div>

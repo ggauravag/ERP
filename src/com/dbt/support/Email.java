@@ -2,13 +2,10 @@ package com.dbt.support;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -30,6 +27,8 @@ import com.dbt.vo.Shipment;
 
 public class Email {
 	
+	public static final String APP_KEY = "mandrill.appKey";
+	
 	public void sendAPIMail(String[] to, String fromName, String fromEmail, String subject, String body)
 	{
 		try {
@@ -41,8 +40,8 @@ public class Email {
 			JSONObject message = new JSONObject();
 			JSONObject mail = new JSONObject();
 			
-			mail.put("key", "grgsow-rdPAqZnMDELMCtA");
-			
+			mail.put("key", AppProperties.getProperty(APP_KEY));
+			System.out.println("AppKey : "+AppProperties.getProperty(APP_KEY));
 			message.put("html", body);
 			message.put("subject", subject);
 			message.put("from_email", fromEmail);

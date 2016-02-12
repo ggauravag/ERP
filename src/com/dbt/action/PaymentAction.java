@@ -51,10 +51,11 @@ public class PaymentAction extends Action {
 		}
 
 		Payment payment = new PaymentDAO().makePayment(paidBy, amount, orderId,
-				medium, desc,date);
+				medium, desc,date, payForm.getDiscountAmount());
 		//System.out.println("Payment ID is : "+payment.getId()+", amount : "+payment.getAmount());
 		if (payment != null) {
 			request.getSession().setAttribute("payment", payment);
+			request.getSession().setAttribute("discount", payForm.getDiscountAmount());
 			request.getSession().setAttribute("status", "success");
 			Order order = new OrderDAO().getOrder(payment.getOrderId());
 			request.getSession().setAttribute("order", order);

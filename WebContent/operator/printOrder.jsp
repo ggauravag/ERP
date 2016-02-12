@@ -203,7 +203,17 @@ body,h1,h2,h3,h4,h5,h6 {
 			</tbody>
 		</table>
 		<div class="row text-right">
-			<div class="col-xs-2 col-xs-offset-8">
+			<div class="col-xs-8 text-left">
+				<jspcore:if test="${merchant.name == 'Ram Furniture' }">
+					<p style="font-size: 18px;color: black;">
+							<u>Under Composition Scheme</u>
+					</p>
+				</jspcore:if>
+				
+			</div>
+		
+		
+			<div class="col-xs-2">
 				<p>
 					<strong> Total : <br>
 					</strong>
@@ -222,8 +232,18 @@ body,h1,h2,h3,h4,h5,h6 {
 						<h4 style="color : black;">Terms & Conditions</h4>
 					</div>
 					<div class="panel-body">
-						<p style="color : black;">1. This is an order confirmation not an invoice (VAT
-							Exclusive).</p>
+						<jspcore:if test="${merchant.name != 'Ram Furniture' }">
+							<p style="color : black;">
+							1. This is an order confirmation not an invoice (VAT
+							Exclusive).
+							</p>
+						</jspcore:if>
+						<jspcore:if test="${merchant.name == 'Ram Furniture' }">
+							<p style="color : black;">
+							1. This is an order confirmation not an invoice.
+							</p>
+						</jspcore:if>
+						
 						<p style="color : black;">2. Fulfillment of order is subject to stock availablity.</p>
 						<p style="color : black;">3. Order shall be processed only after 100% payment.</p>
 					</div>

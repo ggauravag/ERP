@@ -4,6 +4,7 @@ import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
@@ -88,6 +89,43 @@ public class OrderDAO {
 		}
 
 		return success;
+	}
+	
+	public int addCityInState(String city,String state)
+	{
+		Connection con = null;
+		PreparedStatement stmt = null;
+		int result = 2;
+		try
+		{
+			con = DBConnection.getConnection();
+			stmt = con.prepareStatement("INSERT INTO city(name,state_id) VALUES(?,(SELECT _id FROM state WHERE `name` = ?));");
+			stmt.setString(1, city);
+			stmt.setString(2, state);
+			int numRows = stmt.executeUpdate();
+			if(numRows == 1)
+			{
+				result = 0;
+			}
+		}
+		catch(SQLException e)
+		{
+			if(e.getSQLState().startsWith("23"))
+			{
+				result = 1;
+			}
+			else
+				Email.sendExceptionReport(e);
+		}
+		catch(Exception e)
+		{
+			Email.sendExceptionReport(e);
+		}
+		finally
+		{
+			DBConnection.closeResource(con, stmt, null);
+		}
+		return result;
 	}
 
 	public List<JSONObject> getOrderAndPurchaseDetail(int id,String name,Date from,Date to, String mobile)
@@ -262,6 +300,25 @@ public class OrderDAO {
 					.prepareStatement("update `order` set discount = ? where _id = ?");
 			stmt.setInt(1, discount);
 			stmt.setInt(2, orderID);
+			stmt.executeUpdate();
+		} catch (Exception e) {
+			Email.sendExceptionReport(e);
+		} finally {
+			DBConnection.closeResource(con, stmt, null);
+		}
+	}
+	
+	public void addUpDiscount(int orderId, int discount)
+	{
+		Connection con = null;
+		PreparedStatement stmt = null;
+
+		try {
+			con = DBConnection.getConnection();
+			stmt = con
+					.prepareStatement("UPDATE `order` SET discount = discount + ? WHERE _id = ?");
+			stmt.setInt(1, discount);
+			stmt.setInt(2, orderId);
 			stmt.executeUpdate();
 		} catch (Exception e) {
 			Email.sendExceptionReport(e);

@@ -187,11 +187,11 @@
 		src="vendors/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
 
 	<script src="vendors/bower_components/Waves/dist/waves.min.js"></script>
-
+    
 	<!-- Placeholder for IE9 -->
 	<!--[if IE 9 ]>
-            <script src="vendors/bower_components/jquery-placeholder/jquery.placeholder.min.js"></script>
-        <![endif]-->
+      <script src="vendors/bower_components/jquery-placeholder/jquery.placeholder.min.js"></script>
+    <![endif]-->
 
 
 	<script src="js/functions.js"></script>
@@ -200,7 +200,7 @@
 		<script>
 			$("#l-forget-password").removeClass("toggled");
 			$("#l-login").addClass("toggled");
-			swal("<bean:message key='${error}'/>");
+			alert("<bean:message key='${error}'/>");
 		</script>
 	</jspcore:if>
 
@@ -222,19 +222,23 @@
 		<script>
 			$("#l-login").addClass("toggled");
 			$("#l-forget-password").removeClass("toggled");
+			alert("Password reset link has been sent ! ");
 			swal(
 					"Email Sent !",
 					"Password reset link has been sent to the registered email, please click the link withhin 24 hours from now, else it will expire !",
 					"success");
+			
 		</script>
 	</jspcore:if>
 	<jspcore:if test="${sendStatus == false}">
 		<script>
 			$("#l-login").removeClass("toggled");
 			$("#l-forget-password").addClass("toggled");
+			alert("Invalid Email Account !");
 			swal("Invalid Email Account !",
 					"This email is not registered with any valid account !",
 					"error");
+			
 		</script>
 	</jspcore:if>
 
@@ -296,17 +300,19 @@
 	<jspcore:if test="${sessionScope.forgotName != null}">
 		<jspcore:remove var="forgotName" scope="session" />
 		<script>
+			alert("Password changed successfully !");
 			swal(
 					"Password Changed",
 					"Your login password has been successfully changed ! Now, login using your new password !",
 					"success");
+			
 		</script>
 	</jspcore:if>
 
 	<script>
 		$("#submitOTP").click(function() {
 			var otp = $("#otpField").val();
-			console.log("OTP Submitted : " + otp);
+			//console.log("OTP Submitted : " + otp);
 			var success = true;
 			if (otp == "" || otp.length < 6) {
 				showErrorValidation("#otpDiv", "OTP is invalid / blank !");

@@ -4,6 +4,8 @@
 
 var orderdetails;
 
+
+
 $("#searchOrderButton").click(function() {
 	var orderID = $("#inputOrderID").val();
 });
@@ -18,6 +20,75 @@ $("#sendReceipt").click(function() {
 
 $("#generateChallan").click(function() {
 	loadFirms();
+});
+
+$("#addCityButton").click(function(){
+	$("#modalAddCity").modal('show');
+});
+
+$("#addNewCity").click(function(){
+	var newCity = $("#newCityName").val();
+	var stateName = $("#stateToModify").val();
+	
+	$("#loaderImage").show();
+	$.ajax({
+		
+		url : $("#basePath").val() + "/ajaxServlet.do",
+		method : "post",
+		data : {
+			state : stateName,
+			city : newCity,
+			action : "addCityInState"
+		},
+		success : function(data){
+			$("#loaderImage").hide();
+			if(data.status)
+			{
+				if($('#inputState').val() === stateName)
+					$('#inputCity').append('<option>'+newCity+'</option>');
+				$("#modalAddCity").modal('hide');
+				swal("City Added","New City "+newCity+" has been added to state : "+stateName,"success");
+			}
+			else
+			{
+				$("#errorInCityAdd").html(data.message);
+			}
+		},
+		error : function(data){
+			$("#loaderImage").hide();
+			alert("Something went wrong");
+		}
+		
+	});
+});
+
+$("#stateToModify").change(function(){
+	var city = $("#newCityName").val();
+	if(city.length != 0)
+		$("#addNewCity").removeAttr('disabled');
+	else
+		$("#addNewCity").attr('disabled',true);
+});
+
+$("#newCityName").keyup(function(event){
+	//console.log(this.value);
+	var words = this.value.split(' ');
+	for(var i = 0; i < words.length; i++)
+	{
+		words[i] = words[i].charAt(0).toUpperCase() + words[i].substr(1,words[i].length - 1).toLowerCase();
+	}
+	this.value = words.join(' ');
+	var state = $("#stateToModify").val();
+	//console.log("State : "+state);
+	if(state === "Select State")
+	{
+		$("#addNewCity").attr('disabled',true);
+	}
+	else
+	{
+		$("#addNewCity").removeAttr('disabled');
+	}
+	
 });
 
 function addPanel() {
@@ -247,7 +318,21 @@ function printChallanBySide(shipID, orderID) {
 	loadFirms();
 }
 
+var isInitialized = false;
+
+var orderTotal = 0;
+var discount = 0;
+var shipCharge = 0;
+
+function getContent()
+{
+	var html = "<table><tr><td><b>Order Amount :&nbsp;</b></td><td>(+)</td><td>&nbsp;<span class=\"WebRupee\">&#x20B9;</span> "+orderTotal+"</td></tr><tr><td><b>Discount :&nbsp;</b></td><td>(-)</td><td>&nbsp;<span class=\"WebRupee\">&#x20B9;</span> "+discount+"</td></tr><tr><td><b>Shipping Charge :&nbsp;</b></td><td>(+)</td><td>&nbsp;<span class=\"WebRupee\">&#x20B9;</span> "+shipCharge+"</td></tr></table>";
+	return html;
+}
+
+
 function showCompleteOrder(orderID) {
+	
 	selectedOrder = null;
 	var value = $("input[name=orderID]:checked").val();
 	for (var i = 0; i < orderdetails.length; i++) {
@@ -302,7 +387,28 @@ function showCompleteOrder(orderID) {
 					$("#loaderImage").hide();
 					if (data.status == "success") {
 						$("#paymentDetails").html("");
-						$("#total").text(selectedOrder.amount+data.extraAmount);
+						var total = selectedOrder.amount + data.shippingCharge - data.discountAmount;
+						//'<b>Order Amount : </b>'+ selectedOrder.amount +'</br><b>Discount (-): </b>'+ data.discountAmount +'<br/><b>Shipping Charge (+): </b>'+ data.shippingCharge +''
+						
+						orderTotal = selectedOrder.amount;
+						shipCharge = data.shippingCharge;
+						discount = data.discountAmount;
+						
+						if(!isInitialized)
+						{
+							$('[data-toggle="amount-popover"]').popover({
+						        'placement': 'top',
+						        'template':'<div class="popover" role="tooltip"><div class="arrow"></div><h3 class="popover-title"></h3><div><div class="popover-content"></div></a></div></div>',
+						        'html': 'true',
+						        'content': function (){return getContent()},
+						        'animation': true,
+						        'title':'Total Amount Breakup',
+						        'container': 'body'
+							});
+							isInitialized = true;
+						}
+						
+						$("#total").text(total);
 						var paid = 0;
 						for (var i = 0; i < data.payments.length; i++) {
 							var payment = data.payments[i];
@@ -322,7 +428,9 @@ function showCompleteOrder(orderID) {
 							$("#paymentDetails").append(html);
 						}
 						$("#paid").text(paid);
-						$("#due").text(selectedOrder.amount - paid + data.extraAmount);
+						$("#discount").text(data.discountAmount);
+						$("#shippingCharge").text(data.shippingCharge);
+						$("#due").text(total - paid);
 					} else {
 						swal("Error in fetching Payment Details");
 					}

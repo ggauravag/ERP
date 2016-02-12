@@ -244,7 +244,47 @@ public class AjaxAction extends Action {
 			removeDocument(request, response);
 		}
 		
+		else if("addCityInState".equals(action)){
+			addCityInState(request, response);
+		}
+		
 		return null;
+	}
+	
+	public void addCityInState(HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
+		String city = request.getParameter("city");
+		String state = request.getParameter("state");
+		JSONObject responseJSON = new JSONObject();
+		if(city == null || state == null || city.isEmpty() || state.isEmpty())
+		{
+			responseJSON.put("status", false);
+			responseJSON.put("message", "City Name or State name is empty !");
+		}
+		else
+		{
+			OrderDAO dao = new OrderDAO();
+			int result = dao.addCityInState(city, state);
+			if(result == 0)
+				responseJSON.put("status", true);
+			else if(result == 1)
+			{
+				responseJSON.put("status", false);
+				responseJSON.put("message", "City Already Exists In the State !");
+			}
+			else
+			{
+				responseJSON.put("status",false);
+				responseJSON.put("message", "Something went unexpected ! Please try again !");
+			}
+				
+		}
+		String jsonResponse = responseJSON.toJSONString();
+		System.out.println("AjaxActionServlet - addCityInStae() : "+jsonResponse);
+		response.setContentType("text/json");
+		PrintWriter writer = response.getWriter();
+		writer.write(jsonResponse);
+		writer.flush();
 	}
 	
 	public void removeDocument(HttpServletRequest request,
@@ -1192,7 +1232,9 @@ public class AjaxAction extends Action {
 			JSONObject resp = new JSONObject();
 			resp.put("status", "success");
 			resp.put("payments", paymentArray);
-			resp.put("extraAmount", new PaymentDAO().getExtraAmount(order));
+			PaymentDAO paymentDAO = new PaymentDAO();
+			resp.put("discountAmount", paymentDAO.getDiscount(order));
+			resp.put("shippingCharge", paymentDAO.getShippingCharge(order));
 			String responseText = resp.toJSONString();
 			response.setContentType("text/json");
 			System.out.println(responseText);

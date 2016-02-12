@@ -232,8 +232,14 @@ body,h1,h2,h3,h4,h5,h6 {
 					</div>
 					<div class="panel-body">
 						<p style="color : black;">1. This is an Order Invoice.</p>
-						<p style="color : black;">2. Grand Total is VAT / Taxes inclusive.</p>
-						<p style="color : black;margin-bottom: 5px">3. All matters are under Jaipur jurisdiction.</p>
+						<jspcore:if test="${merchant.name != 'Ram Furniture' }">
+							<p style="color : black;">2. Grand Total is VAT / Taxes inclusive.</p>
+							<p style="color : black;margin-bottom: 5px">3. All matters are under Jaipur jurisdiction.</p>
+						</jspcore:if>
+						<jspcore:if test="${merchant.name == 'Ram Furniture' }">
+							<p style="color : black;">2. Goods once sold will not be taken back.</p>
+							<p style="color : black;margin-bottom: 5px">3. All matters are under Jaipur jurisdiction.</p>
+						</jspcore:if>
 					</div>
 				</div>
 			</div>

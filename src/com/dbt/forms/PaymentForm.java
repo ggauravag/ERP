@@ -11,11 +11,17 @@ public class PaymentForm extends ActionForm {
 	/**
 	 * 
 	 */
-	int orderID, amount;
+	int orderID, amount, discountAmount;
 	String modeType, paidBy, description, payTime;
+	
+	public int getDiscountAmount() {
+		return discountAmount;
+	}
 
-	
-	
+	public void setDiscountAmount(int discountAmount) {
+		this.discountAmount = discountAmount;
+	}
+
 	public String getPayTime() {
 		return payTime;
 	}

@@ -151,7 +151,7 @@
 
 					<div class="row">
 						<div id="cityDiv" class="form-input">
-							<label for="inputCity" class="col-sm-2 control-label"></label>
+							<label for="inputCity" class="col-sm-2 control-label"><button type="button" class="btn bgm-cyan" id="addCityButton"><i class="zmdi zmdi-plus"></i> Add City</button></label>
 							<div class="col-sm-3 m-b-25 selectpicker">
 								<select class="form-control" id="inputCity" value="${add.city}"
 									name="custCity">
@@ -354,6 +354,36 @@
 			</form>
 		</div>
 		<!-- card div -->
+		
+		<div class="modal fade" id="modalAddCity" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <div class="modal-header">
+                          <h4 class="modal-title">Add City In State</h4>
+                    </div>
+                    <div class="modal-body">
+                         <label>Select State : </label>		
+                         <select class="form-control" id="stateToModify"
+									value="${add.state}">
+									<jspcore:set var="states" value="${orderDAO.getStates()}"></jspcore:set>
+									<option>Select State</option>
+									<jspcore:forEach var="state" items="${states}">
+										<option value="${state}">${state}</option>
+									</jspcore:forEach>
+						</select>
+						<br/>
+						<label>New City Name : </label><input type="text" id="newCityName" class="form-control"/>
+                   		<br/>
+                   		<label style="color:red;font-size: large;" id="errorInCityAdd"></label>
+                   	</div>
+                    <div class="modal-footer">
+                         <button type="button" id="addNewCity" class="btn btn-link" disabled>Add City</button>
+                         <button type="button" class="btn btn-link" data-dismiss="modal">Close</button>
+                    </div>
+                 </div>
+            </div>
+       </div>
+		
 
 	</div>
 	<!-- container div --> </section> </section>

@@ -279,7 +279,15 @@ body,h1,h2,h3,h4,h5,h6 {
 				</jspcore:choose>
 		</table>
 		<div class="row text-right" style="margin-top: -14px; ">
-			<div class="col-xs-4 col-xs-offset-6">
+			<div class="col-xs-6 text-left">
+			<jspcore:if test="${merchant.name == 'Ram Furniture' }">
+				<p style="font-size: 18px;color: black;">
+						<u>Under Composition Scheme</u>
+				</p>
+			</jspcore:if>
+				
+			</div>
+			<div class="col-xs-4">
 				<p>
 					<strong style="font-size: 16px; color: black;"> Challan
 						Amount : <br> Discount/Less (-) : <br> Shipping Freight (+) :<br>Total Amount :
@@ -303,8 +311,17 @@ body,h1,h2,h3,h4,h5,h6 {
 
 					<ul>
 						<p style="color: black; margin-top: -7px; padding-left: 5px">
-						<li>If applicable, VAT & Taxes would be exclusive of challan
-							amount.</li>
+						<jspcore:if test="${merchant.name != 'Ram Furniture' }">
+							<li>
+								If applicable, VAT & Taxes would be exclusive of challan
+								amount.
+							</li>
+						</jspcore:if>
+						<jspcore:if test="${merchant.name == 'Ram Furniture' }">
+							<li>
+								Goods once sold will not be taken back.
+							</li>
+						</jspcore:if>
 						</p>
 					</ul>
 					<hr style="border-top: 1px solid black; margin-top: -5px">
@@ -322,7 +339,7 @@ body,h1,h2,h3,h4,h5,h6 {
 							<h4 style="color: black;">For ${merchant.name.toUpperCase()}</h4>
 						</div>
 						<div class="panel-body">
-							<p>&nbsp;&nbsp;</p>
+							<p>&nbsp;</p>
 							<p>&nbsp;&nbsp;</p>
 							<p>
 								<strong><h5 class="text-right" style="color: black;">Authorised
